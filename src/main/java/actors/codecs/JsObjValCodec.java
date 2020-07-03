@@ -1,4 +1,4 @@
-package actors;
+package actors.codecs;
 
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.MessageCodec;
@@ -9,26 +9,24 @@ import jsonvalues.MalformedJson;
 /**
  Codec that allows to send {@link JsObj} as messages
  */
-public class JsObjValCodec implements MessageCodec<JsObj,JsObj>{
+public class JsObjValCodec implements MessageCodec<JsObj, JsObj> {
 
   public static JsObjValCodec INSTANCE = new JsObjValCodec();
 
-  private JsObjValCodec(){};
+  private JsObjValCodec() {
+  }
+
   @Override
   public JsObj decodeFromWire(int pos,
                               final Buffer buffer
-                             )
-  {
-    try
-    {
+                             ) {
+    try {
       int length = buffer.getInt(pos);
       pos += 4;
       return JsObj.parse(buffer.getString(pos,
                                           pos + length
                                          ));
-    }
-    catch (MalformedJson malformedJson)
-    {
+    } catch (MalformedJson malformedJson) {
       throw new DecodeException(malformedJson.getMessage());
     }
   }
@@ -36,28 +34,24 @@ public class JsObjValCodec implements MessageCodec<JsObj,JsObj>{
   @Override
   public void encodeToWire(final Buffer buffer,
                            final JsObj obj
-                          )
-  {
+                          ) {
     byte[] encoded = obj.serialize();
     buffer.appendInt(encoded.length);
     buffer.appendBytes(encoded);
   }
 
   @Override
-  public String name()
-  {
-    return "json-obj-val";
+  public String name() {
+    return "json-obj-value";
   }
 
   @Override
-  public byte systemCodecID()
-  {
+  public byte systemCodecID() {
     return -1;
   }
 
   @Override
-  public JsObj transform(final JsObj obj)
-  {
+  public JsObj transform(final JsObj obj) {
     return obj;
   }
 }

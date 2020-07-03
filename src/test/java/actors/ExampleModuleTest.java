@@ -87,7 +87,6 @@ public class ExampleModuleTest
   }
 
   @Test
-  @DisplayName("")
   public void test_verticle_consumer(Vertx vertx,
                                      VertxTestContext context
                                     )

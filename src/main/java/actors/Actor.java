@@ -63,7 +63,7 @@ public class Actor<I> extends AbstractVerticle
                                          }
                                        }
                                       );
-      promise.complete();
+      messageConsumer.completionHandler(promise);
     }
 
     catch (Exception e)

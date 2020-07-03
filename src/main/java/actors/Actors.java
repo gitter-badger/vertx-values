@@ -1,5 +1,7 @@
 package actors;
 
+import actors.codecs.JsArrayValCodec;
+import actors.codecs.JsObjValCodec;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;

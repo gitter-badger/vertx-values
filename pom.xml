@@ -40,6 +40,7 @@
     <MAVEN-COMPILER-PLUGIN.SOURCE>8</MAVEN-COMPILER-PLUGIN.SOURCE>
     <MAVEN-COMPILER-PLUGIN.TARGET>8</MAVEN-COMPILER-PLUGIN.TARGET>
     <VERTX-VERSION>4.0.0-milestone4</VERTX-VERSION>
+    <JSON-VALUES.VERSION>8.1.0</JSON-VALUES.VERSION>
   </properties>
 
   <build>
@@ -87,7 +88,7 @@
     <dependency>
       <groupId>com.github.imrafaelmerino</groupId>
       <artifactId>json-values</artifactId>
-      <version>7.0.0</version>
+      <version>${JSON-VALUES.VERSION}</version>
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>

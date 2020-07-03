@@ -12,15 +12,6 @@ import java.util.function.Supplier;
 public class Conditions
 {
 
-  public  static <O> Function<List<Future<O>>,Supplier<Future<Boolean>>> any(final Predicate<O> predicate){
-    return null;
-  }
-
-  public  static <O> Function<List<Future<O>>,Supplier<Future<Boolean>>> all(final Predicate<O> predicate){
-    return null;
-  }
-
-
   public static Supplier<Future<Boolean>> and(final Supplier<Future<Boolean>> a,
                                               final Supplier<Future<Boolean>>... others) {
 
@@ -42,7 +33,7 @@ public class Conditions
 
 
   public static Supplier<Future<Boolean>> or(final Supplier<Future<Boolean>> a,
-                                              final Supplier<Future<Boolean>>... others) {
+                                             final Supplier<Future<Boolean>>... others) {
 
     return ()->
     {

@@ -22,10 +22,10 @@ public class UserAccountModule extends ActorsModule
   public static Function<JsObj,Future<JsObj>> register;
 
   public static Function<JsObj, Supplier<Future<Boolean>>> isValid = obj ->
-    Conditions.and(() -> isLegalAge.apply(obj.getInt(JsPath.fromKey("age"))),
-                   () -> isValidId.apply(obj.getStr(JsPath.fromKey("id"))),
-                   () -> isValidAddress.apply(obj.getObj(JsPath.fromKey("address"))),
-                   () -> isValidEmail.apply(obj.getStr(JsPath.fromKey("email")))
+    Conditions.and(() -> isLegalAge.apply(obj.getInt("age")),
+                   () -> isValidId.apply(obj.getStr("id")),
+                   () -> isValidAddress.apply(obj.getObj("address")),
+                   () -> isValidEmail.apply(obj.getStr("email"))
                   );
 
   public static Function<JsObj,Future<JsObj>> registerIfValid = obj ->
