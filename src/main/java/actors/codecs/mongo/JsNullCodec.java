@@ -15,7 +15,8 @@ class JsNullCodec implements Codec<JsNull> {
 
     @Override
     public JsNull decode(final BsonReader reader, final DecoderContext decoderContext) {
-      return JsNull.NULL;
+        reader.readNull();
+        return JsNull.NULL;
     }
 
     @Override

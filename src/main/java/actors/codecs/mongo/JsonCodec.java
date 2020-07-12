@@ -11,6 +11,8 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
 
+import java.time.Instant;
+
 
 abstract class JsonCodec {
 
@@ -33,33 +35,22 @@ abstract class JsonCodec {
                               final DecoderContext context) {
 
     BsonType bsonType = reader.getCurrentBsonType();
-    if (bsonType == BsonType.NULL) {
-      reader.readNull();
-      return JsNull.NULL;
-    }
+
     if (bsonType == BsonType.OBJECT_ID) {
       ObjectId objectId = reader.readObjectId();
       return JsStr.of(objectId.toHexString());
     }
-    if (bsonType == BsonType.DECIMAL128) {
-      try {
-        Decimal128 decimal128 = reader.readDecimal128();
-        return JsBigDec.of(decimal128.bigDecimalValue());
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-    //todo mirar si añadir date en json-values
+
+    //not supported for writing, date-time is the format supported
+    // for reading is transformed into an instant
     if(bsonType == BsonType.TIMESTAMP){
       long value = reader.readTimestamp()
                          .getValue();
-      return JsLong.of(value);
+      return JsInstant.of(Instant.ofEpochMilli(value));
     }
-    if(bsonType == BsonType.DATE_TIME){
-      long dateTime = reader.readDateTime();
-      return JsLong.of(dateTime);
-    }
+
     Codec<JsValue> codec = (Codec<JsValue>) bsonTypeCodecMap.get(bsonType);
+    if(codec==null) throw new IllegalArgumentException("The bson type "+bsonType.name()+" is not supported");
     return codec.decode(reader,
                         context
                        );

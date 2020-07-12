@@ -4,7 +4,6 @@ import org.bson.*;
 import org.bson.codecs.BsonTypeClassMap;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.types.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +37,7 @@ public class JsValuesRegistry {
 
   private static Map<BsonType, Class<?>> overwriteDefaults() {
     Map<BsonType,Class<?>> map = new HashMap<>();
+    map.put(BsonType.NULL,JsNull.class);
     map.put(BsonType.ARRAY, JsArray.class);
     map.put(BsonType.BINARY,JsBinary.class);
     map.put(BsonType.BOOLEAN, JsBool.class);
@@ -55,6 +55,7 @@ public class JsValuesRegistry {
 
     map.put(BsonType.STRING, JsStr.class);
 
+    // todo poner en doc que lo usa mongo internate, usar mongo date
     //map.put(BsonType.TIMESTAMP, BsonTimestamp.class);
 
     return map;

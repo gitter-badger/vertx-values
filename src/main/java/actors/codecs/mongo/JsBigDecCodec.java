@@ -22,15 +22,11 @@ class JsBigDecCodec implements Codec<JsBigDec> {
   @Override
   public JsBigDec decode(final BsonReader reader,
                          final DecoderContext decoderContext) {
-    try {
+
       return JsBigDec.of(bigDecCodec.decode(reader,
                                             decoderContext
                                            )
                         );
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw e;
-    }
   }
 
   @Override

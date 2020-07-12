@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.Instant;
 import java.util.function.Supplier;
 
 @ExtendWith(VertxExtension.class)
@@ -89,10 +90,12 @@ public class TestMongoOps {
                              JsArray.of(1,2,3),
                              "null",
                              JsNull.NULL,
+                             "instant",
+                             JsInstant.of(Instant.now()),
                              "biginteger",
                              JsBigInt.of(new BigInteger("11111111111111111111111"))
                             );
-
+        System.out.println(obj.toString());
         dataModule.insertOne.apply(obj)
                             .compose(id -> dataModule.findOne
                                     .apply(JsObj.of("_id",JsObj.of("$oid",
