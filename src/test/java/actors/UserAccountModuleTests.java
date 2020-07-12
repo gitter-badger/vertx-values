@@ -1,6 +1,7 @@
 package actors;
 
-import io.vertx.core.Future;
+import actors.codecs.vertx.RegisterJsValuesCodecs;
+import io.vertx.core.CompositeFuture;
 import io.vertx.core.Vertx;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
@@ -23,8 +24,9 @@ public class UserAccountModuleTests
                             )
   {
 
-    final Future<String> future = vertx.deployVerticle(new UserAccountModule());
-    future.onSuccess(it-> testContext.completeNow());
+      CompositeFuture.all(vertx.deployVerticle(new UserAccountModule()),
+                          vertx.deployVerticle(new RegisterJsValuesCodecs()))
+                     .onSuccess(it-> testContext.completeNow());
 
 
   }

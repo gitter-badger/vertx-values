@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 public class Expressions
 {
-  public static <O> IfThenElse<O> when(final Supplier<Future<Boolean>> condition){
-    return new IfThenElse<>(condition);
+  public static <O> When<O> when(final Supplier<Future<Boolean>> predicate){
+    return new When<>(predicate);
   }
 }

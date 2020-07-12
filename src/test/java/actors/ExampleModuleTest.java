@@ -1,5 +1,5 @@
 package actors;
-import actors.future.JsObjFuture;
+import actors.codecs.vertx.RegisterJsValuesCodecs;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
@@ -8,6 +8,7 @@ import io.vertx.junit5.Checkpoint;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 import jsonvalues.JsObj;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,8 +28,10 @@ public class ExampleModuleTest
                             )
   {
     actors = new Actors(vertx);
-
-    testContext.completeNow();
+    vertx.deployVerticle(new RegisterJsValuesCodecs()).onComplete(it->{
+            if(it.failed())testContext.failNow(it.cause());
+            else testContext.completeNow();
+                                                                  });
 
   }
 
@@ -75,9 +78,9 @@ public class ExampleModuleTest
 
                         fut.onComplete(i ->
                                        {
-                                         assertEquals(4,
-                                                      i.result()
-                                                     );
+                                         Assertions.assertEquals(4,
+                                                                 i.result().intValue()
+                                                                );
                                          vref.undeploy()
                                              .onComplete(a -> context.completeNow());
                                        });

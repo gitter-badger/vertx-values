@@ -1,11 +1,10 @@
 package actors;
 
-import actors.expresions.Conditions;
+import actors.expresions.Predicates;
 import actors.expresions.Expressions;
 import actors.errors.InvalidUser;
 import io.vertx.core.Future;
 import jsonvalues.JsObj;
-import jsonvalues.JsPath;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +21,7 @@ public class UserAccountModule extends ActorsModule
   public static Function<JsObj,Future<JsObj>> register;
 
   public static Function<JsObj, Supplier<Future<Boolean>>> isValid = obj ->
-    Conditions.and(() -> isLegalAge.apply(obj.getInt("age")),
+    Predicates.and(() -> isLegalAge.apply(obj.getInt("age")),
                    () -> isValidId.apply(obj.getStr("id")),
                    () -> isValidAddress.apply(obj.getObj("address")),
                    () -> isValidEmail.apply(obj.getStr("email"))
@@ -30,8 +29,8 @@ public class UserAccountModule extends ActorsModule
 
   public static Function<JsObj,Future<JsObj>> registerIfValid = obj ->
     Expressions.<JsObj>when(isValid.apply(obj))
-               .then(() -> register.apply(obj))
-               .otherwise(() -> Future.failedFuture(new InvalidUser()))
+               .consequence(() -> register.apply(obj))
+               .alternative(() -> Future.failedFuture(new InvalidUser()))
                .get();
 
 

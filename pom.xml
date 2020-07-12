@@ -40,7 +40,8 @@
     <MAVEN-COMPILER-PLUGIN.SOURCE>8</MAVEN-COMPILER-PLUGIN.SOURCE>
     <MAVEN-COMPILER-PLUGIN.TARGET>8</MAVEN-COMPILER-PLUGIN.TARGET>
     <VERTX-VERSION>4.0.0-milestone4</VERTX-VERSION>
-    <JSON-VALUES.VERSION>8.1.0</JSON-VALUES.VERSION>
+    <JSON-VALUES.VERSION>8.2.0</JSON-VALUES.VERSION>
+    <MONGO-JAVA-DRIVER.VERSION>4.0.5</MONGO-JAVA-DRIVER.VERSION>
   </properties>
 
   <build>
@@ -79,12 +80,16 @@
   </build>
 
   <dependencies>
+    <!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
+    <!-- https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync -->
     <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-unit</artifactId>
-      <version>${VERTX-VERSION}</version>
-      <scope>test</scope>
+      <groupId>org.mongodb</groupId>
+      <artifactId>mongodb-driver-sync</artifactId>
+      <version>4.0.5</version>
     </dependency>
+
+
+
     <dependency>
       <groupId>com.github.imrafaelmerino</groupId>
       <artifactId>json-values</artifactId>
@@ -102,6 +107,15 @@
       <version>${VERTX-VERSION}</version>
       <scope>test</scope>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.6.2</version>
+      <scope>test</scope>
+    </dependency>
+
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -114,6 +128,10 @@
       <version>1.7.29</version>
       <scope>test</scope>
     </dependency>
+
+
+
+
   </dependencies>
   <profiles>
     <profile>

@@ -1,0 +1,41 @@
+package actors.mongo;
+
+import actors.ActorRef;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.result.InsertOneResult;
+import io.vertx.core.Future;
+import jsonvalues.JsObj;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import static actors.mongo.Converters.insertOneResult2HexId;
+
+public class DataCollectionModule extends MongoModule{
+
+
+    Function<JsObj,Future<String>> insertOne;
+    Function<JsObj,Future<Optional<JsObj>>> findOne;
+
+    public DataCollectionModule(final Supplier<MongoCollection<JsObj>> collection) {
+        super(collection);
+    }
+
+    @Override
+    protected void defineActors(final List<Object> futures) {
+       insertOne =  ((ActorRef<JsObj, String>) futures.get(0)).ask();
+       findOne = ((ActorRef<JsObj,JsObj>) futures.get(1)).ask().andThen(fut->fut.map(Optional::ofNullable));
+    }
+
+
+
+    @Override
+    protected List<Future> deployActors()
+    {
+        return Arrays.asList(insertActors.deployInsertOne(insertOneResult2HexId),
+                             findActors.deployFind(Converters.getFirst));
+    }
+}

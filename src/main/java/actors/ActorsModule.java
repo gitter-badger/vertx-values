@@ -4,11 +4,20 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- Actor that acts as a module deploying and exposing all the deployed actors. Any non standard message
- can be sent registering a codec overwriting the method {@link #registerMessageCodecs(Vertx)}.
+ Actor that acts as a module deploying and exposing all the deployed actors.
  */
 public abstract class ActorsModule extends AbstractVerticle
 {
+
+   private static final DeploymentOptions DEFAULT_DEPLOYMENT_OPTIONS = new DeploymentOptions();
+   protected final DeploymentOptions deploymentOptions;
+
+   public ActorsModule(final DeploymentOptions deploymentOptions) {
+    this.deploymentOptions = Objects.requireNonNull(deploymentOptions);
+  }
+  public ActorsModule(){
+     this.deploymentOptions = DEFAULT_DEPLOYMENT_OPTIONS;
+  }
 
   /**
    The purpose of this method is to initialize the functions/consumers/suppliers defined in
@@ -37,8 +46,8 @@ public abstract class ActorsModule extends AbstractVerticle
 
     try
     {
-      actors = new Actors(Objects.requireNonNull(vertx));
-      registerMessageCodecs(vertx);
+      actors = new Actors(Objects.requireNonNull(vertx),deploymentOptions);
+      initModule(actors);
       CompositeFuture.all(deployActors())
                      .onComplete(result -> failIfErrorOrInitModule(start,
                                                                    result
@@ -50,14 +59,8 @@ public abstract class ActorsModule extends AbstractVerticle
     }
   }
 
-  /**
-   Overwrite this method to register all the message codecs if you want to send any non standard
-   message across the event bus.
-   @param vertx the vertx instance where the module will be deployed
-   */
-  protected void registerMessageCodecs(final Vertx vertx)
-  {
-  }
+  protected void initModule(final Actors actors){}
+
 
   private void failIfErrorOrInitModule(final Promise<Void> start,
                                        final AsyncResult<CompositeFuture> result

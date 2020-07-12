@@ -1,14 +1,7 @@
 package actors;
 
-import actors.codecs.JsArrayValCodec;
-import actors.codecs.JsObjValCodec;
-import io.vertx.core.CompositeFuture;
-import io.vertx.core.DeploymentOptions;
-import io.vertx.core.Future;
-import io.vertx.core.Vertx;
+import io.vertx.core.*;
 import io.vertx.core.eventbus.Message;
-import jsonvalues.JsArray;
-import jsonvalues.JsObj;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -45,7 +38,6 @@ public class Actors
   {
     this.vertx = requireNonNull(vertx);
     this.deploymentOptions = requireNonNull(deploymentOptions);
-    registerJsValuesCodecs();
   }
 
   /**
@@ -183,6 +175,7 @@ public class Actors
                                   );
   }
 
+
   /**
 
    @param address the address of the verticle
@@ -213,6 +206,22 @@ public class Actors
     return deploy(generateProcessAddress(),
                   fn,
                   deploymentOptions
+                 );
+  }
+
+  /**
+
+   @param fn the function that takes a message of type I and produces an output of type O
+   @param <I> the type of the message sent to the verticle
+   @param <O> the type of the reply
+   @param options the deployment options
+   @return an ActorRef wrapped in a future
+   */
+  public <I, O> Future<ActorRef<I, O>> deploy(final Function<I, O> fn,final DeploymentOptions options)
+  {
+    return deploy(generateProcessAddress(),
+                  fn,
+                  options
                  );
   }
 
@@ -290,6 +299,17 @@ public class Actors
                  deploymentOptions);
   }
 
+
+  public Future<String> deploy(final AbstractVerticle verticle){
+    return vertx.deployVerticle(verticle);
+  }
+
+  public Future<String> deploy(final AbstractVerticle verticle,
+                               final DeploymentOptions options){
+    return vertx.deployVerticle(verticle,options);
+  }
+
+
   private static String generateProcessAddress()
   {
     return "__vertx.generated." + processSequence.incrementAndGet();
@@ -308,17 +328,6 @@ public class Actors
     else return Future.failedFuture(cf.cause());
   }
 
-  private void registerJsValuesCodecs()
-  {
-    vertx.eventBus()
-         .registerDefaultCodec(JsObj.class,
-                               JsObjValCodec.INSTANCE
-                              );
 
-    vertx.eventBus()
-         .registerDefaultCodec(JsArray.class,
-                               JsArrayValCodec.INSTANCE
-                              );
-  }
 
 }
