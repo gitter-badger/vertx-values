@@ -46,60 +46,79 @@ public class FindMessageCodec implements MessageCodec<FindMessage, FindMessage> 
     }
 
     private JsObj toJsObj(final FindMessage findMessage) {
-        JsObj  options    = JsObj.empty();
+        JsObj options = JsObj.empty();
+
+        options = options.set(FILTER,
+                              findMessage.filter
+                             );
+
+        options.set(LIMIT,
+                    JsInt.of(findMessage.limit)
+                   );
+
+        options = options.set(BATCHSIZE,
+                              JsInt.of(findMessage.batchSize)
+                             );
+
+        options = options.set(MAX_AWAIT_TIME,
+                              JsLong.of(findMessage.maxAwaitTime)
+                             );
+
+        options = options.set(MAX_TIME,
+                              JsLong.of(findMessage.maxTime)
+                             );
+
+        options = options.set(SKIP,
+                              JsInt.of(findMessage.skip)
+                             );
+
+        options = options.set(NO_CURSOR_TIMEOUT,
+                              JsBool.of(findMessage.noCursorTimeout)
+                             );
+        options = options.set(OP_LOG_REPLAY,
+                              JsBool.of(findMessage.oplogReplay)
+                             );
+        options = options.set(SHOW_RECORD_ID,
+                              JsBool.of(findMessage.showRecordId)
+                             );
+        options = options.set(PARTIAL,
+                              JsBool.of(findMessage.partial)
+                             );
+        options = options.set(RETURN_KEY,
+                              JsBool.of(findMessage.returnKey)
+                             );
+
         String hintString = findMessage.hintString;
         if (hintString != null) options = options.set(HINT_STRING,
                                                       JsStr.of(hintString)
                                                      );
         JsObj hint = findMessage.hint;
         if (hint != null) options = options.set(HINT,
-                                                hint);
+                                                hint
+                                               );
         JsObj projection = findMessage.projection;
         if (projection != null) options = options.set(PROJECTION,
-                                                      projection);
+                                                      projection
+                                                     );
         JsObj sort = findMessage.sort;
         if (sort != null) options = options.set(SORT,
-                                                sort);
-        Integer batchSize = findMessage.batchSize;
-        if (batchSize != null) options = options.set(BATCHSIZE,
-                                                     JsInt.of(batchSize)
-                                                    );
+                                                sort
+                                               );
+
         String comment = findMessage.comment;
         if (comment != null) options = options.set(COMMENT,
-                                                   JsStr.of(comment));
-        JsObj filter = findMessage.filter;
-        if (filter != null) options = options.set(FILTER,
-                                                  filter);
-        Integer limit = findMessage.limit;
-        if (limit != null) options = options.set(LIMIT,
-                                                 JsInt.of(limit)
-                                                );
+                                                   JsStr.of(comment)
+                                                  );
         JsObj max = findMessage.max;
         if (max != null) options = options.set(MAX,
-                                               max);
+                                               max
+                                              );
         JsObj min = findMessage.min;
         if (min != null) options = options.set(MIN,
-                                               min);
-        Long maxAwaitTime = findMessage.maxAwaitTime;
-        if (maxAwaitTime != null) options = options.set(MAX_AWAIT_TIME,
-                                                        JsLong.of(maxAwaitTime));
-        Long maxTime = findMessage.maxTime;
-        if (maxTime != null) options = options.set(MAX_TIME,
-                                                   JsLong.of(maxTime));
-        Integer skip = findMessage.skip;
-        if (skip != null) options = options.set(SKIP,
-                                                JsInt.of(skip));
-        options = options.set(NO_CURSOR_TIMEOUT,
-                              JsBool.of(findMessage.noCursorTimeout)
-                             );
-        options = options.set(OP_LOG_REPLAY,
-                              JsBool.of(findMessage.oplogReplay));
-        options = options.set(SHOW_RECORD_ID,
-                              JsBool.of(findMessage.showRecordId));
-        options = options.set(PARTIAL,
-                              JsBool.of(findMessage.partial));
-        options = options.set(RETURN_KEY,
-                              JsBool.of(findMessage.returnKey));
+                                               min
+                                              );
+
+
 
         return options;
     }
@@ -108,7 +127,7 @@ public class FindMessageCodec implements MessageCodec<FindMessage, FindMessage> 
     public FindMessage decodeFromWire(int pos,
                                       final Buffer buffer) {
         int length = buffer.getInt(pos);
-        byte[] bytes = buffer.getBytes(pos+4,
+        byte[] bytes = buffer.getBytes(pos + 4,
                                        pos + length
                                       );
         JsObj options = JsObj.parse(new String(bytes));

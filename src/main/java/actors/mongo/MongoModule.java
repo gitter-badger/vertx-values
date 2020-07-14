@@ -1,5 +1,6 @@
 package actors.mongo;
 
+import actors.ActorRef;
 import actors.Actors;
 import actors.ActorsModule;
 import com.mongodb.client.MongoCollection;
@@ -44,43 +45,60 @@ public abstract class MongoModule extends ActorsModule {
         Objects.requireNonNull(actors);
         insertActors = new InsertActors(collection,
                                         deploymentOptions,
-                                        actors);
+                                        actors
+        );
         findActors = new FindActors(collection,
                                     deploymentOptions,
-                                    actors);
+                                    actors
+        );
         findAndDeleteActors = new FindAndDeleteActors(collection,
                                                       deploymentOptions,
-                                                      actors);
+                                                      actors
+        );
         findAndUpdateActors = new FindAndUpdateActors(collection,
                                                       deploymentOptions,
-                                                      actors);
+                                                      actors
+        );
         findAndReplaceActors = new FindAndReplaceActors(collection,
                                                         deploymentOptions,
-                                                        actors);
+                                                        actors
+        );
         updateActors = new UpdateActors(collection,
                                         deploymentOptions,
-                                        actors);
+                                        actors
+        );
         deleteActors = new DeleteActors(collection,
                                         deploymentOptions,
-                                        actors);
+                                        actors
+        );
         replaceActors = new ReplaceActors(collection,
                                           deploymentOptions,
-                                          actors);
+                                          actors
+        );
         watcherActors = new WatcherActors(collection,
                                           deploymentOptions,
                                           actors
         );
         countActors = new CountActors(collection,
                                       deploymentOptions,
-                                      actors);
+                                      actors
+        );
         aggregateActors = new AggregateActors(collection,
                                               deploymentOptions,
-                                              actors);
+                                              actors
+        );
     }
 
     protected <O> Supplier<Future<O>> spawn(final Function<MongoCollection<JsObj>, O> fn) {
         return spawn(fn,
-                     deploymentOptions);
+                     deploymentOptions
+                    );
+    }
+
+    protected <O> Future<ActorRef<JsObj, O>> deploy(final Function<MongoCollection<JsObj>, O> fn) {
+        return deploy(fn,
+                      deploymentOptions
+                     );
     }
 
     protected <O> Supplier<Future<O>> spawn(final Function<MongoCollection<JsObj>, O> fn,
@@ -88,8 +106,18 @@ public abstract class MongoModule extends ActorsModule {
 
         Function<JsObj, O> actor = o -> fn.apply(collection.get());
         return () -> actors.spawn(actor,
-                                  deploymentOptions)
+                                  deploymentOptions
+                                 )
                            .get()
                            .apply(JsObj.empty());
+    }
+
+    protected <O> Future<ActorRef<JsObj, O>> deploy(final Function<MongoCollection<JsObj>, O> fn,
+                                                    final DeploymentOptions deploymentOptions) {
+
+        Function<JsObj, O> actor = o -> fn.apply(collection.get());
+        return actors.deploy(actor,
+                             deploymentOptions
+                            );
     }
 }

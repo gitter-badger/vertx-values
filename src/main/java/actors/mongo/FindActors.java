@@ -16,7 +16,6 @@ import java.util.function.Supplier;
 import static actors.mongo.Converters.objVal2Bson;
 import static java.util.Objects.requireNonNull;
 
-
 class FindActors {
 
     public final DeploymentOptions deploymentOptions;
@@ -106,11 +105,11 @@ class FindActors {
                                                                            .limit(message.limit)
                                                                            .skip(message.skip)
                                                                            .maxTime(message.maxTime,
-                                                                             TimeUnit.MILLISECONDS
+                                                                                    TimeUnit.MILLISECONDS
                                                                             )
                                                                            .maxAwaitTime(message.maxAwaitTime,
-                                                                                  TimeUnit.MILLISECONDS
-                                                                                 )
+                                                                                         TimeUnit.MILLISECONDS
+                                                                                        )
                                                                            .partial(message.partial)
                                                                            .showRecordId(message.showRecordId)
                                                                            .oplogReplay(message.oplogReplay)

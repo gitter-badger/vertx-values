@@ -2,7 +2,10 @@ package actors.mongo;
 
 import jsonvalues.JsObj;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
+import static java.util.Objects.requireNonNull;
 
 
 public class FindMessageBuilder {
@@ -13,17 +16,17 @@ public class FindMessageBuilder {
     private JsObj max;
     private JsObj min;
     private String hintString;
-    private Integer skip = 0;
-    private Integer limit = 0;
+    private int skip = 0;
+    private int limit = 0;
     private boolean showRecordId;
     private boolean returnKey;
     private String comment;
     private boolean noCursorTimeout;
     private boolean partial;
     private boolean oplogReplay;
-    private Integer batchSize = 100;
-    private Long maxAwaitTime = 0L;
-    private Long maxTime = 0L;
+    private int batchSize = 100;
+    private long maxAwaitTime = 0L;
+    private long maxTime = 0L;
 
     public FindMessageBuilder filter(final JsObj filter) {
         this.filter = filter;
@@ -60,12 +63,14 @@ public class FindMessageBuilder {
         return this;
     }
 
-    public FindMessageBuilder skip(final Integer skip) {
+    public FindMessageBuilder skip(final int skip) {
+        if(skip<0)throw new IllegalArgumentException("skip is < 0");
         this.skip = skip;
         return this;
     }
 
-    public FindMessageBuilder limit(final Integer limit) {
+    public FindMessageBuilder limit(final int limit) {
+        if(limit<0)throw new IllegalArgumentException("limit is < 0");
         this.limit = limit;
         return this;
     }
@@ -100,21 +105,23 @@ public class FindMessageBuilder {
         return this;
     }
 
-    public FindMessageBuilder batchSize(final Integer batchSize) {
+    public FindMessageBuilder batchSize(final int batchSize) {
+        if(batchSize<0)throw new IllegalArgumentException("batchSize is < 0");
         this.batchSize = batchSize;
         return this;
     }
 
     public FindMessageBuilder maxAwaitTime(final int maxAwaitTime,
                                            final TimeUnit unit) {
-        this.maxAwaitTime = unit.toMillis(maxAwaitTime);
+        if(maxAwaitTime<0)throw new IllegalArgumentException("maxAwaitTime is < 0");
+        this.maxAwaitTime = requireNonNull(unit).toMillis(maxAwaitTime);
         return this;
     }
 
     public FindMessageBuilder maxTime(final int maxTime,
                                       final TimeUnit unit) {
-        this.maxTime = unit.toMillis(maxTime);
-
+        if(maxTime<0)throw new IllegalArgumentException("maxTime is < 0");
+        this.maxTime = requireNonNull(unit).toMillis(maxTime);
         return this;
     }
 

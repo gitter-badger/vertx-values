@@ -9,9 +9,11 @@ import io.vertx.core.Future;
 import jsonvalues.JsArray;
 import jsonvalues.JsObj;
 import org.bson.conversions.Bson;
+
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
 import static java.util.Objects.requireNonNull;
 
 
@@ -30,15 +32,15 @@ class AggregateActors {
     }
 
     protected <O> Future<ActorRef<JsArray, O>> deployAggregate(final DeploymentOptions deploymentOptions,
-                    final Function<AggregateIterable<JsObj>, O> resultConverter) {
+                                                               final Function<AggregateIterable<JsObj>, O> resultConverter) {
         requireNonNull(resultConverter);
 
         Function<JsArray, O> fn = m ->
         {
-            List<Bson> pipeline = Converters.arrayVal2ListOfBsonVal.apply(m);
+            List<Bson>             pipeline   = Converters.arrayVal2ListOfBsonVal.apply(m);
             MongoCollection<JsObj> collection = requireNonNull(this.collection.get());
             return
-                   resultConverter.apply(collection.aggregate(pipeline));
+                    resultConverter.apply(collection.aggregate(pipeline));
         };
         return actors.deploy(fn,
                              deploymentOptions
@@ -51,24 +53,25 @@ class AggregateActors {
 
         Function<JsArray, O> fn = m ->
         {
-            List<Bson> pipeline = Converters.arrayVal2ListOfBsonVal.apply(m);
+            List<Bson>             pipeline   = Converters.arrayVal2ListOfBsonVal.apply(m);
             MongoCollection<JsObj> collection = requireNonNull(this.collection.get());
             return
                     resultConverter.apply(collection.aggregate(pipeline));
         };
         return actors.spawn(fn,
-                             deploymentOptions
-                            );
+                            deploymentOptions
+                           );
     }
+
     protected <O> Future<ActorRef<JsArray, O>> deployAggregate(final Function<AggregateIterable<JsObj>, O> resultConverter) {
         requireNonNull(resultConverter);
 
         Function<JsArray, O> fn = m ->
         {
-            List<Bson> pipeline = Converters.arrayVal2ListOfBsonVal.apply(m);
+            List<Bson>             pipeline   = Converters.arrayVal2ListOfBsonVal.apply(m);
             MongoCollection<JsObj> collection = requireNonNull(this.collection.get());
             return
-                   resultConverter.apply(collection.aggregate(pipeline));
+                    resultConverter.apply(collection.aggregate(pipeline));
         };
         return actors.deploy(fn,
                              deploymentOptions
@@ -81,17 +84,15 @@ class AggregateActors {
 
         Function<JsArray, O> fn = m ->
         {
-            List<Bson> pipeline = Converters.arrayVal2ListOfBsonVal.apply(m);
+            List<Bson>             pipeline   = Converters.arrayVal2ListOfBsonVal.apply(m);
             MongoCollection<JsObj> collection = requireNonNull(this.collection.get());
             return
                     resultConverter.apply(collection.aggregate(pipeline));
         };
         return actors.spawn(fn,
-                             deploymentOptions
-                            );
+                            deploymentOptions
+                           );
     }
-
-
 
 
 }
