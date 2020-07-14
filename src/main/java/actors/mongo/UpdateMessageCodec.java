@@ -1,6 +1,5 @@
-package actors.codecs.vertx;
+package actors.mongo;
 
-import actors.mongo.UpdateMessage;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.MessageCodec;
 import jsonvalues.JsObj;

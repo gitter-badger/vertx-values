@@ -2,7 +2,6 @@ package actors.mongo;
 
 import actors.codecs.mongo.JsValuesRegistry;
 import actors.codecs.vertx.RegisterJsValuesCodecs;
-import actors.codecs.vertx.RegisterMongoCodecs;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoCollection;
@@ -98,9 +97,8 @@ public class TestMongoOps {
         System.out.println(obj.toString());
         dataModule.insertOne.apply(obj)
                             .compose(id -> dataModule.findOne
-                                    .apply(JsObj.of("_id",JsObj.of("$oid",
-                                                    JsStr.of(id)
-                                                   ))
+                                    .apply(new FindMessageBuilder().filter(Converters.toOid.apply(id))
+                                                                   .create()
                                           )
                                     )
                             .setHandler(findRes -> {

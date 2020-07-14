@@ -3,6 +3,7 @@ package actors.mongo;
 import actors.ActorRef;
 import actors.Actors;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.CountOptions;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
 import jsonvalues.JsObj;
@@ -28,22 +29,21 @@ class CountActors {
     }
 
 
-
-    protected  Future<ActorRef<JsObj, Long>> deployCount(final CountInputs inputs) {
+    protected  Future<ActorRef<JsObj, Long>> deployCount(final CountOptions inputs,
+                                                         final DeploymentOptions deploymentOptions) {
         requireNonNull(inputs);
 
         Function<JsObj, Long> fn = queryMessage ->
         {
             Bson                   query      = Converters.objVal2Bson.apply(queryMessage);
             MongoCollection<JsObj> collection = requireNonNull(this.collection.get());
-            return inputs.clientSession == null ?
-                   collection.countDocuments() :
-                   collection.countDocuments(inputs.clientSession,
-                                                         query
+            return
+                   collection.countDocuments(query,
+                                             inputs
                                         );
         };
         return actors.deploy(fn,
-                             inputs.deploymentOptions
+                             deploymentOptions
                             );
     }
 
@@ -59,60 +59,34 @@ class CountActors {
                             );
     }
 
-    protected  Supplier<Future<Long>> spawnCount(final Bson query,
-                                                final CountInputs inputs) {
+    protected Supplier<Function<JsObj, Future<Long>>> spawnCount(final CountOptions inputs,
+                                                                 final DeploymentOptions deploymentOptions) {
         requireNonNull(inputs);
-        requireNonNull(query);
-        Function<JsObj, Long> fn = m ->
+
+        Function<JsObj, Long> fn = queryMessage ->
         {
+            Bson                   query      = Converters.objVal2Bson.apply(queryMessage);
             MongoCollection<JsObj> collection = requireNonNull(this.collection.get());
-            return inputs.clientSession == null ?
-                   collection.countDocuments(query) :
-                   collection.countDocuments(inputs.clientSession,
-                                   query
-                                        );
-        };
-        Supplier<Function<JsObj, Future<Long>>> spawn = actors.spawn(fn,
-                                                                  inputs.deploymentOptions
-                                                                 );
-        return () -> spawn.get()
-                          .apply(JsObj.empty());
-
-    }
-
-    protected  Supplier<Future<Long>> spawnCount(final Bson query) {
-        requireNonNull(query);
-        Function<JsObj, Long> fn = m -> requireNonNull(collection.get()).countDocuments(query);
-        Supplier<Function<JsObj, Future<Long>>> spawn = actors.spawn(fn,
-                                                                  deploymentOptions
-                                                                 );
-        return () -> spawn.get()
-                          .apply(JsObj.empty());
-    }
-
-    protected Supplier<Function<JsObj, Future<Long>>> spawnCount(final CountInputs inputs) {
-        requireNonNull(inputs);
-        Function<JsObj, Long> fn = m ->
-        {
-            MongoCollection<JsObj> collection = requireNonNull(this.collection.get());
-            return inputs.clientSession == null ?
-                   collection.countDocuments(Converters.objVal2Bson.apply(m)) :
-                   collection.countDocuments(inputs.clientSession,
-                                             Converters.objVal2Bson.apply(m)
-                                        );
+            return
+                    collection.countDocuments(query,
+                                              inputs
+                                             );
         };
         return actors.spawn(fn,
-                            inputs.deploymentOptions
-                           );
-
+                             deploymentOptions
+                            );
     }
 
-    protected  Supplier<Function<JsObj, Future<Long>>> spawnCount() {
-        Function<JsObj, Long> fn = m -> requireNonNull(collection.get()).countDocuments(Converters.objVal2Bson.apply(m));
-        return actors.spawn(fn,
-                            deploymentOptions
-                           );
 
+    protected Supplier<Function<JsObj, Future<Long>>> spawnCount() {
+        Function<JsObj, Long> fn = query -> {
+            Bson                bson = Converters.objVal2Bson.apply(query);
+            return requireNonNull(collection.get()).countDocuments(bson);
+
+        };
+        return actors.spawn(fn,
+                             deploymentOptions
+                            );
     }
 
 }

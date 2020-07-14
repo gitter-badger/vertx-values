@@ -1,6 +1,7 @@
-package actors.codecs.vertx;
+package actors.mongo;
 
 import actors.mongo.UpdateMessage;
+import actors.mongo.UpdateMessageCodec;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 
@@ -12,6 +13,10 @@ public class RegisterMongoCodecs extends AbstractVerticle {
             vertx.eventBus()
                  .registerDefaultCodec(UpdateMessage.class,
                                        UpdateMessageCodec.INSTANCE
+                                      );
+            vertx.eventBus()
+                 .registerDefaultCodec(FindMessage.class,
+                                       FindMessageCodec.INSTANCE
                                       );
             startPromise.complete();
         } catch (Exception e) {

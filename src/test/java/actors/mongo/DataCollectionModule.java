@@ -2,7 +2,6 @@ package actors.mongo;
 
 import actors.ActorRef;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.result.InsertOneResult;
 import io.vertx.core.Future;
 import jsonvalues.JsObj;
 
@@ -18,7 +17,7 @@ public class DataCollectionModule extends MongoModule{
 
 
     Function<JsObj,Future<String>> insertOne;
-    Function<JsObj,Future<Optional<JsObj>>> findOne;
+    Function<FindMessage,Future<Optional<JsObj>>> findOne;
 
     public DataCollectionModule(final Supplier<MongoCollection<JsObj>> collection) {
         super(collection);
@@ -27,7 +26,7 @@ public class DataCollectionModule extends MongoModule{
     @Override
     protected void defineActors(final List<Object> futures) {
        insertOne =  ((ActorRef<JsObj, String>) futures.get(0)).ask();
-       findOne = ((ActorRef<JsObj,JsObj>) futures.get(1)).ask().andThen(fut->fut.map(Optional::ofNullable));
+       findOne = ((ActorRef<FindMessage,JsObj>) futures.get(1)).ask().andThen(fut->fut.map(Optional::ofNullable));
     }
 
 
@@ -36,6 +35,7 @@ public class DataCollectionModule extends MongoModule{
     protected List<Future> deployActors()
     {
         return Arrays.asList(insertActors.deployInsertOne(insertOneResult2HexId),
-                             findActors.deployFind(Converters.getFirst));
+
+                             findActors.deployFindOne());
     }
 }

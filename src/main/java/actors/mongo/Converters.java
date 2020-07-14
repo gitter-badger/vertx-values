@@ -91,5 +91,6 @@ class Converters {
 
     public static Function<FindIterable<JsObj>, JsArray> getArray = JsArray::ofIterable;
 
-
+    public static Function<String,JsObj> toOid = id -> JsObj.of("_id",JsObj.of("$oid",
+                                                                               JsStr.of(id)));
 }

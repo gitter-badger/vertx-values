@@ -42,7 +42,6 @@ public class JsValuesRegistry {
     map.put(BsonType.BINARY,JsBinary.class);
     map.put(BsonType.BOOLEAN, JsBool.class);
     map.put(BsonType.DATE_TIME,JsInstant.class);
-
 /*
     map.put(BsonType.DB_POINTER, BsonDbPointer.class);
 */
@@ -51,12 +50,7 @@ public class JsValuesRegistry {
     map.put(BsonType.INT32, JsInt.class);
     map.put(BsonType.INT64, JsLong.class);
     map.put(BsonType.DECIMAL128, JsBigDec.class);
-
-
     map.put(BsonType.STRING, JsStr.class);
-
-    // todo poner en doc que lo usa mongo internate, usar mongo date
-    //map.put(BsonType.TIMESTAMP, BsonTimestamp.class);
 
     return map;
   }
