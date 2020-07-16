@@ -1,4 +1,4 @@
-package actors.codecs.vertx;
+package actors.codecs;
 
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.MessageCodec;

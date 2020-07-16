@@ -1,5 +1,5 @@
 package actors;
-import actors.codecs.vertx.RegisterJsValuesCodecs;
+import actors.codecs.RegisterJsValuesCodecs;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;

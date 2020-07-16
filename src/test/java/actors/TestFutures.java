@@ -1,7 +1,8 @@
 package actors;
 
-import actors.future.JsArrayFuture;
-import actors.future.JsObjFuture;
+import actors.expresions.JsArrayExp;
+import actors.expresions.JsObjExp;
+import actors.expresions.Val;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.junit5.VertxExtension;
@@ -42,19 +43,19 @@ public class TestFutures extends ActorsModule{
   public void testJsObjFuture(final Vertx vertx,
                               final VertxTestContext context){
 
-    JsObjFuture future = JsObjFuture.of("a",
-                                    () -> multiplyBy10.apply(10)
-                                                      .map(JsInt::of),
-                                    "b",
-                                    () -> add10.apply(5)
-                                               .map(JsInt::of),
-                                    "c",
-                                    () -> toUpper.apply("abc")
-                                                 .map(JsStr::of),
-                                    "d",
-                                        JsArrayFuture.tuple(()->multiplyBy10.apply(1).map(JsInt::of),
-                                                            ()->multiplyBy10.apply(5).map(JsInt::of))
-                                   );
+    JsObjExp future = JsObjExp.of("a",
+                                  Val.of(() -> multiplyBy10.apply(10)
+                                                        .map(JsInt::of)),
+                                  "b",
+                                  Val.of(() -> add10.apply(5)
+                                               .map(JsInt::of)),
+                                  "c",
+                                  Val.of(() -> toUpper.apply("abc")
+                                                 .map(JsStr::of)),
+                                  "d",
+                                  JsArrayExp.tuple(Val.of(()->multiplyBy10.apply(1).map(JsInt::of)),
+                                                   Val.of(()->multiplyBy10.apply(5).map(JsInt::of)))
+                                 );
 
     future.get().onSuccess(o-> {
       if(o.equals(JsObj.of("a", JsInt.of(100),

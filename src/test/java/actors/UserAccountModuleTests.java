@@ -1,6 +1,6 @@
 package actors;
 
-import actors.codecs.vertx.RegisterJsValuesCodecs;
+import actors.codecs.RegisterJsValuesCodecs;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Vertx;
 import io.vertx.junit5.VertxExtension;
@@ -72,8 +72,7 @@ public class UserAccountModuleTests
                       "address",JsObj.of("city",JsStr.of("Madrid")),
                       "id",JsStr.of("03886961F")
                      )
-            )
-      .get()
+            ).get()
       .onComplete(it -> context.verify(()->
                                        {
                                          Assertions.assertTrue(it.succeeded());

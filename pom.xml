@@ -6,7 +6,7 @@
   <groupId>com.github.imrafaelmerino</groupId>
   <artifactId>vertx-actors</artifactId>
   <packaging>jar</packaging>
-  <version>0.1</version>
+  <version>0.2</version>
   <name>vertx-actors</name>
   <description>vertx-actors is a lightweight library to work with Vertx following a functional style and the Earlang philosophy based on actors. </description>
   <url>https://github.com/imrafaelmerino/vertx-actors</url>
@@ -41,7 +41,6 @@
     <MAVEN-COMPILER-PLUGIN.TARGET>8</MAVEN-COMPILER-PLUGIN.TARGET>
     <VERTX-VERSION>4.0.0-milestone4</VERTX-VERSION>
     <JSON-VALUES.VERSION>8.1.2</JSON-VALUES.VERSION>
-    <MONGO-JAVA-DRIVER.VERSION>4.0.5</MONGO-JAVA-DRIVER.VERSION>
   </properties>
 
   <build>
@@ -80,16 +79,6 @@
   </build>
 
   <dependencies>
-    <!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
-    <!-- https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync -->
-    <dependency>
-      <groupId>org.mongodb</groupId>
-      <artifactId>mongodb-driver-sync</artifactId>
-      <version>4.0.5</version>
-    </dependency>
-
-
-
     <dependency>
       <groupId>com.github.imrafaelmerino</groupId>
       <artifactId>json-values</artifactId>
@@ -107,7 +96,6 @@
       <version>${VERTX-VERSION}</version>
       <scope>test</scope>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>

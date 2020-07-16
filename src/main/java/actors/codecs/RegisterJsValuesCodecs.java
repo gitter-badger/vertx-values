@@ -1,23 +1,25 @@
-package actors.mongo;
+package actors.codecs;
 
-import actors.mongo.UpdateMessage;
-import actors.mongo.UpdateMessageCodec;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
+import jsonvalues.JsArray;
+import jsonvalues.JsObj;
 
-public class RegisterMongoCodecs extends AbstractVerticle {
+public class RegisterJsValuesCodecs extends AbstractVerticle {
 
     @Override
     public void start(final Promise<Void> startPromise)  {
         try {
             vertx.eventBus()
-                 .registerDefaultCodec(UpdateMessage.class,
-                                       UpdateMessageCodec.INSTANCE
+                 .registerDefaultCodec(JsObj.class,
+                                       JsObjMessageCodec.INSTANCE
                                       );
+
             vertx.eventBus()
-                 .registerDefaultCodec(FindMessage.class,
-                                       FindMessageCodec.INSTANCE
+                 .registerDefaultCodec(JsArray.class,
+                                       JsArrayMessageCodec.INSTANCE
                                       );
+
             startPromise.complete();
         } catch (Exception e) {
            startPromise.fail(e);
