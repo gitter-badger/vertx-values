@@ -1,4 +1,4 @@
-package actors.expresions;
+package actors.exp;
 
 import io.vavr.collection.List;
 import io.vertx.core.Future;
@@ -7,6 +7,7 @@ import jsonvalues.JsValue;
 
 import java.util.Arrays;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static java.util.Objects.requireNonNull;
 
@@ -17,24 +18,29 @@ import static java.util.Objects.requireNonNull;
  executed asynchronously. When all the futures are completed, all the results are combined into
  a json array.
  {@code
- JsArrayFuture.of(() -> Future.succeededFuture(1),
+ JsArrayFuture.of(
+ () -> Future.succeededFuture(1),
  () -> Future.succeededFuture("a"),
  () -> Future.succeededFuture(true)
- ) = Future(JsArray(1,"a",true))
+ ) = Future(JsArray(1,"a",true)
+ )
  }
  */
 
-public class JsArrayExp implements Exp<JsArray> {
-    private List<Exp<? extends JsValue>> array = List.empty();
+public class JsArrayExp extends AbstractExp<JsArray> {
+    private List<Exp<? extends JsValue>> seq = List.empty();
 
-    private JsArrayExp() {
+    private JsArrayExp(List<Exp<? extends JsValue>> seq) {
+        this.seq = seq;
     }
+
+    private JsArrayExp(){}
 
     private JsArrayExp(final Exp<? extends JsValue> fut,
                        final Exp<? extends JsValue>... others
                       ) {
-        array = array.append(fut)
-                     .appendAll(Arrays.asList(others));
+        seq = seq.append(fut)
+                 .appendAll(Arrays.asList(others));
     }
 
 
@@ -53,32 +59,58 @@ public class JsArrayExp implements Exp<JsArray> {
         );
     }
 
+
     /**
      it triggers the execution of all the completable futures, combining the results into a JsArray
 
      @return a CompletableFuture of a json array
      */
     @Override
-    public Future<JsArray> get() {
-        Future<JsArray> result = Future.succeededFuture(JsArray.empty());
+    public Future<jsonvalues.JsArray> get() {
+        Future<jsonvalues.JsArray> result = Future.succeededFuture(jsonvalues.JsArray.empty());
 
-        for (final Exp<? extends JsValue> future : array) {
+        for (final Exp<? extends JsValue> future : seq) {
             result = result.flatMap(arr -> future.get()
                                                  .map(v -> arr.append(v)));
         }
-
         return result;
     }
 
     public JsArrayExp append(final Exp<? extends JsValue> future) {
 
         final JsArrayExp arrayFuture = new JsArrayExp();
-        arrayFuture.array = arrayFuture.array.append(future);
+        arrayFuture.seq = arrayFuture.seq.append(future);
         return arrayFuture;
     }
 
     @Override
-    public <P> Exp<P> map(final Function<JsArray, P> fn) {
+    public <P> Exp<P> map(final Function<jsonvalues.JsArray, P> fn) {
         return Val.of(() -> get().map(fn));
     }
+
+    @Override
+    public jsonvalues.JsArray result() {
+        jsonvalues.JsArray result = jsonvalues.JsArray.empty();
+
+        for (final Exp<? extends JsValue> future : seq) {
+            result = result.append(future.get()
+                                         .result());
+        }
+
+        return result;
+    }
+
+    @Override
+    public Exp<JsArray> retry(final int attempts) {
+        return new JsArrayExp(seq.map(it->it.retry(attempts)));
+    }
+
+    @Override
+    public Exp<JsArray> retryIf(final Predicate<Throwable> predicate,
+                                final int attempts) {
+        return new JsArrayExp(seq.map(it->it.retryIf(predicate,attempts)));
+
+    }
+
+
 }

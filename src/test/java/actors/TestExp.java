@@ -1,12 +1,11 @@
 package actors;
 
-import actors.expresions.Exp;
-import actors.expresions.IfElse;
-import actors.expresions.JsObjExp;
+import actors.exp.Exp;
+import actors.exp.IfElse;
+import actors.exp.JsObjExp;
 import io.vertx.core.Future;
 import jsonvalues.JsBool;
 import jsonvalues.JsInt;
-import jsonvalues.JsObj;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -30,27 +29,30 @@ public class TestExp {
                                                         .alternative(c);
 
 
-        JsObj result = JsObjExp.of("a",
-                                   a.map(JsBool::of),
-                                   "b",
-                                   b.map(JsInt::of),
-                                   "c",
-                                   c.map(JsInt::of),
-                                   "d",
-                                   d.map(JsInt::of)
-                                  )
+        JsObjExp of = JsObjExp.of("a",
+                                  a.map(JsBool::of),
+                                  "b",
+                                  b.map(JsInt::of),
+                                  "c",
+                                  c.map(JsInt::of),
+                                  "d",
+                                  d.map(JsInt::of)
+                                 );
+
+
+        jsonvalues.JsObj result = of
                                .get()
                                .result();
-        System.out.println(result);
-        Assertions.assertEquals(JsObj.of("a",
-                                         JsBool.FALSE,
-                                         "b",
-                                         JsInt.of(1),
-                                         "c",
-                                         JsInt.of(89),
-                                         "d",
-                                         JsInt.of(89)
-                                        ),
+
+        Assertions.assertEquals(jsonvalues.JsObj.of("a",
+                                                    JsBool.FALSE,
+                                                    "b",
+                                                    JsInt.of(1),
+                                                    "c",
+                                                    JsInt.of(89),
+                                                    "d",
+                                                    JsInt.of(89)
+                                                   ),
                                 result
                                );
     }

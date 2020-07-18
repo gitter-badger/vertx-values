@@ -1,15 +1,14 @@
 package actors;
 
-import actors.expresions.JsArrayExp;
-import actors.expresions.JsObjExp;
-import actors.expresions.Val;
+import actors.exp.JsArrayExp;
+import actors.exp.JsObjExp;
+import actors.exp.Val;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 import jsonvalues.JsArray;
 import jsonvalues.JsInt;
-import jsonvalues.JsObj;
 import jsonvalues.JsStr;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -18,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 @ExtendWith(VertxExtension.class)
 public class TestFutures extends ActorsModule{
@@ -53,16 +53,19 @@ public class TestFutures extends ActorsModule{
                                   Val.of(() -> toUpper.apply("abc")
                                                  .map(JsStr::of)),
                                   "d",
-                                  JsArrayExp.tuple(Val.of(()->multiplyBy10.apply(1).map(JsInt::of)),
-                                                   Val.of(()->multiplyBy10.apply(5).map(JsInt::of)))
+                                  JsArrayExp.tuple(Val.of(() -> multiplyBy10.apply(1)
+                                                                     .map(JsInt::of)),
+                                                          Val.of(() -> multiplyBy10.apply(5)
+                                                                     .map(JsInt::of))
+                                                  )
                                  );
 
     future.get().onSuccess(o-> {
-      if(o.equals(JsObj.of("a", JsInt.of(100),
-                           "b", JsInt.of(15),
-                           "c", JsStr.of("ABC"),
-                           "d", JsArray.of(10,50)
-                 ))
+      if(o.equals(jsonvalues.JsObj.of("a", JsInt.of(100),
+                                      "b", JsInt.of(15),
+                                      "c", JsStr.of("ABC"),
+                                      "d", jsonvalues.JsArray.of(10, 50)
+                                     ))
       ) context.completeNow();
 
     });

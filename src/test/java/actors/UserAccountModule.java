@@ -1,9 +1,8 @@
 package actors;
 
 import actors.errors.InvalidUser;
-import actors.expresions.IfElse;
-import actors.expresions.Predicates;
-import actors.expresions.Val;
+import actors.exp.And;
+import actors.exp.IfElse;
 import io.vertx.core.Future;
 import jsonvalues.JsObj;
 
@@ -21,11 +20,11 @@ public class UserAccountModule extends ActorsModule
   public static Function<String,Future<Boolean>> isValidEmail;
   public static Function<JsObj,Future<JsObj>> register;
 
-  public static Function<JsObj, Supplier<Future<Boolean>>> isValid = obj -> Predicates.and(Val.of(() -> isLegalAge.apply(obj.getInt("age"))),
-                                                                                 Val.of(() -> isValidId.apply(obj.getStr("id"))),
-                                                                                 Val.of(() -> isValidAddress.apply(obj.getObj("address"))),
-                                                                                 Val.of(() -> isValidEmail.apply(obj.getStr("email")))
-                                                                                );
+  public static Function<JsObj, Supplier<Future<Boolean>>> isValid = obj -> And.of(() -> isLegalAge.apply(obj.getInt("age")),
+                                                                                   () -> isValidId.apply(obj.getStr("id")),
+                                                                                  () -> isValidAddress.apply(obj.getObj("address")),
+                                                                                 () -> isValidEmail.apply(obj.getStr("email"))
+                                                                                  );
 
   public static Function<JsObj,Future<JsObj>> registerIfValid = obj ->
     IfElse.<JsObj>predicate(isValid.apply(obj))
