@@ -5,6 +5,8 @@ import io.vertx.core.Promise;
 import jsonvalues.JsArray;
 import jsonvalues.JsObj;
 
+import java.util.Arrays;
+
 public class RegisterJsValuesCodecs extends AbstractVerticle {
 
     @Override
@@ -22,7 +24,7 @@ public class RegisterJsValuesCodecs extends AbstractVerticle {
 
             startPromise.complete();
         } catch (Exception e) {
-           startPromise.fail(e);
+           startPromise.fail(e.toString()+" @ "+ Arrays.toString(e.getStackTrace()));
         }
 
 

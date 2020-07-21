@@ -6,6 +6,7 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.eventbus.ReplyFailure;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 import static io.vertx.core.eventbus.ReplyFailure.RECIPIENT_FAILURE;
@@ -58,7 +59,7 @@ public class Actor<I> extends AbstractVerticle
                                          catch (Exception e)
                                          {
                                            m.fail(RECIPIENT_FAILURE.toInt(),
-                                                  e.toString()+" @ "+e.getStackTrace()[0]
+                                                  e.toString()+" @ "+ Arrays.toString(e.getStackTrace())
                                                  );
                                          }
                                        }
