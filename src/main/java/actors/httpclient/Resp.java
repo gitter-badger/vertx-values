@@ -47,6 +47,11 @@ final public class Resp {
             fn -> resp -> resp.set(BODY_FIELD,
                                fn.apply(resp.getBinary(BODY_FIELD)));
 
+    public static final Function<JsObj,JsObj> mapBody2Str =
+           mapBody.apply(bytes -> JsStr.of(new String(bytes)));
+
+    public static final Function<JsObj,JsObj> mapBody2Json =
+            mapBody.apply(bytes -> JsObj.parse(new String(bytes)));
 
      static BiFunction<Buffer,HttpClientResponse,JsObj> toJsObj  =
              (buffer,httpResp) -> CODE_LENS.set.apply(httpResp.statusCode())

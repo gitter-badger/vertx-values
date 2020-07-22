@@ -77,8 +77,8 @@ public abstract class Req {
                                           .forEach(key -> it.getArray(key)
                                                             .forEach(value -> options.addHeader(key,
                                                                                                 value.toJsStr().value
-                                                                                               ))));
-
+                                                                                               )))
+                                 );
                 Optional<Long> timeout = TIMEOUT_OPT.get.apply(body);
                 timeout.ifPresent(options::setTimeout);
 

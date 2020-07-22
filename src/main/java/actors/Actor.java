@@ -7,6 +7,7 @@ import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.eventbus.ReplyFailure;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import static io.vertx.core.eventbus.ReplyFailure.RECIPIENT_FAILURE;
@@ -31,8 +32,8 @@ public class Actor<I> extends AbstractVerticle
                final String address
               )
   {
-    this.consumer = consumer;
-    this.address = address;
+    this.consumer = Objects.requireNonNull(consumer);
+    this.address = Objects.requireNonNull(address);
   }
 
   /**
@@ -56,8 +57,9 @@ public class Actor<I> extends AbstractVerticle
                                          {
                                            this.consumer.accept((Message<I>) m);
                                          }
-                                         catch (Exception e)
+                                         catch (Throwable e)
                                          {
+                                           //todo @ sobra si no hay stacktrace
                                            m.fail(RECIPIENT_FAILURE.toInt(),
                                                   e.toString()+" @ "+ Arrays.toString(e.getStackTrace())
                                                  );

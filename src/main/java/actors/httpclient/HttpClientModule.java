@@ -3,6 +3,7 @@ package actors.httpclient;
 
 import actors.ActorRef;
 import actors.ActorsModule;
+import actors.Handlers;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -47,7 +48,7 @@ public abstract class HttpClientModule extends ActorsModule {
 
     private static Consumer<Message<JsObj>> consumer(final HttpClient client) {
         return message -> {
-            JsObj body = message.body();
+            JsObj          body    = message.body();
             Integer        type    = Req.TYPE_LENS.get.apply(body);
             RequestOptions options = Req.toReqOptions.apply(body);
             switch (type) {
@@ -112,18 +113,33 @@ public abstract class HttpClientModule extends ActorsModule {
                 HttpClientResponse resp = r.result();
                 resp.body()
                     .onComplete(
-                            it -> {
-                                if (it.succeeded()) {
-                                    JsObj apply = Resp.toJsObj.apply(it.result(),resp);
-                                    m.reply(apply);
-                                }
-                                else m.reply(EXCEPTION_READING_BODY_RESPONSE.apply(it.cause()));
-                            }
+                            Handlers.pipeTo(m,
+                                            buffer -> Resp.toJsObj.apply(buffer,
+                                                                         resp
+                                                                        ),
+                                            cause -> EXCEPTION_RESPONSE.apply(cause)
+                                           )
+
                                );
 
             }
-            else m.reply(EXCEPTION_RESPONSE.apply(r.cause()));
+            else {
+                m.reply(EXCEPTION_RESPONSE.apply(r.cause()));
+            }
 
+        };
+    }
+
+    private static Handler<AsyncResult<Buffer>> getAsyncResultHandler(final Message<JsObj> m,
+                                                                      final HttpClientResponse resp) {
+        return it -> {
+            if (it.succeeded()) {
+                JsObj apply = Resp.toJsObj.apply(it.result(),
+                                                 resp
+                                                );
+                m.reply(apply);
+            }
+            else m.reply(EXCEPTION_READING_BODY_RESPONSE.apply(it.cause()));
         };
     }
 
