@@ -1,6 +1,7 @@
 package actors.httpclient;
 
 import actors.Actors;
+import actors.TestFns;
 import actors.codecs.RegisterJsValuesCodecs;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
@@ -36,13 +37,7 @@ public class HttpExampleModuleTest {
                               actors.deploy(httpModule)
                              )
                            )
-                       .onComplete(it -> {
-                                       if (it.succeeded()) testContext.completeNow();
-                                       else {
-                                           testContext.failNow(it.cause());
-                                       }
-                                   }
-                                  );
+                       .onComplete(TestFns.pipeTo(testContext));
 
     }
 
@@ -51,19 +46,16 @@ public class HttpExampleModuleTest {
         Future<JsObj> search1 = httpModule.search.apply("vertx");
         Future<JsObj> search2 = httpModule.search.apply("reactive");
 
-        CompositeFuture.all(search1,search2).onComplete(it -> {
+        CompositeFuture.all(search1,
+                            search2)
+                       .onComplete(
+                               TestFns.pipeTo(list -> System.out.println(list.stream()
+                                                                               .map(o -> ((JsObj) o).getInt("code"))
+                                                                               .collect(Collectors.toList())
+                                                                        ),
+                                              context
+                                             )
+                                  );
 
-            if (it.succeeded()) {
-                System.out.println(it.result()
-                                     .list()
-                                     .stream()
-                                     .map(o -> ((JsObj) o).getInt("code"))
-                                     .collect(Collectors.toList()));
-                context.completeNow();
-            }
-            else
-                context.failNow(it.cause());
-
-        });
     }
 }

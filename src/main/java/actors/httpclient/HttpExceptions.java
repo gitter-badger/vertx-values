@@ -11,6 +11,9 @@ public class HttpExceptions  {
     public static final int ERROR_HTTP_METHOD_CODE_NOT_IMPLEMENTED = 10000;
     public static final int EXCEPTION_READING_BODY_RESPONSE_CODE = 10001;
     public static final int EXCEPTION_RESPONSE_UNKNOWN = 10002;
+    /**
+     Error that happens when the domain can't be resolved: wrong name or there is no internet connection.
+     */
     public static final int EXCEPTION_UNKNOWN_HOST = 10003;
     public static final int EXCEPTION_CONNECT_TIMEOUT = 10004;
     public static final int EXCEPTION_REQUEST_TIMEOUT = 10005;

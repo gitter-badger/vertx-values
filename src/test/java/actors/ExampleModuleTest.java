@@ -28,10 +28,7 @@ public class ExampleModuleTest
                             )
   {
     actors = new Actors(vertx);
-    vertx.deployVerticle(new RegisterJsValuesCodecs()).onComplete(it->{
-            if(it.failed())testContext.failNow(it.cause());
-            else testContext.completeNow();
-                                                                  });
+    vertx.deployVerticle(new RegisterJsValuesCodecs()).onComplete(TestFns.pipeTo(testContext));
 
   }
 
@@ -70,7 +67,6 @@ public class ExampleModuleTest
 
     addOne.onComplete(h ->
                       {
-
                         final ActorRef<Integer, Integer> vref = h.result();
                         final Future<Integer> fut = vref
                           .ask()

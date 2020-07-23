@@ -7,7 +7,6 @@ import io.vertx.core.http.HttpClientOptions;
 import jsonvalues.JsObj;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class HttpExampleModule extends HttpClientModule {
 
@@ -24,12 +23,9 @@ public class HttpExampleModule extends HttpClientModule {
                                                   .uri("/search?q=" + term));
         Consumer<Message<String>> consumer =
                 message -> search.apply(message.body())
-                                 .onComplete(Handlers.pipeTo(message,Resp.mapBody2Str));
-       //TODO que el spaw retorne una functión no? porque un supplier de una function...
-        this.search = term -> {
-            Supplier<Function<String, Future<JsObj>>> spawn = actors.spawn(consumer);
-            return spawn.get().apply(term);
-        };
+                                 .onComplete(Handlers.pipeTo(message));
+        this.search = actors.spawn(consumer);
+
     }
 
 

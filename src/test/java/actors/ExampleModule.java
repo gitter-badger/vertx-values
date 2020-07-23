@@ -20,7 +20,7 @@ public class ExampleModule extends ActorsModule
   }
 
   public static Function<Integer, Future<Integer>> triple;
-  public static Supplier<Function<Integer,Future<Integer>>> quadruple;
+  public static Function<Integer,Future<Integer>> quadruple;
   public static Function<Integer,Future<Integer>> addOne;
   public static Consumer<Integer> printNumber;
 

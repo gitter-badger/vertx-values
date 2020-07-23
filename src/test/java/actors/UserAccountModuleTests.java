@@ -26,7 +26,7 @@ public class UserAccountModuleTests
 
       CompositeFuture.all(vertx.deployVerticle(new UserAccountModule()),
                           vertx.deployVerticle(new RegisterJsValuesCodecs()))
-                     .onSuccess(it-> testContext.completeNow());
+                     .onComplete(TestFns.pipeTo(testContext));
 
 
   }

@@ -6,7 +6,7 @@
   <groupId>com.github.imrafaelmerino</groupId>
   <artifactId>vertx-actors</artifactId>
   <packaging>jar</packaging>
-  <version>0.2</version>
+  <version>0.3</version>
   <name>vertx-actors</name>
   <description>vertx-actors is a lightweight library to work with Vertx following a functional style and the Earlang philosophy based on actors. </description>
   <url>https://github.com/imrafaelmerino/vertx-actors</url>

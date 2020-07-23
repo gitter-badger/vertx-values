@@ -1,0 +1,31 @@
+package actors;
+
+import io.vertx.core.AsyncResult;
+import io.vertx.core.CompositeFuture;
+import io.vertx.core.Handler;
+import io.vertx.junit5.VertxTestContext;
+
+import java.util.List;
+import java.util.function.Consumer;
+
+public class TestFns {
+    public static <T> Handler<AsyncResult<T>> pipeTo(final VertxTestContext testContext) {
+        return it -> {
+            if (it.succeeded()) testContext.completeNow();
+            else testContext.failNow(it.cause());
+        };
+    }
+
+
+    public static Handler<AsyncResult<CompositeFuture>> pipeTo(final Consumer<List<?>> consumer,
+                                                               final VertxTestContext testContext) {
+        return it -> {
+            if (it.succeeded()) {
+                consumer.accept(it.result()
+                                  .list());
+                testContext.completeNow();
+            }
+            else testContext.failNow(it.cause());
+        };
+    }
+}

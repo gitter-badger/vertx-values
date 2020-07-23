@@ -26,7 +26,7 @@ final public class Resp {
     public static final Option<JsObj, String> MESSAGE_OPT = JsObj.optional.str(MESSAGE_FIELD);
     public static final Lens<JsObj, JsArray> COOKIES_LENS = JsObj.lens.array(COOKIES_FIELD);
     public static final Lens<JsObj, JsObj> HEADERS_OPT = JsObj.lens.obj(HEADERS_FIELD);
-    public static final Lens<JsObj, byte[]> BODY_LENS = JsObj.lens.binary(BODY_FIELD);
+    public static final Lens<JsObj, String> BODY_LENS = JsObj.lens.str(BODY_FIELD);
 
 
     public static final JsObjSpec spec = JsObjSpec.strict(CODE_FIELD,
@@ -38,53 +38,60 @@ final public class Resp {
                                                           HEADERS_FIELD,
                                                           obj,
                                                           BODY_FIELD,
-                                                          binary.optional()
+                                                          str.optional()
                                                          );
 
 
-
-    public static final Function<Function<byte[],JsValue>,Function<JsObj,JsObj>> mapBody =
+    public static final Function<Function<String, JsValue>, Function<JsObj, JsObj>> mapBody =
             fn -> resp -> resp.set(BODY_FIELD,
-                               fn.apply(resp.getBinary(BODY_FIELD)));
+                                   fn.apply(resp.getStr(BODY_FIELD))
+                                  );
 
-    public static final Function<JsObj,JsObj> mapBody2Str =
-           mapBody.apply(bytes -> JsStr.of(new String(bytes)));
 
-    public static final Function<JsObj,JsObj> mapBody2Json =
+
+    public static final Function<JsObj, JsObj> mapBody2Json =
             mapBody.apply(bytes -> JsObj.parse(new String(bytes)));
 
-     static BiFunction<Buffer,HttpClientResponse,JsObj> toJsObj  =
-             (buffer,httpResp) -> CODE_LENS.set.apply(httpResp.statusCode())
-                                           .andThen(MESSAGE_OPT.set.apply(httpResp.statusMessage()))
-                                           .andThen(COOKIES_LENS.set.apply(cookies2JsArray(httpResp.cookies())))
-                                           .andThen(HEADERS_OPT.set.apply(headers2JsObj(httpResp.headers())))
-                                           .andThen(BODY_LENS.set.apply(buffer.getBytes()))
-                                           .apply(JsObj.empty());
+    static BiFunction<Buffer, HttpClientResponse, JsObj> toJsObj =
+            (buffer, httpResp) ->
+                    CODE_LENS.set.apply(httpResp.statusCode())
+                                               .andThen(MESSAGE_OPT.set.apply(httpResp.statusMessage()))
+                                               .andThen(COOKIES_LENS.set.apply(cookies2JsArray(httpResp.cookies())))
+                                               .andThen(HEADERS_OPT.set.apply(headers2JsObj(httpResp.headers())))
+                                               .andThen(BODY_LENS.set.apply(new String(buffer.getBytes())))
+                                               .apply(JsObj.empty());
 
 
-    private static JsObj headers2JsObj(final MultiMap headers) {
+    public static JsObj headers2JsObj(final MultiMap headers) {
         JsObj result = JsObj.empty();
-        if(headers == null || headers.isEmpty()) return JsObj.empty();
+        if (headers == null || headers.isEmpty()) return JsObj.empty();
         for (final Map.Entry<String, String> header : headers) {
-            result = addHeader(header, result);
+            result = addHeader(header,
+                               result
+                              );
         }
         return result;
     }
 
     private static JsObj addHeader(final Map.Entry<String, String> header,
-                            final JsObj result) {
-        if(!result.containsKey(header.getKey()))
-            return result.set(header.getKey(),JsArray.of(header.getValue()));
+                                   final JsObj result) {
+        if (!result.containsKey(header.getKey()))
+            return result.set(header.getKey(),
+                              JsArray.of(header.getValue())
+                             );
         else {
             JsArray headerValues = result.getArray(header.getKey())
-                                   .append(JsStr.of(header.getValue()));
-            return result.set(header.getKey(),headerValues);
+                                         .append(JsStr.of(header.getValue()));
+            return result.set(header.getKey(),
+                              headerValues);
         }
     }
 
-    private static JsArray cookies2JsArray(final List<String> cookies) {
-        if(cookies == null || cookies.isEmpty()) return JsArray.empty();
-        return JsArray.ofIterable(cookies.stream().map(JsStr::of).collect(Collectors.toList()));
+    public static JsArray cookies2JsArray(final List<String> cookies) {
+        if (cookies == null || cookies.isEmpty()) return JsArray.empty();
+        return JsArray.ofIterable(cookies.stream()
+                                         .map(JsStr::of)
+                                         .collect(Collectors.toList()));
     }
 
 }
