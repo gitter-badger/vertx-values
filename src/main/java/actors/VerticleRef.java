@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
 
@@ -22,7 +21,7 @@ import static java.util.Objects.requireNonNull;
  @param <I> the type of the input message sent to this actor
  @param <O> the type of the output message returned by this actor
  */
-public class ActorRef<I, O>
+public class VerticleRef<I, O>
 {
 
   private final Vertx vertx;
@@ -40,10 +39,10 @@ public class ActorRef<I, O>
    */
   public final Set<String> ids;
 
-  ActorRef(final Vertx vertx,
-           final Set<String> ids,
-           final String address
-          )
+  VerticleRef(final Vertx vertx,
+              final Set<String> ids,
+              final String address
+             )
   {
     this.vertx = vertx;
     this.ids = ids;
@@ -57,13 +56,13 @@ public class ActorRef<I, O>
    @return a function that takes an object of type I and returns an object of type O wrapped in a
    future
    */
-  public Function<I, Future<O>> ask(final DeliveryOptions options)
+  public Actor<I,O> ask(final DeliveryOptions options)
   {
     requireNonNull(options);
     return body -> vertx.eventBus().<O>request(address,
-                                               body,
-                                               options
-                                              ).map(Message::body);
+                                             body,
+                                             options
+                                            ).map(Message::body);
   }
 
   /**
@@ -72,7 +71,7 @@ public class ActorRef<I, O>
    @return a function that takes an object of type I and returns an object of type O wrapped in a
    future
    */
-  public Function<I, Future<O>> ask()
+  public Actor<I,O> ask()
   {
     return ask(DEFAULT);
   }
@@ -105,7 +104,7 @@ public class ActorRef<I, O>
    Undeploy all the instances of this actor
    @return a future that will be completed when all the instances are undeployed
    */
-  public Future<Void> undeploy()
+  public Future<Void> unregister()
   {
 
     List<Future> futures = new ArrayList<>();
@@ -115,13 +114,12 @@ public class ActorRef<I, O>
       futures.add(future);
 
     }
-    final Future<Void> fut = CompositeFuture.all(futures)
-                                            .flatMap(it ->
+    return CompositeFuture.all(futures)
+                          .flatMap(it ->
                                                      {
                                                        if (it.succeeded()) return Future.succeededFuture();
                                                        else return Future.failedFuture(it.cause());
                                                      });
-    return fut;
   }
 
 }

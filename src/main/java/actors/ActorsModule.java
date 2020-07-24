@@ -23,7 +23,7 @@ public abstract class ActorsModule extends AbstractVerticle
    The purpose of this method is to initialize the functions/consumers/suppliers defined in
    static fields of this class that will be exposed.
    @param futures the list of ActorRef wrapped in futures that were returned by the method
-   {@link #deployActors()}}.
+   {@link #registerActors()}}.
    */
   protected abstract void defineActors(final List<Object> futures);
 
@@ -33,7 +33,7 @@ public abstract class ActorsModule extends AbstractVerticle
    */
   //CompositeFuture.all method takes a list of futures with no generic type specified, that's why
   //List<Future> instead of List<Future<?>> has been used
-  protected abstract List<Future> deployActors();
+  protected abstract List<Future> registerActors();
 
   /**
    Factory to deploy or spawn actors
@@ -48,7 +48,7 @@ public abstract class ActorsModule extends AbstractVerticle
     {
       actors = new Actors(Objects.requireNonNull(vertx),deploymentOptions);
       initModule(actors);
-      CompositeFuture.all(deployActors())
+      CompositeFuture.all(registerActors())
                      .onComplete(result -> failIfErrorOrInitModule(start,
                                                                    result
                                                                   ));
@@ -81,7 +81,7 @@ public abstract class ActorsModule extends AbstractVerticle
 
   /**
    Call this method from the {@link #defineActors(List)} method to cast every object of the list into
-   its real type {@link ActorRef}
+   its real type {@link VerticleRef}
    @param object object result of deploying or spawing an actor with the factory {@link Actors}
    @param <I> the type of the input message
    @param <O> the type of the output message
@@ -89,9 +89,9 @@ public abstract class ActorsModule extends AbstractVerticle
    */
   @SuppressWarnings("unchecked")
   //It's responsibility of the caller to make sure the object has the correct type
-  protected  <I, O> ActorRef<I, O> toActorRef(final Object object)
+  protected  <I, O> VerticleRef<I, O> toVerticleRef(final Object object)
   {
-    return (ActorRef<I, O>) object;
+    return (VerticleRef<I, O>) object;
   }
 
 

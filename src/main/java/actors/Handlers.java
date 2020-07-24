@@ -24,14 +24,14 @@ public class Handlers {
                 try {
                     message.reply(mapSuccess.apply(event.result()));
                 } catch (Throwable e) {
-                    message.reply(ActorExceptions.EXCEPTION_HANDLING_SUSCESSFULL_EVENT.apply(e));
+                    message.reply(ActorExceptions.GET_ERROR_HANDLING_SUCCESSFUL_EVENT_EXCEPTION.apply(e));
                 }
             }
             else {
                 try {
                     message.reply(mapError.apply(event.cause()));
                 } catch (Throwable e) {
-                    message.reply(ActorExceptions.EXCEPTION_HANDLING_FAILURE_EVENT.apply(e));
+                    message.reply(ActorExceptions.GET_ERROR_HANDLING_FAILURE_EVENT_EXCEPTION.apply(e));
                 }
             }
         };
@@ -59,7 +59,7 @@ public class Handlers {
                 try {
                     message.reply(mapSuccess.apply(event.result()));
                 } catch (Throwable e) {
-                    message.reply(ActorExceptions.EXCEPTION_HANDLING_SUSCESSFULL_EVENT.apply(e));
+                    message.reply(ActorExceptions.GET_ERROR_HANDLING_SUCCESSFUL_EVENT_EXCEPTION.apply(e));
                 }
             }
             else {

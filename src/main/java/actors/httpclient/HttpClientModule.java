@@ -1,7 +1,7 @@
 package actors.httpclient;
 
 
-import actors.ActorRef;
+import actors.VerticleRef;
 import actors.ActorsModule;
 import actors.Handlers;
 import io.vertx.core.AsyncResult;
@@ -149,16 +149,16 @@ public abstract class HttpClientModule extends ActorsModule {
 
     @Override
     protected void defineActors(final List<Object> futures) {
-        this.httpClient = req -> ((ActorRef<JsObj, JsObj>) futures.get(0)).ask()
-                                                                          .apply(req);
+        this.httpClient = req -> ((VerticleRef<JsObj, JsObj>) futures.get(0)).ask()
+                                                                             .apply(req);
         defineHttpActors();
     }
 
     protected abstract void defineHttpActors();
 
     @Override
-    protected List<Future> deployActors() {
-        return Arrays.asList(actors.deploy(consumer(vertx.createHttpClient(httpOptions))));
+    protected List<Future> registerActors() {
+        return Arrays.asList(actors.register(consumer(vertx.createHttpClient(httpOptions))));
 
     }
 }

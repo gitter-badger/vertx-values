@@ -33,8 +33,8 @@ public class HttpExampleModuleTest {
         httpModule = new HttpExampleModule(new HttpClientOptions());
 
         CompositeFuture.all(
-                Arrays.asList(actors.deploy(new RegisterJsValuesCodecs()),
-                              actors.deploy(httpModule)
+                Arrays.asList(actors.register(new RegisterJsValuesCodecs()),
+                              actors.register(httpModule)
                              )
                            )
                        .onComplete(TestFns.pipeTo(testContext));
@@ -47,12 +47,14 @@ public class HttpExampleModuleTest {
         Future<JsObj> search2 = httpModule.search.apply("reactive");
 
         CompositeFuture.all(search1,
-                            search2)
+                            search2
+                           )
                        .onComplete(
-                               TestFns.pipeTo(list -> System.out.println(list.stream()
-                                                                               .map(o -> ((JsObj) o).getInt("code"))
-                                                                               .collect(Collectors.toList())
-                                                                        ),
+                               TestFns.pipeTo(result -> System.out.println(result.list()
+                                                                                 .stream()
+                                                                                 .map(o -> ((JsObj) o).getInt("code"))
+                                                                                 .collect(Collectors.toList())
+                                                                          ),
                                               context
                                              )
                                   );

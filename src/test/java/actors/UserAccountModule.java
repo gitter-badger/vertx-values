@@ -36,21 +36,21 @@ public class UserAccountModule extends ActorsModule
   @Override
   protected void defineActors(final List<Object> futures)
   {
-    isLegalAge = this.<Integer,Boolean>toActorRef(futures.get(0)).ask();
-    isValidId = this.<String,Boolean>toActorRef(futures.get(1)).ask();
-    isValidAddress = this.<JsObj,Boolean>toActorRef(futures.get(2)).ask();
-    isValidEmail = this.<String,Boolean>toActorRef(futures.get(3)).ask();
-    register = this.<JsObj,JsObj>toActorRef(futures.get(4)).ask();
+    isLegalAge = this.<Integer,Boolean>toVerticleRef(futures.get(0)).ask();
+    isValidId = this.<String,Boolean>toVerticleRef(futures.get(1)).ask();
+    isValidAddress = this.<JsObj,Boolean>toVerticleRef(futures.get(2)).ask();
+    isValidEmail = this.<String,Boolean>toVerticleRef(futures.get(3)).ask();
+    register = this.<JsObj,JsObj>toVerticleRef(futures.get(4)).ask();
   }
 
   @Override
-  protected List<Future> deployActors()
+  protected List<Future> registerActors()
   {
-    return Arrays.asList(actors.deploy(UserAcountFunctions.isLegalAge),
-                         actors.deploy(UserAcountFunctions.isValidId),
-                         actors.deploy(UserAcountFunctions.isValidAddress),
-                         actors.deploy(UserAcountFunctions.isValidEmail),
-                         actors.deploy(UserAcountFunctions.register)
+    return Arrays.asList(actors.register(UserAcountFunctions.isLegalAge),
+                         actors.register(UserAcountFunctions.isValidId),
+                         actors.register(UserAcountFunctions.isValidAddress),
+                         actors.register(UserAcountFunctions.isValidEmail),
+                         actors.register(UserAcountFunctions.register)
                         );
   }
 

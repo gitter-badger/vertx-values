@@ -17,12 +17,11 @@ public class TestFns {
     }
 
 
-    public static Handler<AsyncResult<CompositeFuture>> pipeTo(final Consumer<List<?>> consumer,
-                                                               final VertxTestContext testContext) {
+    public static <T> Handler<AsyncResult<T>> pipeTo(final Consumer<T> consumer,
+                                                     final VertxTestContext testContext) {
         return it -> {
             if (it.succeeded()) {
-                consumer.accept(it.result()
-                                  .list());
+                consumer.accept(it.result());
                 testContext.completeNow();
             }
             else testContext.failNow(it.cause());

@@ -11,5 +11,5 @@ import java.util.function.Supplier;
 
  @param <T> the type returned by the completable future */
 @FunctionalInterface
-interface JsFuture<T extends JsValue> extends Supplier<Future<T>> {
+public interface JsFuture<T extends JsValue> extends Supplier<Future<T>> {
 }

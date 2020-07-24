@@ -7,7 +7,6 @@ import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
-import jsonvalues.JsArray;
 import jsonvalues.JsInt;
 import jsonvalues.JsStr;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,7 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 @ExtendWith(VertxExtension.class)
 public class TestFutures extends ActorsModule{
@@ -73,21 +71,21 @@ public class TestFutures extends ActorsModule{
 
   @Override
   protected void defineActors(final List<Object> list) {
-    toUpper = ((ActorRef<String,String>) list.get(0)).ask();
-    multiplyBy10 = ((ActorRef<Integer,Integer>) list.get(1)).ask();
-    add10 = ((ActorRef<Integer,Integer>) list.get(2)).ask();
+    toUpper = ((VerticleRef<String,String>) list.get(0)).ask();
+    multiplyBy10 = ((VerticleRef<Integer,Integer>) list.get(1)).ask();
+    add10 = ((VerticleRef<Integer,Integer>) list.get(2)).ask();
 
   }
 
   @Override
-  protected List<Future> deployActors() {
+  protected List<Future> registerActors() {
 
     Function<String,String> keysToUpper = String::toUpperCase;
     Function<Integer,Function<Integer,Integer>> multiplyBy = i -> j -> i * j;
     Function<Integer,Function<Integer,Integer>> add = i -> j -> i + j;
 
-    return Arrays.asList(actors.deploy(keysToUpper),
-                         actors.deploy(multiplyBy.apply(10)),
-                         actors.deploy(add.apply(10)));
+    return Arrays.asList(actors.register(keysToUpper),
+                         actors.register(multiplyBy.apply(10)),
+                         actors.register(add.apply(10)));
   }
 }

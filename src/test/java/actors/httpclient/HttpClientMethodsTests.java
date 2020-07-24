@@ -69,10 +69,7 @@ public class HttpClientMethodsTests {
     public void testGet(VertxTestContext testContext) {
         httpClient.get.apply(new GetBuilder().port(PORT)
                                              .uri("example"))
-                      .onComplete(it -> {
-                          System.out.println(it);
-                          testContext.completeNow();
-                      });
+                      .onComplete(TestFns.pipeTo(System.out::println,testContext));
     }
 
     @Test

@@ -45,7 +45,7 @@ public class ExampleModuleTest
 
     for (int i1 = 0; i1 < i; i1++)
     {
-      actors.deploy(consumer,new DeploymentOptions().setWorker(true))
+      actors.register(consumer, new DeploymentOptions().setWorker(true))
             .onComplete(r -> checkpoint.flag());
     }
   }
@@ -56,8 +56,8 @@ public class ExampleModuleTest
                                    ) throws InterruptedException
   {
 
-    Future<ActorRef<Integer, Integer>> addOne = actors.deploy(i -> i + 1);
-    Future<ActorRef<Integer, Integer>> triple = actors.deploy(i -> i +3);
+    Future<VerticleRef<Integer, Integer>> addOne = actors.register(i -> i + 1);
+    Future<VerticleRef<Integer, Integer>> triple = actors.register(i -> i +3);
     addOne.flatMap(a -> a.ask()
                          .apply(1))
           .flatMap(b -> triple.flatMap(c -> c.ask()
@@ -67,7 +67,7 @@ public class ExampleModuleTest
 
     addOne.onComplete(h ->
                       {
-                        final ActorRef<Integer, Integer> vref = h.result();
+                        final VerticleRef<Integer, Integer> vref = h.result();
                         final Future<Integer> fut = vref
                           .ask()
                           .apply(3);
@@ -77,7 +77,7 @@ public class ExampleModuleTest
                                          Assertions.assertEquals(4,
                                                                  i.result().intValue()
                                                                 );
-                                         vref.undeploy()
+                                         vref.unregister()
                                              .onComplete(a -> context.completeNow());
                                        });
 
@@ -91,7 +91,7 @@ public class ExampleModuleTest
                                     )
   {
     final Consumer<Message<JsObj>> consumer = m -> m.reply(m.body());
-    actors.deploy(consumer)
+    actors.register(consumer)
           .onComplete(r -> r.result()
                                .ask()
                                .apply(JsObj.empty())
@@ -114,7 +114,7 @@ public class ExampleModuleTest
                                       )
   {
     final Consumer<Message<JsObj>> messageConsumer = m -> m.reply(m.body());
-    actors.deploy(messageConsumer)
+    actors.register(messageConsumer)
           .onComplete(r ->
                          {
                            context.verify(() -> assertTrue(r.succeeded()));

@@ -14,11 +14,10 @@ import java.util.function.Function;
 import static java.util.Objects.requireNonNull;
 
 /**
- Class that deploys and spawns verticles. If an address is not provided, one is generated. You only
- need a ActorRef to interact with a verticle. When a verticle is deployed it's waiting for messages
+ Wrapper around the vertx instance. It registers and spawns verticles. If an address is not provided, one is generated. You only
+ need an ActorRef to interact with a verticle. When a verticle is deployed it's waiting for messages
  to be processed. When a verticle is spawn, it processes a message or does some stuff and after that
- it's undeployed automatically. It register codecs to work with the immutable and persistent Jsons
- from the library json-values
+ it's undeployed automatically.
  */
 public class Actors {
     private static final DeploymentOptions DEFAULT_OPTIONS = new DeploymentOptions();
@@ -62,13 +61,13 @@ public class Actors {
      @param <O>      the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Future<ActorRef<I, O>> deploy(final String address,
-                                                final Consumer<Message<I>> consumer
-                                               ) {
-        return deploy(address,
-                      consumer,
-                      deploymentOptions
-                     );
+    public <I, O> Future<VerticleRef<I, O>> register(final String address,
+                                                     final Consumer<Message<I>> consumer
+                                                    ) {
+        return register(address,
+                        consumer,
+                        deploymentOptions
+                       );
     }
 
     /**
@@ -79,11 +78,11 @@ public class Actors {
      @param <O>      the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Future<ActorRef<I, O>> deploy(final Consumer<Message<I>> consumer) {
-        return deploy(generateProcessAddress(),
-                      consumer,
-                      deploymentOptions
-                     );
+    public <I, O> Future<VerticleRef<I, O>> register(final Consumer<Message<I>> consumer) {
+        return register(generateProcessAddress(),
+                        consumer,
+                        deploymentOptions
+                       );
     }
 
     /**
@@ -93,13 +92,13 @@ public class Actors {
      @param <O>      the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Future<ActorRef<I, O>> deploy(final Consumer<Message<I>> consumer,
-                                                final DeploymentOptions options
-                                               ) {
-        return deploy(generateProcessAddress(),
-                      consumer,
-                      options
-                     );
+    public <I, O> Future<VerticleRef<I, O>> register(final Consumer<Message<I>> consumer,
+                                                     final DeploymentOptions options
+                                                    ) {
+        return register(generateProcessAddress(),
+                        consumer,
+                        options
+                       );
     }
 
     /**
@@ -110,15 +109,15 @@ public class Actors {
      @param <O>      the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Future<ActorRef<I, O>> deploy(final String address,
-                                                final Consumer<Message<I>> consumer,
-                                                final DeploymentOptions options
-                                               ) {
+    public <I, O> Future<VerticleRef<I, O>> register(final String address,
+                                                     final Consumer<Message<I>> consumer,
+                                                     final DeploymentOptions options
+                                                    ) {
         final int          instances = options.getInstances();
         final Set<String>  ids       = new HashSet<>();
         final List<Future> futures   = new ArrayList<>();
-        final Actor<I> verticle = new Actor<>(consumer,
-                                              address
+        final MyVerticle<I> verticle = new MyVerticle<>(consumer,
+                                                        address
         );
         for (int i = 0; i < instances; i++) {
             final Future<String> future = vertx.deployVerticle(verticle,
@@ -142,15 +141,15 @@ public class Actors {
      @param <O>     the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Future<ActorRef<I, O>> deploy(final String address,
-                                                final Function<I, O> fn,
-                                                final DeploymentOptions options
-                                               ) {
+    public <I, O> Future<VerticleRef<I, O>> register(final String address,
+                                                     final Function<I, O> fn,
+                                                     final DeploymentOptions options
+                                                    ) {
         final int          instances = options.getInstances();
         final Set<String>  ids       = new HashSet<>();
         final List<Future> futures   = new ArrayList<>();
-        final Actor<I> verticle = new Actor<>(m -> m.reply(fn.apply(m.body())),
-                                              address
+        final MyVerticle<I> verticle = new MyVerticle<>(m -> m.reply(fn.apply(m.body())),
+                                                        address
         );
         for (int i = 0; i < instances; i++) {
             final Future<String> future = vertx.deployVerticle(verticle,
@@ -176,13 +175,13 @@ public class Actors {
      @param <O>     the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Future<ActorRef<I, O>> deploy(final String address,
-                                                final Function<I, O> fn
-                                               ) {
-        return deploy(address,
-                      fn,
-                      deploymentOptions
-                     );
+    public <I, O> Future<VerticleRef<I, O>> register(final String address,
+                                                     final Function<I, O> fn
+                                                    ) {
+        return register(address,
+                        fn,
+                        deploymentOptions
+                       );
     }
 
     /**
@@ -191,11 +190,11 @@ public class Actors {
      @param <O> the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Future<ActorRef<I, O>> deploy(final Function<I, O> fn) {
-        return deploy(generateProcessAddress(),
-                      fn,
-                      deploymentOptions
-                     );
+    public <I, O> Future<VerticleRef<I, O>> register(final Function<I, O> fn) {
+        return register(generateProcessAddress(),
+                        fn,
+                        deploymentOptions
+                       );
     }
 
     /**
@@ -205,12 +204,12 @@ public class Actors {
      @param options the deployment options
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Future<ActorRef<I, O>> deploy(final Function<I, O> fn,
-                                                final DeploymentOptions options) {
-        return deploy(generateProcessAddress(),
-                      fn,
-                      options
-                     );
+    public <I, O> Future<VerticleRef<I, O>> register(final Function<I, O> fn,
+                                                     final DeploymentOptions options) {
+        return register(generateProcessAddress(),
+                        fn,
+                        options
+                       );
     }
 
     /**
@@ -219,8 +218,23 @@ public class Actors {
      @param <O>      the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Function<I, Future<O>> spawn(final Consumer<Message<I>> consumer) {
-        return spawn(consumer,
+    public <I, O> Actor<I, O> spawn(final Consumer<Message<I>> consumer) {
+        return spawn(generateProcessAddress(),
+                     consumer,
+                     deploymentOptions
+                    );
+    }
+
+    /**
+     @param consumer the consumer that will process the messages sent to the verticle
+     @param <I>      the type of the message sent to the verticle
+     @param <O>      the type of the reply
+     @return an ActorRef wrapped in a future
+     */
+    public <I, O> Actor<I, O> spawn(final String address,
+                                    final Consumer<Message<I>> consumer) {
+        return spawn(address,
+                     consumer,
                      deploymentOptions
                     );
     }
@@ -232,17 +246,19 @@ public class Actors {
      @param <O>      the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Function<I, Future<O>> spawn(final Consumer<Message<I>> consumer,
-                                               final DeploymentOptions options
-                                              ) {
+    public <I, O> Actor<I, O> spawn(final String address,
+                                    final Consumer<Message<I>> consumer,
+                                    final DeploymentOptions options
+                                   ) {
         return n ->
         {
-            Future<ActorRef<I, O>> future = deploy(consumer,
-                                                   options
-                                                  );
+            Future<VerticleRef<I, O>> future = register(address,
+                                                        consumer,
+                                                        options
+                                                       );
             return future.flatMap(r -> r.ask()
                                         .apply(n)
-                                        .onComplete(a -> r.undeploy()));
+                                        .onComplete(a -> r.unregister()));
         };
     }
 
@@ -253,19 +269,21 @@ public class Actors {
      @param <O>     the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Function<I, Future<O>> spawn(final Function<I, O> fn,
-                                               final DeploymentOptions options
-                                              ) {
+    public <I, O> Actor<I, O> spawn(final String address,
+                                    final Function<I, O> fn,
+                                    final DeploymentOptions options
+                                   ) {
         return n ->
         {
             Consumer<Message<I>> consumer = m -> m.reply(fn.apply(m.body()));
 
-            Future<ActorRef<I, O>> future = deploy(consumer,
-                                                   options
-                                                  );
+            Future<VerticleRef<I, O>> future = register(address,
+                                                        consumer,
+                                                        options
+                                                       );
             return future.flatMap(r -> r.ask()
                                         .apply(n)
-                                        .onComplete(a -> r.undeploy()));
+                                        .onComplete(a -> r.unregister()));
         };
     }
 
@@ -275,21 +293,37 @@ public class Actors {
      @param <O> the type of the output
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Function<I, Future<O>> spawn(final Function<I, O> fn) {
-        return spawn(fn,
+    public <I, O> Actor<I, O> spawn(final Function<I, O> fn) {
+        return spawn(generateProcessAddress(),
+                     fn,
+                     deploymentOptions
+                    );
+    }
+
+    /**
+     @param fn  the function that takes a message of type I and produces an output of type O
+     @param <I> the type of the input message
+     @param <O> the type of the output
+     @return an ActorRef wrapped in a future
+     */
+    public <I, O> Actor<I,O> spawn(final String address,
+                                               final Function<I, O> fn) {
+        return spawn(address,
+                     fn,
                      deploymentOptions
                     );
     }
 
 
-    public Future<String> deploy(final AbstractVerticle verticle) {
+    public Future<String> register(final AbstractVerticle verticle) {
         return vertx.deployVerticle(verticle);
     }
 
-    public Future<String> deploy(final AbstractVerticle verticle,
-                                 final DeploymentOptions options) {
+    public Future<String> register(final AbstractVerticle verticle,
+                                   final DeploymentOptions options) {
         return vertx.deployVerticle(verticle,
-                                    options);
+                                    options
+                                   );
     }
 
 
@@ -297,16 +331,24 @@ public class Actors {
         return "__vertx.generated." + processSequence.incrementAndGet();
     }
 
-    private <I, O> Future<ActorRef<I, O>> getActorRefFuture(final String address,
-                                                            final Set<String> ids,
-                                                            final CompositeFuture cf
-                                                           ) {
-        if (cf.isComplete()) return Future.succeededFuture(new ActorRef<>(vertx,
-                                                                          ids,
-                                                                          address
+    private <I, O> Future<VerticleRef<I, O>> getActorRefFuture(final String address,
+                                                               final Set<String> ids,
+                                                               final CompositeFuture cf
+                                                              ) {
+        if (cf.isComplete()) return Future.succeededFuture(new VerticleRef<>(vertx,
+                                                                             ids,
+                                                                             address
                                                            )
                                                           );
         else return Future.failedFuture(cf.cause());
+    }
+
+    protected <O> Future<O> send(final String address,Object message){
+        return vertx.eventBus().<O>request(address,message).map(Message::body);
+    }
+
+    protected void publish(final String address,Object message){
+        vertx.eventBus().publish(address,message);
     }
 
 
