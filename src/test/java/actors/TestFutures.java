@@ -3,8 +3,6 @@ package actors;
 import actors.exp.Exp;
 import actors.exp.JsArrayExp;
 import actors.exp.JsObjExp;
-import actors.exp.MapExp;
-import io.vavr.collection.Map;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.junit5.VertxExtension;
@@ -76,25 +74,27 @@ public class TestFutures extends ActorsModule {
     }
 
     @Override
-    protected void onComplete(final Map<String, ActorRef<?,?>> map) {
-        toUpper = this.<String,String>getActorRef("toUpper").ask();
-        multiplyBy10 = this.<Integer,Integer>getActorRef("multiplyByTen").ask();
-        add10 = this.<Integer,Integer>getActorRef("addTen").ask();
+    protected void onComplete() {
+        toUpper = this.<String, String>getRegisteredActor("toUpper").ask();
+        multiplyBy10 = this.<Integer, Integer>getRegisteredActor("multiplyByTen").ask();
+        add10 = this.<Integer, Integer>getRegisteredActor("addTen").ask();
 
     }
 
     @Override
-    protected MapExp defineActors() {
+    protected void registerActors() {
         Function<String, String>                      keysToUpper = String::toUpperCase;
         Function<Integer, Function<Integer, Integer>> multiplyBy  = i -> j -> i * j;
         Function<Integer, Function<Integer, Integer>> add         = i -> j -> i + j;
-        return MapExp.of("toUpper",
-                         actors.register(keysToUpper),
-                         "multiplyByTen",
-                         actors.register(multiplyBy.apply(10)),
-                         "addTen",
-                         actors.register(add.apply(10))
-                        );
+        registerActor("toUpper",
+                      actors.register(keysToUpper)
+                     );
+        registerActor("multiplyByTen",
+                      actors.register(multiplyBy.apply(10))
+                     );
+        registerActor("addTen",
+                      actors.register(add.apply(10))
+                     );
 
     }
 }

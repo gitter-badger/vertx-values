@@ -25,15 +25,16 @@ import static java.util.Objects.requireNonNull;
  ) =
  Future.succeededFuture(JsObj(a->1,b->"a",c->true))}
  */
-public final class MapExp extends AbstractExp<Map<String, ?>> {
+public final class MapExp<O> extends AbstractExp<Map<String, O>> {
 
-    public final static MapExp EMPTY = new MapExp();
+    public final static MapExp<?> EMPTY = new MapExp<>();
 
-    private Map<String, Exp<?>> bindings = LinkedHashMap.empty();
+    private Map<String, Exp<O>> bindings = LinkedHashMap.empty();
 
-    private MapExp() {}
+    private MapExp() {
+    }
 
-    private MapExp(final Map<String, Exp<?>> bindings) {
+    private MapExp(final Map<String, Exp<O>> bindings) {
         this.bindings = bindings;
     }
 
@@ -45,10 +46,10 @@ public final class MapExp extends AbstractExp<Map<String, ?>> {
      @param exp the mapping associated to the key
      @return a JsObjFuture
      */
-    public static MapExp of(final String key,
-                            final Exp<?> exp
-                           ) {
-        MapExp obj = new MapExp();
+    public static <O> MapExp<O> of(final String key,
+                                   final Exp<O> exp
+                                  ) {
+        MapExp<O> obj = new MapExp<>();
         obj.bindings = obj.bindings.put(key,
                                         exp
                                        );
@@ -60,51 +61,51 @@ public final class MapExp extends AbstractExp<Map<String, ?>> {
      static factory method to create a JsObjFuture of one mapping
 
      @param key1 the first key
-     @param fut1 the mapping associated to the first key
+     @param exp1 the mapping associated to the first key
      @param key2 the second key
-     @param fut2 the mapping associated to the second key
+     @param exp2 the mapping associated to the second key
      @return a JsObjFuture
      */
-    public static MapExp of(final String key1,
-                            final Exp<?> fut1,
-                            final String key2,
-                            final Exp<?> fut2
-                           ) {
-        MapExp obj = MapExp.of(key1,
-                               fut1
-                              );
+    public static <O> MapExp<O> of(final String key1,
+                                   final Exp<O> exp1,
+                                   final String key2,
+                                   final Exp<O> exp2
+                                  ) {
+        MapExp<O> obj = MapExp.of(key1,
+                                  exp1
+                                 );
         obj.bindings = obj.bindings.put(requireNonNull(key2),
-                                        requireNonNull(fut2)
+                                        requireNonNull(exp2)
                                        );
         return obj;
     }
 
     /**
-     static factory method to create a JsObjFuture of three mappings
+     static factory method to create a JsObjexpure of three mappings
 
      @param key1 the first key
-     @param fut1 the mapping associated to the first key
+     @param exp1 the mapping associated to the first key
      @param key2 the second key
-     @param fut2 the mapping associated to the second key
+     @param exp2 the mapping associated to the second key
      @param key3 the third key
-     @param fut3 the mapping associated to the third key
+     @param exp3 the mapping associated to the third key
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static MapExp of(final String key1,
-                            final Exp<?> fut1,
-                            final String key2,
-                            final Exp<?> fut2,
-                            final String key3,
-                            final Exp<?> fut3
-                           ) {
-        MapExp obj = MapExp.of(key1,
-                               fut1,
-                               key2,
-                               fut2
-                              );
+    public static <O> MapExp<O> of(final String key1,
+                                   final Exp<O> exp1,
+                                   final String key2,
+                                   final Exp<O> exp2,
+                                   final String key3,
+                                   final Exp<O> exp3
+                                  ) {
+        MapExp<O> obj = MapExp.of(key1,
+                                  exp1,
+                                  key2,
+                                  exp2
+                                 );
         obj.bindings = obj.bindings.put(requireNonNull(key3),
-                                        requireNonNull(fut3)
+                                        requireNonNull(exp3)
                                        );
         return obj;
     }
@@ -114,34 +115,34 @@ public final class MapExp extends AbstractExp<Map<String, ?>> {
      static factory method to create a JsObjFuture of four mappings
 
      @param key1 the first key
-     @param fut1 the mapping associated to the first key
+     @param exp1 the mapping associated to the first key
      @param key2 the second key
-     @param fut2 the mapping associated to the second key
+     @param exp2 the mapping associated to the second key
      @param key3 the third key
-     @param fut3 the mapping associated to the third key
+     @param exp3 the mapping associated to the third key
      @param key4 the fourth key
-     @param fut4 the mapping associated to the fourth key
+     @param exp4 the mapping associated to the fourth key
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static MapExp of(final String key1,
-                            final Exp<?> fut1,
-                            final String key2,
-                            final Exp<?> fut2,
-                            final String key3,
-                            final Exp<?> fut3,
-                            final String key4,
-                            final Exp<?> fut4
-                           ) {
-        MapExp obj = MapExp.of(key1,
-                               fut1,
-                               key2,
-                               fut2,
-                               key3,
-                               fut3
-                              );
+    public static <O> MapExp<O> of(final String key1,
+                                   final Exp<O> exp1,
+                                   final String key2,
+                                   final Exp<O> exp2,
+                                   final String key3,
+                                   final Exp<O> exp3,
+                                   final String key4,
+                                   final Exp<O> exp4
+                                  ) {
+        MapExp<O> obj = MapExp.of(key1,
+                                  exp1,
+                                  key2,
+                                  exp2,
+                                  key3,
+                                  exp3
+                                 );
         obj.bindings = obj.bindings.put(requireNonNull(key4),
-                                        requireNonNull(fut4)
+                                        requireNonNull(exp4)
                                        );
         return obj;
     }
@@ -151,40 +152,40 @@ public final class MapExp extends AbstractExp<Map<String, ?>> {
      static factory method to create a JsObjFuture of five mappings
 
      @param key1 the first key
-     @param fut1 the mapping associated to the first key
+     @param exp1 the mapping associated to the first key
      @param key2 the second key
-     @param fut2 the mapping associated to the second key
+     @param exp2 the mapping associated to the second key
      @param key3 the third key
-     @param fut3 the mapping associated to the third key
+     @param exp3 the mapping associated to the third key
      @param key4 the fourth key
-     @param fut4 the mapping associated to the fourth key
+     @param exp4 the mapping associated to the fourth key
      @param key5 the fifth key
-     @param fut5 the mapping associated to the fifth key
+     @param exp5 the mapping associated to the fifth key
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static MapExp of(final String key1,
-                            final Exp<?> fut1,
-                            final String key2,
-                            final Exp<?> fut2,
-                            final String key3,
-                            final Exp<?> fut3,
-                            final String key4,
-                            final Exp<?> fut4,
-                            final String key5,
-                            final Exp<?> fut5
-                           ) {
-        MapExp obj = MapExp.of(key1,
-                               fut1,
-                               key2,
-                               fut2,
-                               key3,
-                               fut3,
-                               key4,
-                               fut4
-                              );
+    public static <O> MapExp<O> of(final String key1,
+                                   final Exp<O> exp1,
+                                   final String key2,
+                                   final Exp<O> exp2,
+                                   final String key3,
+                                   final Exp<O> exp3,
+                                   final String key4,
+                                   final Exp<O> exp4,
+                                   final String key5,
+                                   final Exp<O> exp5
+                                  ) {
+        MapExp<O> obj = MapExp.of(key1,
+                                  exp1,
+                                  key2,
+                                  exp2,
+                                  key3,
+                                  exp3,
+                                  key4,
+                                  exp4
+                                 );
         obj.bindings = obj.bindings.put(requireNonNull(key5),
-                                        requireNonNull(fut5)
+                                        requireNonNull(exp5)
                                        );
         return obj;
     }
@@ -194,46 +195,46 @@ public final class MapExp extends AbstractExp<Map<String, ?>> {
      static factory method to create a JsObjFuture of six mappings
 
      @param key1 the first key
-     @param fut1 the mapping associated to the first key
+     @param exp1 the mapping associated to the first key
      @param key2 the second key
-     @param fut2 the mapping associated to the second key
+     @param exp2 the mapping associated to the second key
      @param key3 the third key
-     @param fut3 the mapping associated to the third key
+     @param exp3 the mapping associated to the third key
      @param key4 the fourth key
-     @param fut4 the mapping associated to the fourth key
+     @param exp4 the mapping associated to the fourth key
      @param key5 the fifth key
-     @param fut5 the mapping associated to the fifth key
+     @param exp5 the mapping associated to the fifth key
      @param key6 the sixth key
-     @param fut6 the mapping associated to the sixth key
+     @param exp6 the mapping associated to the sixth key
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static MapExp of(final String key1,
-                            final Exp<?> fut1,
-                            final String key2,
-                            final Exp<?> fut2,
-                            final String key3,
-                            final Exp<?> fut3,
-                            final String key4,
-                            final Exp<?> fut4,
-                            final String key5,
-                            final Exp<?> fut5,
-                            final String key6,
-                            final Exp<?> fut6
-                           ) {
-        MapExp obj = MapExp.of(key1,
-                               fut1,
-                               key2,
-                               fut2,
-                               key3,
-                               fut3,
-                               key4,
-                               fut4,
-                               key5,
-                               fut5
-                              );
+    public static <O> MapExp<O> of(final String key1,
+                                   final Exp<O> exp1,
+                                   final String key2,
+                                   final Exp<O> exp2,
+                                   final String key3,
+                                   final Exp<O> exp3,
+                                   final String key4,
+                                   final Exp<O> exp4,
+                                   final String key5,
+                                   final Exp<O> exp5,
+                                   final String key6,
+                                   final Exp<O> exp6
+                                  ) {
+        MapExp<O> obj = MapExp.of(key1,
+                                  exp1,
+                                  key2,
+                                  exp2,
+                                  key3,
+                                  exp3,
+                                  key4,
+                                  exp4,
+                                  key5,
+                                  exp5
+                                 );
         obj.bindings = obj.bindings.put(requireNonNull(key6),
-                                        requireNonNull(fut6)
+                                        requireNonNull(exp6)
                                        );
         return obj;
     }
@@ -243,52 +244,52 @@ public final class MapExp extends AbstractExp<Map<String, ?>> {
      static factory method to create a JsObjFuture of seven mappings
 
      @param key1 the first key
-     @param fut1 the mapping associated to the first key
+     @param exp1 the mapping associated to the first key
      @param key2 the second key
-     @param fut2 the mapping associated to the second key
+     @param exp2 the mapping associated to the second key
      @param key3 the third key
-     @param fut3 the mapping associated to the third key
+     @param exp3 the mapping associated to the third key
      @param key4 the fourth key
-     @param fut4 the mapping associated to the fourth key
+     @param exp4 the mapping associated to the fourth key
      @param key5 the fifth key
-     @param fut5 the mapping associated to the fifth key
+     @param exp5 the mapping associated to the fifth key
      @param key6 the sixth key
-     @param fut6 the mapping associated to the sixth key
+     @param exp6 the mapping associated to the sixth key
      @param key7 the seventh key
-     @param fut7 the mapping associated to the seventh key
+     @param exp7 the mapping associated to the seventh key
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static MapExp of(final String key1,
-                            final Exp<?> fut1,
-                            final String key2,
-                            final Exp<?> fut2,
-                            final String key3,
-                            final Exp<?> fut3,
-                            final String key4,
-                            final Exp<?> fut4,
-                            final String key5,
-                            final Exp<?> fut5,
-                            final String key6,
-                            final Exp<?> fut6,
-                            final String key7,
-                            final Exp<?> fut7
-                           ) {
-        MapExp obj = MapExp.of(key1,
-                               fut1,
-                               key2,
-                               fut2,
-                               key3,
-                               fut3,
-                               key4,
-                               fut4,
-                               key5,
-                               fut5,
-                               key6,
-                               fut6
-                              );
+    public static <O> MapExp<O> of(final String key1,
+                                   final Exp<O> exp1,
+                                   final String key2,
+                                   final Exp<O> exp2,
+                                   final String key3,
+                                   final Exp<O> exp3,
+                                   final String key4,
+                                   final Exp<O> exp4,
+                                   final String key5,
+                                   final Exp<O> exp5,
+                                   final String key6,
+                                   final Exp<O> exp6,
+                                   final String key7,
+                                   final Exp<O> exp7
+                                  ) {
+        MapExp<O> obj = MapExp.of(key1,
+                                  exp1,
+                                  key2,
+                                  exp2,
+                                  key3,
+                                  exp3,
+                                  key4,
+                                  exp4,
+                                  key5,
+                                  exp5,
+                                  key6,
+                                  exp6
+                                 );
         obj.bindings = obj.bindings.put(requireNonNull(key7),
-                                        requireNonNull(fut7)
+                                        requireNonNull(exp7)
                                        );
         return obj;
     }
@@ -298,58 +299,58 @@ public final class MapExp extends AbstractExp<Map<String, ?>> {
      static factory method to create a JsObjFuture of eight mappings
 
      @param key1 the first key
-     @param fut1 the mapping associated to the first key
+     @param exp1 the mapping associated to the first key
      @param key2 the second key
-     @param fut2 the mapping associated to the second key
+     @param exp2 the mapping associated to the second key
      @param key3 the third key
-     @param fut3 the mapping associated to the third key
+     @param exp3 the mapping associated to the third key
      @param key4 the fourth key
-     @param fut4 the mapping associated to the fourth key
+     @param exp4 the mapping associated to the fourth key
      @param key5 the fifth key
-     @param fut5 the mapping associated to the fifth key
+     @param exp5 the mapping associated to the fifth key
      @param key6 the sixth key
-     @param fut6 the mapping associated to the sixth key
+     @param exp6 the mapping associated to the sixth key
      @param key7 the seventh key
-     @param fut7 the mapping associated to the seventh key
+     @param exp7 the mapping associated to the seventh key
      @param key8 the eighth key
-     @param fut8 the mapping associated to the eighth key
+     @param exp8 the mapping associated to the eighth key
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static MapExp of(final String key1,
-                            final Exp<?> fut1,
-                            final String key2,
-                            final Exp<?> fut2,
-                            final String key3,
-                            final Exp<?> fut3,
-                            final String key4,
-                            final Exp<?> fut4,
-                            final String key5,
-                            final Exp<?> fut5,
-                            final String key6,
-                            final Exp<?> fut6,
-                            final String key7,
-                            final Exp<?> fut7,
-                            final String key8,
-                            final Exp<?> fut8
-                           ) {
-        MapExp obj = MapExp.of(key1,
-                               fut1,
-                               key2,
-                               fut2,
-                               key3,
-                               fut3,
-                               key4,
-                               fut4,
-                               key5,
-                               fut5,
-                               key6,
-                               fut6,
-                               key7,
-                               fut7
-                              );
+    public static <O> MapExp<O> of(final String key1,
+                                   final Exp<O> exp1,
+                                   final String key2,
+                                   final Exp<O> exp2,
+                                   final String key3,
+                                   final Exp<O> exp3,
+                                   final String key4,
+                                   final Exp<O> exp4,
+                                   final String key5,
+                                   final Exp<O> exp5,
+                                   final String key6,
+                                   final Exp<O> exp6,
+                                   final String key7,
+                                   final Exp<O> exp7,
+                                   final String key8,
+                                   final Exp<O> exp8
+                                  ) {
+        MapExp<O> obj = MapExp.of(key1,
+                                  exp1,
+                                  key2,
+                                  exp2,
+                                  key3,
+                                  exp3,
+                                  key4,
+                                  exp4,
+                                  key5,
+                                  exp5,
+                                  key6,
+                                  exp6,
+                                  key7,
+                                  exp7
+                                 );
         obj.bindings = obj.bindings.put(requireNonNull(key8),
-                                        requireNonNull(fut8)
+                                        requireNonNull(exp8)
                                        );
         return obj;
 
@@ -360,64 +361,64 @@ public final class MapExp extends AbstractExp<Map<String, ?>> {
      static factory method to create a JsObjFuture of nine mappings
 
      @param key1 the first key
-     @param fut1 the mapping associated to the first key
+     @param exp1 the mapping associated to the first key
      @param key2 the second key
-     @param fut2 the mapping associated to the second key
+     @param exp2 the mapping associated to the second key
      @param key3 the third key
-     @param fut3 the mapping associated to the third key
+     @param exp3 the mapping associated to the third key
      @param key4 the fourth key
-     @param fut4 the mapping associated to the fourth key
+     @param exp4 the mapping associated to the fourth key
      @param key5 the fifth key
-     @param fut5 the mapping associated to the fifth key
+     @param exp5 the mapping associated to the fifth key
      @param key6 the sixth key
-     @param fut6 the mapping associated to the sixth key
+     @param exp6 the mapping associated to the sixth key
      @param key7 the seventh key
-     @param fut7 the mapping associated to the seventh key
+     @param exp7 the mapping associated to the seventh key
      @param key8 the eighth key
-     @param fut8 the mapping associated to the eighth key
+     @param exp8 the mapping associated to the eighth key
      @param key9 the ninth key
-     @param fut9 the mapping associated to the ninth key
+     @param exp9 the mapping associated to the ninth key
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static MapExp of(final String key1,
-                            final Exp<?> fut1,
-                            final String key2,
-                            final Exp<?> fut2,
-                            final String key3,
-                            final Exp<?> fut3,
-                            final String key4,
-                            final Exp<?> fut4,
-                            final String key5,
-                            final Exp<?> fut5,
-                            final String key6,
-                            final Exp<?> fut6,
-                            final String key7,
-                            final Exp<?> fut7,
-                            final String key8,
-                            final Exp<?> fut8,
-                            final String key9,
-                            final Exp<?> fut9
-                           ) {
-        MapExp obj = MapExp.of(key1,
-                               fut1,
-                               key2,
-                               fut2,
-                               key3,
-                               fut3,
-                               key4,
-                               fut4,
-                               key5,
-                               fut5,
-                               key6,
-                               fut6,
-                               key7,
-                               fut7,
-                               key8,
-                               fut8
-                              );
+    public static <O> MapExp<O> of(final String key1,
+                                   final Exp<O> exp1,
+                                   final String key2,
+                                   final Exp<O> exp2,
+                                   final String key3,
+                                   final Exp<O> exp3,
+                                   final String key4,
+                                   final Exp<O> exp4,
+                                   final String key5,
+                                   final Exp<O> exp5,
+                                   final String key6,
+                                   final Exp<O> exp6,
+                                   final String key7,
+                                   final Exp<O> exp7,
+                                   final String key8,
+                                   final Exp<O> exp8,
+                                   final String key9,
+                                   final Exp<O> exp9
+                                  ) {
+        MapExp<O> obj = MapExp.of(key1,
+                                  exp1,
+                                  key2,
+                                  exp2,
+                                  key3,
+                                  exp3,
+                                  key4,
+                                  exp4,
+                                  key5,
+                                  exp5,
+                                  key6,
+                                  exp6,
+                                  key7,
+                                  exp7,
+                                  key8,
+                                  exp8
+                                 );
         obj.bindings = obj.bindings.put(requireNonNull(key9),
-                                        requireNonNull(fut9)
+                                        requireNonNull(exp9)
                                        );
         return obj;
 
@@ -429,70 +430,70 @@ public final class MapExp extends AbstractExp<Map<String, ?>> {
      static factory method to create a JsObjFuture of ten mappings
 
      @param key1  the first key
-     @param fut1  the mapping associated to the first key
+     @param exp1  the mapping associated to the first key
      @param key2  the second key
-     @param fut2  the mapping associated to the second key
+     @param exp2  the mapping associated to the second key
      @param key3  the third key
-     @param fut3  the mapping associated to the third key
+     @param exp3  the mapping associated to the third key
      @param key4  the fourth key
-     @param fut4  the mapping associated to the fourth key
+     @param exp4  the mapping associated to the fourth key
      @param key5  the fifth key
-     @param fut5  the mapping associated to the fifth key
+     @param exp5  the mapping associated to the fifth key
      @param key6  the sixth key
-     @param fut6  the mapping associated to the sixth key
+     @param exp6  the mapping associated to the sixth key
      @param key7  the seventh key
-     @param fut7  the mapping associated to the seventh key
+     @param exp7  the mapping associated to the seventh key
      @param key8  the eighth key
-     @param fut8  the mapping associated to the eighth key
+     @param exp8  the mapping associated to the eighth key
      @param key9  the ninth key
-     @param fut9  the mapping associated to the ninth key
+     @param exp9  the mapping associated to the ninth key
      @param key10 the tenth key
-     @param fut10 the mapping associated to the tenth key
+     @param exp10 the mapping associated to the tenth key
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static MapExp of(final String key1,
-                            final Exp<?> fut1,
-                            final String key2,
-                            final Exp<?> fut2,
-                            final String key3,
-                            final Exp<?> fut3,
-                            final String key4,
-                            final Exp<?> fut4,
-                            final String key5,
-                            final Exp<?> fut5,
-                            final String key6,
-                            final Exp<?> fut6,
-                            final String key7,
-                            final Exp<?> fut7,
-                            final String key8,
-                            final Exp<?> fut8,
-                            final String key9,
-                            final Exp<?> fut9,
-                            final String key10,
-                            final Exp<?> fut10
-                           ) {
-        MapExp obj = MapExp.of(key1,
-                               fut1,
-                               key2,
-                               fut2,
-                               key3,
-                               fut3,
-                               key4,
-                               fut4,
-                               key5,
-                               fut5,
-                               key6,
-                               fut6,
-                               key7,
-                               fut7,
-                               key8,
-                               fut8,
-                               key9,
-                               fut9
-                              );
+    public static <O> MapExp<O> of(final String key1,
+                                   final Exp<O> exp1,
+                                   final String key2,
+                                   final Exp<O> exp2,
+                                   final String key3,
+                                   final Exp<O> exp3,
+                                   final String key4,
+                                   final Exp<O> exp4,
+                                   final String key5,
+                                   final Exp<O> exp5,
+                                   final String key6,
+                                   final Exp<O> exp6,
+                                   final String key7,
+                                   final Exp<O> exp7,
+                                   final String key8,
+                                   final Exp<O> exp8,
+                                   final String key9,
+                                   final Exp<O> exp9,
+                                   final String key10,
+                                   final Exp<O> exp10
+                                  ) {
+        MapExp<O> obj = MapExp.of(key1,
+                                  exp1,
+                                  key2,
+                                  exp2,
+                                  key3,
+                                  exp3,
+                                  key4,
+                                  exp4,
+                                  key5,
+                                  exp5,
+                                  key6,
+                                  exp6,
+                                  key7,
+                                  exp7,
+                                  key8,
+                                  exp8,
+                                  key9,
+                                  exp9
+                                 );
         obj.bindings = obj.bindings.put(requireNonNull(key10),
-                                        requireNonNull(fut10)
+                                        requireNonNull(exp10)
                                        );
         return obj;
 
@@ -503,76 +504,76 @@ public final class MapExp extends AbstractExp<Map<String, ?>> {
      static factory method to create a JsObjFuture of eleven mappings
 
      @param key1  the first key
-     @param fut1  the mapping associated to the first key
+     @param exp1  the mapping associated to the first key
      @param key2  the second key
-     @param fut2  the mapping associated to the second key
+     @param exp2  the mapping associated to the second key
      @param key3  the third key
-     @param fut3  the mapping associated to the third key
+     @param exp3  the mapping associated to the third key
      @param key4  the fourth key
-     @param fut4  the mapping associated to the fourth key
+     @param exp4  the mapping associated to the fourth key
      @param key5  the fifth key
-     @param fut5  the mapping associated to the fifth key
+     @param exp5  the mapping associated to the fifth key
      @param key6  the sixth key
-     @param fut6  the mapping associated to the sixth key
+     @param exp6  the mapping associated to the sixth key
      @param key7  the seventh key
-     @param fut7  the mapping associated to the seventh key
+     @param exp7  the mapping associated to the seventh key
      @param key8  the eighth key
-     @param fut8  the mapping associated to the eighth key
+     @param exp8  the mapping associated to the eighth key
      @param key9  the ninth key
-     @param fut9  the mapping associated to the ninth key
+     @param exp9  the mapping associated to the ninth key
      @param key10 the tenth key
-     @param fut10 the mapping associated to the eleventh key
+     @param exp10 the mapping associated to the eleventh key
      @param key11 the tenth key
-     @param fut11 the mapping associated to the eleventh key
+     @param exp11 the mapping associated to the eleventh key
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static MapExp of(final String key1,
-                            final Exp<?> fut1,
-                            final String key2,
-                            final Exp<?> fut2,
-                            final String key3,
-                            final Exp<?> fut3,
-                            final String key4,
-                            final Exp<?> fut4,
-                            final String key5,
-                            final Exp<?> fut5,
-                            final String key6,
-                            final Exp<?> fut6,
-                            final String key7,
-                            final Exp<?> fut7,
-                            final String key8,
-                            final Exp<?> fut8,
-                            final String key9,
-                            final Exp<?> fut9,
-                            final String key10,
-                            final Exp<?> fut10,
-                            final String key11,
-                            final Exp<?> fut11
-                           ) {
-        MapExp obj = MapExp.of(key1,
-                               fut1,
-                               key2,
-                               fut2,
-                               key3,
-                               fut3,
-                               key4,
-                               fut4,
-                               key5,
-                               fut5,
-                               key6,
-                               fut6,
-                               key7,
-                               fut7,
-                               key8,
-                               fut8,
-                               key9,
-                               fut9,
-                               key10,
-                               fut10
-                              );
+    public static <O> MapExp<O> of(final String key1,
+                                   final Exp<O> exp1,
+                                   final String key2,
+                                   final Exp<O> exp2,
+                                   final String key3,
+                                   final Exp<O> exp3,
+                                   final String key4,
+                                   final Exp<O> exp4,
+                                   final String key5,
+                                   final Exp<O> exp5,
+                                   final String key6,
+                                   final Exp<O> exp6,
+                                   final String key7,
+                                   final Exp<O> exp7,
+                                   final String key8,
+                                   final Exp<O> exp8,
+                                   final String key9,
+                                   final Exp<O> exp9,
+                                   final String key10,
+                                   final Exp<O> exp10,
+                                   final String key11,
+                                   final Exp<O> exp11
+                                  ) {
+        MapExp<O> obj = MapExp.of(key1,
+                                  exp1,
+                                  key2,
+                                  exp2,
+                                  key3,
+                                  exp3,
+                                  key4,
+                                  exp4,
+                                  key5,
+                                  exp5,
+                                  key6,
+                                  exp6,
+                                  key7,
+                                  exp7,
+                                  key8,
+                                  exp8,
+                                  key9,
+                                  exp9,
+                                  key10,
+                                  exp10
+                                 );
         obj.bindings = obj.bindings.put(requireNonNull(key11),
-                                        requireNonNull(fut11)
+                                        requireNonNull(exp11)
                                        );
         return obj;
 
@@ -583,82 +584,82 @@ public final class MapExp extends AbstractExp<Map<String, ?>> {
      static factory method to create a JsObjFuture of twelve mappings
 
      @param key1  the first key
-     @param fut1  the mapping associated to the first key
+     @param exp1  the mapping associated to the first key
      @param key2  the second key
-     @param fut2  the mapping associated to the second key
+     @param exp2  the mapping associated to the second key
      @param key3  the third key
-     @param fut3  the mapping associated to the third key
+     @param exp3  the mapping associated to the third key
      @param key4  the fourth key
-     @param fut4  the mapping associated to the fourth key
+     @param exp4  the mapping associated to the fourth key
      @param key5  the fifth key
-     @param fut5  the mapping associated to the fifth key
+     @param exp5  the mapping associated to the fifth key
      @param key6  the sixth key
-     @param fut6  the mapping associated to the sixth key
+     @param exp6  the mapping associated to the sixth key
      @param key7  the seventh key
-     @param fut7  the mapping associated to the seventh key
+     @param exp7  the mapping associated to the seventh key
      @param key8  the eighth key
-     @param fut8  the mapping associated to the eighth key
+     @param exp8  the mapping associated to the eighth key
      @param key9  the ninth key
-     @param fut9  the mapping associated to the ninth key
+     @param exp9  the mapping associated to the ninth key
      @param key10 the tenth key
-     @param fut10 the mapping associated to the eleventh key
+     @param exp10 the mapping associated to the eleventh key
      @param key11 the eleventh key
-     @param fut11 the mapping associated to the eleventh key
+     @param exp11 the mapping associated to the eleventh key
      @param key12 the twelfth key
-     @param fut12 the mapping associated to the twelfth key
+     @param exp12 the mapping associated to the twelfth key
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static MapExp of(final String key1,
-                            final Exp<?> fut1,
-                            final String key2,
-                            final Exp<?> fut2,
-                            final String key3,
-                            final Exp<?> fut3,
-                            final String key4,
-                            final Exp<?> fut4,
-                            final String key5,
-                            final Exp<?> fut5,
-                            final String key6,
-                            final Exp<?> fut6,
-                            final String key7,
-                            final Exp<?> fut7,
-                            final String key8,
-                            final Exp<?> fut8,
-                            final String key9,
-                            final Exp<?> fut9,
-                            final String key10,
-                            final Exp<?> fut10,
-                            final String key11,
-                            final Exp<?> fut11,
-                            final String key12,
-                            final Exp<?> fut12
-                           ) {
-        MapExp obj = MapExp.of(key1,
-                               fut1,
-                               key2,
-                               fut2,
-                               key3,
-                               fut3,
-                               key4,
-                               fut4,
-                               key5,
-                               fut5,
-                               key6,
-                               fut6,
-                               key7,
-                               fut7,
-                               key8,
-                               fut8,
-                               key9,
-                               fut9,
-                               key10,
-                               fut10,
-                               key11,
-                               fut11
-                              );
+    public static <O> MapExp<O> of(final String key1,
+                                   final Exp<O> exp1,
+                                   final String key2,
+                                   final Exp<O> exp2,
+                                   final String key3,
+                                   final Exp<O> exp3,
+                                   final String key4,
+                                   final Exp<O> exp4,
+                                   final String key5,
+                                   final Exp<O> exp5,
+                                   final String key6,
+                                   final Exp<O> exp6,
+                                   final String key7,
+                                   final Exp<O> exp7,
+                                   final String key8,
+                                   final Exp<O> exp8,
+                                   final String key9,
+                                   final Exp<O> exp9,
+                                   final String key10,
+                                   final Exp<O> exp10,
+                                   final String key11,
+                                   final Exp<O> exp11,
+                                   final String key12,
+                                   final Exp<O> exp12
+                                  ) {
+        MapExp<O> obj = MapExp.of(key1,
+                                  exp1,
+                                  key2,
+                                  exp2,
+                                  key3,
+                                  exp3,
+                                  key4,
+                                  exp4,
+                                  key5,
+                                  exp5,
+                                  key6,
+                                  exp6,
+                                  key7,
+                                  exp7,
+                                  key8,
+                                  exp8,
+                                  key9,
+                                  exp9,
+                                  key10,
+                                  exp10,
+                                  key11,
+                                  exp11
+                                 );
         obj.bindings = obj.bindings.put(requireNonNull(key12),
-                                        requireNonNull(fut12)
+                                        requireNonNull(exp12)
                                        );
         return obj;
 
@@ -668,88 +669,88 @@ public final class MapExp extends AbstractExp<Map<String, ?>> {
      static factory method to create a JsObjFuture of thirteen mappings
 
      @param key1  the first key
-     @param fut1  the mapping associated to the first key
+     @param exp1  the mapping associated to the first key
      @param key2  the second key
-     @param fut2  the mapping associated to the second key
+     @param exp2  the mapping associated to the second key
      @param key3  the third key
-     @param fut3  the mapping associated to the third key
+     @param exp3  the mapping associated to the third key
      @param key4  the fourth key
-     @param fut4  the mapping associated to the fourth key
+     @param exp4  the mapping associated to the fourth key
      @param key5  the fifth key
-     @param fut5  the mapping associated to the fifth key
+     @param exp5  the mapping associated to the fifth key
      @param key6  the sixth key
-     @param fut6  the mapping associated to the sixth key
+     @param exp6  the mapping associated to the sixth key
      @param key7  the seventh key
-     @param fut7  the mapping associated to the seventh key
+     @param exp7  the mapping associated to the seventh key
      @param key8  the eighth key
-     @param fut8  the mapping associated to the eighth key
+     @param exp8  the mapping associated to the eighth key
      @param key9  the ninth key
-     @param fut9  the mapping associated to the ninth key
+     @param exp9  the mapping associated to the ninth key
      @param key10 the tenth key
-     @param fut10 the mapping associated to the eleventh key
+     @param exp10 the mapping associated to the eleventh key
      @param key11 the eleventh key
-     @param fut11 the mapping associated to the eleventh key
+     @param exp11 the mapping associated to the eleventh key
      @param key12 the twelfth key
-     @param fut12 the mapping associated to the twelfth key,
+     @param exp12 the mapping associated to the twelfth key,
      @param key13 the thirteenth key
-     @param fut13 the mapping associated to the thirteenth key
+     @param exp13 the mapping associated to the thirteenth key
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static MapExp of(final String key1,
-                            final Exp<?> fut1,
-                            final String key2,
-                            final Exp<?> fut2,
-                            final String key3,
-                            final Exp<?> fut3,
-                            final String key4,
-                            final Exp<?> fut4,
-                            final String key5,
-                            final Exp<?> fut5,
-                            final String key6,
-                            final Exp<?> fut6,
-                            final String key7,
-                            final Exp<?> fut7,
-                            final String key8,
-                            final Exp<?> fut8,
-                            final String key9,
-                            final Exp<?> fut9,
-                            final String key10,
-                            final Exp<?> fut10,
-                            final String key11,
-                            final Exp<?> fut11,
-                            final String key12,
-                            final Exp<?> fut12,
-                            final String key13,
-                            final Exp<?> fut13
-                           ) {
-        MapExp obj = MapExp.of(key1,
-                               fut1,
-                               key2,
-                               fut2,
-                               key3,
-                               fut3,
-                               key4,
-                               fut4,
-                               key5,
-                               fut5,
-                               key6,
-                               fut6,
-                               key7,
-                               fut7,
-                               key8,
-                               fut8,
-                               key9,
-                               fut9,
-                               key10,
-                               fut10,
-                               key11,
-                               fut11,
-                               key12,
-                               fut12
-                              );
+    public static <O> MapExp<O> of(final String key1,
+                                   final Exp<O> exp1,
+                                   final String key2,
+                                   final Exp<O> exp2,
+                                   final String key3,
+                                   final Exp<O> exp3,
+                                   final String key4,
+                                   final Exp<O> exp4,
+                                   final String key5,
+                                   final Exp<O> exp5,
+                                   final String key6,
+                                   final Exp<O> exp6,
+                                   final String key7,
+                                   final Exp<O> exp7,
+                                   final String key8,
+                                   final Exp<O> exp8,
+                                   final String key9,
+                                   final Exp<O> exp9,
+                                   final String key10,
+                                   final Exp<O> exp10,
+                                   final String key11,
+                                   final Exp<O> exp11,
+                                   final String key12,
+                                   final Exp<O> exp12,
+                                   final String key13,
+                                   final Exp<O> exp13
+                                  ) {
+        MapExp<O> obj = MapExp.of(key1,
+                                  exp1,
+                                  key2,
+                                  exp2,
+                                  key3,
+                                  exp3,
+                                  key4,
+                                  exp4,
+                                  key5,
+                                  exp5,
+                                  key6,
+                                  exp6,
+                                  key7,
+                                  exp7,
+                                  key8,
+                                  exp8,
+                                  key9,
+                                  exp9,
+                                  key10,
+                                  exp10,
+                                  key11,
+                                  exp11,
+                                  key12,
+                                  exp12
+                                 );
         obj.bindings = obj.bindings.put(requireNonNull(key13),
-                                        requireNonNull(fut13)
+                                        requireNonNull(exp13)
                                        );
         return obj;
     }
@@ -759,94 +760,94 @@ public final class MapExp extends AbstractExp<Map<String, ?>> {
      static factory method to create a JsObjFuture of fourteen mappings
 
      @param key1  the first key
-     @param fut1  the mapping associated to the first key
+     @param exp1  the mapping associated to the first key
      @param key2  the second key
-     @param fut2  the mapping associated to the second key
+     @param exp2  the mapping associated to the second key
      @param key3  the third key
-     @param fut3  the mapping associated to the third key
+     @param exp3  the mapping associated to the third key
      @param key4  the fourth key
-     @param fut4  the mapping associated to the fourth key
+     @param exp4  the mapping associated to the fourth key
      @param key5  the fifth key
-     @param fut5  the mapping associated to the fifth key
+     @param exp5  the mapping associated to the fifth key
      @param key6  the sixth key
-     @param fut6  the mapping associated to the sixth key
+     @param exp6  the mapping associated to the sixth key
      @param key7  the seventh key
-     @param fut7  the mapping associated to the seventh key
+     @param exp7  the mapping associated to the seventh key
      @param key8  the eighth key
-     @param fut8  the mapping associated to the eighth key
+     @param exp8  the mapping associated to the eighth key
      @param key9  the ninth key
-     @param fut9  the mapping associated to the ninth key
+     @param exp9  the mapping associated to the ninth key
      @param key10 the tenth key
-     @param fut10 the mapping associated to the eleventh key
+     @param exp10 the mapping associated to the eleventh key
      @param key11 the eleventh key
-     @param fut11 the mapping associated to the eleventh key
+     @param exp11 the mapping associated to the eleventh key
      @param key12 the twelfth key
-     @param fut12 the mapping associated to the twelfth key,
+     @param exp12 the mapping associated to the twelfth key,
      @param key13 the thirteenth key
-     @param fut13 the mapping associated to the thirteenth key
+     @param exp13 the mapping associated to the thirteenth key
      @param key14 the fourteenth key
-     @param fut14 the mapping associated to the fourteenth key
+     @param exp14 the mapping associated to the fourteenth key
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static MapExp of(final String key1,
-                            final Exp<?> fut1,
-                            final String key2,
-                            final Exp<?> fut2,
-                            final String key3,
-                            final Exp<?> fut3,
-                            final String key4,
-                            final Exp<?> fut4,
-                            final String key5,
-                            final Exp<?> fut5,
-                            final String key6,
-                            final Exp<?> fut6,
-                            final String key7,
-                            final Exp<?> fut7,
-                            final String key8,
-                            final Exp<?> fut8,
-                            final String key9,
-                            final Exp<?> fut9,
-                            final String key10,
-                            final Exp<?> fut10,
-                            final String key11,
-                            final Exp<?> fut11,
-                            final String key12,
-                            final Exp<?> fut12,
-                            final String key13,
-                            final Exp<?> fut13,
-                            final String key14,
-                            final Exp<?> fut14
-                           ) {
-        MapExp obj = MapExp.of(key1,
-                               fut1,
-                               key2,
-                               fut2,
-                               key3,
-                               fut3,
-                               key4,
-                               fut4,
-                               key5,
-                               fut5,
-                               key6,
-                               fut6,
-                               key7,
-                               fut7,
-                               key8,
-                               fut8,
-                               key9,
-                               fut9,
-                               key10,
-                               fut10,
-                               key11,
-                               fut11,
-                               key12,
-                               fut12,
-                               key13,
-                               fut13
-                              );
+    public static <O> MapExp<O> of(final String key1,
+                                   final Exp<O> exp1,
+                                   final String key2,
+                                   final Exp<O> exp2,
+                                   final String key3,
+                                   final Exp<O> exp3,
+                                   final String key4,
+                                   final Exp<O> exp4,
+                                   final String key5,
+                                   final Exp<O> exp5,
+                                   final String key6,
+                                   final Exp<O> exp6,
+                                   final String key7,
+                                   final Exp<O> exp7,
+                                   final String key8,
+                                   final Exp<O> exp8,
+                                   final String key9,
+                                   final Exp<O> exp9,
+                                   final String key10,
+                                   final Exp<O> exp10,
+                                   final String key11,
+                                   final Exp<O> exp11,
+                                   final String key12,
+                                   final Exp<O> exp12,
+                                   final String key13,
+                                   final Exp<O> exp13,
+                                   final String key14,
+                                   final Exp<O> exp14
+                                  ) {
+        MapExp<O> obj = MapExp.of(key1,
+                                  exp1,
+                                  key2,
+                                  exp2,
+                                  key3,
+                                  exp3,
+                                  key4,
+                                  exp4,
+                                  key5,
+                                  exp5,
+                                  key6,
+                                  exp6,
+                                  key7,
+                                  exp7,
+                                  key8,
+                                  exp8,
+                                  key9,
+                                  exp9,
+                                  key10,
+                                  exp10,
+                                  key11,
+                                  exp11,
+                                  key12,
+                                  exp12,
+                                  key13,
+                                  exp13
+                                 );
         obj.bindings = obj.bindings.put(requireNonNull(key14),
-                                        requireNonNull(fut14)
+                                        requireNonNull(exp14)
                                        );
         return obj;
 
@@ -857,100 +858,100 @@ public final class MapExp extends AbstractExp<Map<String, ?>> {
      static factory method to create a JsObjFuture of fifteen mappings
 
      @param key1  the first key
-     @param fut1  the mapping associated to the first key
+     @param exp1  the mapping associated to the first key
      @param key2  the second key
-     @param fut2  the mapping associated to the second key
+     @param exp2  the mapping associated to the second key
      @param key3  the third key
-     @param fut3  the mapping associated to the third key
+     @param exp3  the mapping associated to the third key
      @param key4  the fourth key
-     @param fut4  the mapping associated to the fourth key
+     @param exp4  the mapping associated to the fourth key
      @param key5  the fifth key
-     @param fut5  the mapping associated to the fifth key
+     @param exp5  the mapping associated to the fifth key
      @param key6  the sixth key
-     @param fut6  the mapping associated to the sixth key
+     @param exp6  the mapping associated to the sixth key
      @param key7  the seventh key
-     @param fut7  the mapping associated to the seventh key
+     @param exp7  the mapping associated to the seventh key
      @param key8  the eighth key
-     @param fut8  the mapping associated to the eighth key
+     @param exp8  the mapping associated to the eighth key
      @param key9  the ninth key
-     @param fut9  the mapping associated to the ninth key
+     @param exp9  the mapping associated to the ninth key
      @param key10 the tenth key
-     @param fut10 the mapping associated to the eleventh key
+     @param exp10 the mapping associated to the eleventh key
      @param key11 the eleventh key
-     @param fut11 the mapping associated to the eleventh key
+     @param exp11 the mapping associated to the eleventh key
      @param key12 the twelfth key
-     @param fut12 the mapping associated to the twelfth key,
+     @param exp12 the mapping associated to the twelfth key,
      @param key13 the thirteenth key
-     @param fut13 the mapping associated to the thirteenth key
+     @param exp13 the mapping associated to the thirteenth key
      @param key14 the fourteenth key
-     @param fut14 the mapping associated to the fourteenth key
+     @param exp14 the mapping associated to the fourteenth key
      @param key15 the fifteenth key
-     @param fut15 the mapping associated to the fifteenth key
+     @param exp15 the mapping associated to the fifteenth key
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static MapExp of(final String key1,
-                            final Exp<?> fut1,
-                            final String key2,
-                            final Exp<?> fut2,
-                            final String key3,
-                            final Exp<?> fut3,
-                            final String key4,
-                            final Exp<?> fut4,
-                            final String key5,
-                            final Exp<?> fut5,
-                            final String key6,
-                            final Exp<?> fut6,
-                            final String key7,
-                            final Exp<?> fut7,
-                            final String key8,
-                            final Exp<?> fut8,
-                            final String key9,
-                            final Exp<?> fut9,
-                            final String key10,
-                            final Exp<?> fut10,
-                            final String key11,
-                            final Exp<?> fut11,
-                            final String key12,
-                            final Exp<?> fut12,
-                            final String key13,
-                            final Exp<?> fut13,
-                            final String key14,
-                            final Exp<?> fut14,
-                            final String key15,
-                            final Exp<?> fut15
-                           ) {
-        MapExp obj = MapExp.of(key1,
-                               fut1,
-                               key2,
-                               fut2,
-                               key3,
-                               fut3,
-                               key4,
-                               fut4,
-                               key5,
-                               fut5,
-                               key6,
-                               fut6,
-                               key7,
-                               fut7,
-                               key8,
-                               fut8,
-                               key9,
-                               fut9,
-                               key10,
-                               fut10,
-                               key11,
-                               fut11,
-                               key12,
-                               fut12,
-                               key13,
-                               fut13,
-                               key14,
-                               fut14
-                              );
+    public static <O> MapExp<O> of(final String key1,
+                                   final Exp<O> exp1,
+                                   final String key2,
+                                   final Exp<O> exp2,
+                                   final String key3,
+                                   final Exp<O> exp3,
+                                   final String key4,
+                                   final Exp<O> exp4,
+                                   final String key5,
+                                   final Exp<O> exp5,
+                                   final String key6,
+                                   final Exp<O> exp6,
+                                   final String key7,
+                                   final Exp<O> exp7,
+                                   final String key8,
+                                   final Exp<O> exp8,
+                                   final String key9,
+                                   final Exp<O> exp9,
+                                   final String key10,
+                                   final Exp<O> exp10,
+                                   final String key11,
+                                   final Exp<O> exp11,
+                                   final String key12,
+                                   final Exp<O> exp12,
+                                   final String key13,
+                                   final Exp<O> exp13,
+                                   final String key14,
+                                   final Exp<O> exp14,
+                                   final String key15,
+                                   final Exp<O> exp15
+                                  ) {
+        MapExp<O> obj = MapExp.of(key1,
+                                  exp1,
+                                  key2,
+                                  exp2,
+                                  key3,
+                                  exp3,
+                                  key4,
+                                  exp4,
+                                  key5,
+                                  exp5,
+                                  key6,
+                                  exp6,
+                                  key7,
+                                  exp7,
+                                  key8,
+                                  exp8,
+                                  key9,
+                                  exp9,
+                                  key10,
+                                  exp10,
+                                  key11,
+                                  exp11,
+                                  key12,
+                                  exp12,
+                                  key13,
+                                  exp13,
+                                  key14,
+                                  exp14
+                                 );
         obj.bindings = obj.bindings.put(requireNonNull(key15),
-                                        requireNonNull(fut15)
+                                        requireNonNull(exp15)
                                        );
         return obj;
 
@@ -960,16 +961,16 @@ public final class MapExp extends AbstractExp<Map<String, ?>> {
     /**
      returns a new object future inserting the given future at the given key
 
-     @param key    the given key
-     @param future the given future
+     @param key the given key
+     @param exp the given future
      @return a new JsObjFuture
      */
-    public MapExp set(final String key,
-                      final Exp<?> future
-                     ) {
-        return new MapExp(bindings.put(requireNonNull(key),
-                                       requireNonNull(future)
-                                      ));
+    public MapExp<O> set(final String key,
+                         final Exp<O> exp
+                        ) {
+        return new MapExp<>(bindings.put(requireNonNull(key),
+                                         requireNonNull(exp)
+                                        ));
     }
 
     public boolean isEmpty() {
@@ -978,12 +979,12 @@ public final class MapExp extends AbstractExp<Map<String, ?>> {
 
 
     @Override
-    public <P> Exp<P> map(final Function<Map<String, ?>, P> fn) {
+    public <P> Exp<P> map(final Function<Map<String, O>, P> fn) {
         return Val.of(() -> get().map(fn));
     }
 
     @Override
-    public Map<String, ?> result() {
+    public Map<String, O> result() {
         return bindings.map((k, v) -> new Tuple2<>(k,
                                                    v.get()
                                                     .result()
@@ -992,21 +993,21 @@ public final class MapExp extends AbstractExp<Map<String, ?>> {
     }
 
     @Override
-    public Exp<Map<String, ?>> retry(final int attempts) {
-        return new MapExp(bindings.mapValues(it -> it.retry(attempts)));
+    public Exp<Map<String, O>> retry(final int attempts) {
+        return new MapExp<>(bindings.mapValues(it -> it.retry(attempts)));
     }
 
     @Override
-    public Exp<Map<String, ?>> retryIf(final Predicate<Throwable> predicate,
+    public Exp<Map<String, O>> retryIf(final Predicate<Throwable> predicate,
                                        final int attempts) {
-        return new MapExp(bindings.mapValues(it -> it.retryIf(predicate,
-                                                              attempts
-                                                             )));
+        return new MapExp<>(bindings.mapValues(it -> it.retryIf(predicate,
+                                                                attempts
+                                                               )));
 
     }
 
     @Override
-    public Future<Map<String, ?>> get() {
+    public Future<Map<String, O>> get() {
 
 
         List<String> keys = bindings.keysIterator()
@@ -1021,18 +1022,17 @@ public final class MapExp extends AbstractExp<Map<String, ?>> {
                                           .toJavaList()
                                   )
                               .map(r -> {
-                                  Map<String, ?> result = LinkedHashMap.empty();
-                                  java.util.List<Object> list = r.result()
-                                                                 .list();
-                                  for (int i = 0; i < list.size(); i++
-                                  ) {
-                                      result = result.put(new Tuple2(keys.get(i),
-                                                                       list.get(i))
+                                  Map<String, O> result = LinkedHashMap.empty();
+                                  java.util.List<O> list = r.result()
+                                                            .list();
+                                  for (int i = 0; i < list.size(); i++) {
+                                      result = result.put(new Tuple2<>(keys.get(i),
+                                                                       list.get(i)
+                                                          )
                                                          );
 
                                   }
                                   return result;
-
                               });
 
 

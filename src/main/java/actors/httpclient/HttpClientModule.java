@@ -2,12 +2,9 @@ package actors.httpclient;
 
 
 import actors.Actor;
-import actors.ActorRef;
 import actors.ActorsModule;
 import actors.Handlers;
 import actors.exp.Exp;
-import actors.exp.MapExp;
-import io.vavr.collection.Map;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
@@ -17,8 +14,6 @@ import jsonvalues.JsObj;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
-
-import static actors.httpclient.HttpExceptions.EXCEPTION_READING_BODY_RESPONSE;
 import static actors.httpclient.HttpExceptions.EXCEPTION_RESPONSE;
 import static actors.httpclient.Req.BODY_LENS;
 
@@ -131,36 +126,22 @@ public abstract class HttpClientModule extends ActorsModule {
         };
     }
 
-    private static Handler<AsyncResult<Buffer>> getAsyncResultHandler(final Message<JsObj> m,
-                                                                      final HttpClientResponse resp) {
-        return it -> {
-            if (it.succeeded()) {
-                JsObj apply = Resp.toJsObj.apply(it.result(),
-                                                 resp
-                                                );
-                m.reply(apply);
-            }
-            else m.reply(EXCEPTION_READING_BODY_RESPONSE.apply(it.cause()));
-        };
-    }
-
     public HttpClientModule(final HttpClientOptions options) {
         this.httpOptions = options;
     }
 
     @Override
-    protected void onComplete(final Map<String, ActorRef<?, ?>> futures) {
-        this.httpClient = this.<JsObj,JsObj>getActorRef("httpclient").ask();
+    protected void onComplete() {
+        this.httpClient = this.<JsObj, JsObj>getRegisteredActor("httpclient").ask();
         defineHttpActors();
     }
 
     protected abstract void defineHttpActors();
 
-    @Override
-    protected MapExp defineActors() {
 
-        return MapExp.of("httpclient",
-                         actors.register(consumer(vertx.createHttpClient(httpOptions)))
-                        );
+    @Override
+    protected void registerActors() {
+        registerActor("httpclient",
+                      actors.register(consumer(vertx.createHttpClient(httpOptions))));
     }
 }

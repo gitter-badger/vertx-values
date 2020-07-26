@@ -3,9 +3,7 @@ package actors;
 import actors.errors.InvalidUser;
 import actors.exp.And;
 import actors.exp.IfElse;
-import actors.exp.MapExp;
 import actors.exp.Val;
-import io.vavr.collection.Map;
 import jsonvalues.JsObj;
 
 public class UserAccountModule extends ActorsModule {
@@ -29,27 +27,31 @@ public class UserAccountModule extends ActorsModule {
                     .alternative(Val.of(new InvalidUser()));
 
     @Override
-    protected void onComplete(final Map<String, ActorRef<?, ?>> futures) {
-        isLegalAge = this.<Integer, Boolean>getActorRef("isLegalAge").ask();
-        isValidId = this.<String, Boolean>getActorRef("isValidId").ask();
-        isValidAddress = this.<JsObj, Boolean>getActorRef("isValidAddress").ask();
-        isValidEmail = this.<String, Boolean>getActorRef("isValidEmail").ask();
-        register = this.<JsObj, JsObj>getActorRef("register").ask();
+    protected void onComplete() {
+        isLegalAge = this.<Integer, Boolean>getRegisteredActor("isLegalAge").ask();
+        isValidId = this.<String, Boolean>getRegisteredActor("isValidId").ask();
+        isValidAddress = this.<JsObj, Boolean>getRegisteredActor("isValidAddress").ask();
+        isValidEmail = this.<String, Boolean>getRegisteredActor("isValidEmail").ask();
+        register = this.<JsObj, JsObj>getRegisteredActor("register").ask();
     }
 
     @Override
-    protected MapExp defineActors() {
-        return MapExp.of("isLegalAge",
-                         actors.register(UserAcountFunctions.isLegalAge),
-                         "isValidId",
-                         actors.register(UserAcountFunctions.isValidId),
-                         "isValidAddress",
-                         actors.register(UserAcountFunctions.isValidAddress),
-                         "isValidEmail",
-                         actors.register(UserAcountFunctions.isValidEmail),
-                         "register",
-                         actors.register(UserAcountFunctions.register)
-                        );
+    protected void registerActors() {
+        registerActor("isLegalAge",
+                      actors.register(UserAcountFunctions.isLegalAge)
+                     );
+        registerActor("isValidId",
+                      actors.register(UserAcountFunctions.isValidId)
+                     );
+        registerActor("isValidAddress",
+                      actors.register(UserAcountFunctions.isValidAddress)
+                     );
+        registerActor("isValidEmail",
+                      actors.register(UserAcountFunctions.isValidEmail)
+                     );
+        registerActor("register",
+                      actors.register(UserAcountFunctions.register)
+                     );
 
     }
 }

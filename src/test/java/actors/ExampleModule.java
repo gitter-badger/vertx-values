@@ -1,8 +1,6 @@
 package actors;
 
 import actors.exp.Exp;
-import actors.exp.MapExp;
-import io.vavr.collection.Map;
 import io.vertx.core.eventbus.Message;
 
 import java.util.function.Consumer;
@@ -18,25 +16,27 @@ public class ExampleModule extends ActorsModule {
 
 
     @Override
-    protected void onComplete(final Map<String, ActorRef<?, ?>> futures) {
-        triple = this.<Integer, Integer>getActorRef("triple").ask();
-        addOne = this.<Integer, Integer>getActorRef("addOne").ask();
-        printNumber = this.<Integer, Void>getActorRef("print").tell();
+    protected void onComplete() {
+        triple = this.<Integer, Integer>getRegisteredActor("triple").ask();
+        addOne = this.<Integer, Integer>getRegisteredActor("addOne").ask();
+        printNumber = this.<Integer, Void>getRegisteredActor("print").tell();
         quadruple = actors.spawn(i -> i * 4);
     }
 
     @Override
-    protected MapExp defineActors() {
+    protected void registerActors() {
         final Function<Integer, Integer> triple      = i -> i * 3;
         final Function<Integer, Integer> addOne      = i -> i + 1;
         final Consumer<Message<Integer>> printNumber = m -> System.out.println(m.body());
 
-        return MapExp.of("triple",
-                         actors.register(triple),
-                         "addOne",
-                         actors.register(addOne),
-                         "printNumber",
-                         actors.register(printNumber)
-                        );
+        registerActor("triple",
+                      actors.register(triple)
+                     );
+        registerActor("addOne",
+                      actors.register(addOne)
+                     );
+        registerActor("printNumber",
+                      actors.register(printNumber)
+                     );
     }
 }

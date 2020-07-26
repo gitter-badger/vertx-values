@@ -4,14 +4,10 @@ import actors.Actor;
 import actors.ActorRef;
 import actors.ActorsModule;
 import actors.exp.Exp;
-import actors.exp.MapExp;
-import io.vavr.collection.Map;
 import jsonvalues.JsObj;
-
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
-
 import static actors.bankaccount.Account.creditLens;
 import static actors.bankaccount.Account.nameLens;
 
@@ -39,20 +35,23 @@ public class BankAccountModule extends ActorsModule {
     public BiFunction<Actor<JsObj, Integer>, Actor<JsObj, Integer>, Actor<Integer, Integer>> makeTx;
 
 
-
     @Override
-    protected void onComplete(final Map<String, ActorRef<?, ?>> futures) {
+    protected void onComplete() {
         registerAccount = account -> actors.register(nameLens.get.apply(account),
                                                      new AccountActor(creditLens.get.apply(account))
                                                     );
 
         makeTx = (from, to) -> actors.spawn(new TxActor(from,
-                                                        to)
+                                                        to
+                                            )
                                            );
     }
 
     @Override
-    protected MapExp defineActors() {
-        return null;
+    protected void registerActors() {
+
     }
+
 }
+
+

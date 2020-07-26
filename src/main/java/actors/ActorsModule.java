@@ -1,5 +1,6 @@
 package actors;
 
+import actors.exp.Exp;
 import actors.exp.MapExp;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
@@ -9,6 +10,8 @@ import io.vertx.core.Promise;
 
 import java.util.Objects;
 
+import static java.util.Objects.requireNonNull;
+
 
 /**
  Actor that acts as a module deploying and exposing all the deployed actors.
@@ -17,19 +20,19 @@ public abstract class ActorsModule extends AbstractVerticle {
 
     private static final DeploymentOptions DEFAULT_DEPLOYMENT_OPTIONS = new DeploymentOptions();
     protected final DeploymentOptions deploymentOptions;
-    private MapExp refExp;
+    private MapExp<ActorRef<?,?>> refExp;
     private Map<String, ActorRef<?, ?>> refMap;
 
 
-    public ActorsModule(final MapExp refExp,
+    public ActorsModule(final MapExp<ActorRef<?,?>> refExp,
                         final DeploymentOptions deploymentOptions) {
-        this.refExp = Objects.requireNonNull(refExp);
-        this.deploymentOptions = Objects.requireNonNull(deploymentOptions);
+        this.refExp = requireNonNull(refExp);
+        this.deploymentOptions = requireNonNull(deploymentOptions);
     }
 
     public ActorsModule(final MapExp refExp) {
         this.deploymentOptions = DEFAULT_DEPLOYMENT_OPTIONS;
-        this.refExp = Objects.requireNonNull(refExp);
+        this.refExp = requireNonNull(refExp);
     }
 
     public ActorsModule() {
@@ -40,11 +43,11 @@ public abstract class ActorsModule extends AbstractVerticle {
      The purpose of this method is to initialize the functions/consumers/suppliers defined in
      public fields of this class that will be exposed.
 
-     @param futures the list of ActorRef wrapped in futures.
+     @param actorRefs the list of ActorRef wrapped in actorRefs.
      */
-    protected abstract void onComplete(final Map<String, ActorRef<?, ?>> futures);
+    protected abstract void onComplete();
 
-    protected abstract MapExp defineActors();
+    protected abstract void registerActors();
 
     /**
      Factory to deploy or spawn actors
@@ -55,30 +58,31 @@ public abstract class ActorsModule extends AbstractVerticle {
     public void start(final Promise<Void> start) {
 
         try {
-            actors = new Actors(Objects.requireNonNull(vertx),
+            actors = new Actors(requireNonNull(vertx),
                                 deploymentOptions
             );
             initModule(actors);
 
-            refExp = defineActors();
+            registerActors();
             if (refExp != null && !refExp.isEmpty()) {
                 refExp.onComplete(event -> {
                                       if (event.failed()) start.fail(event.cause());
                                       else {
                                           try {
-                                              refMap = (Map<String, ActorRef<?, ?>>) event.result();
-                                              onComplete(refMap);
+                                              refMap =  event.result();
+                                              onComplete();
                                               start.complete();
                                           } catch (Exception e) {
                                               start.fail(e);
                                           }
                                       }
                                   }
-                                 ).get();
+                                 )
+                      .get();
             }
             else {
                 refMap = HashMap.empty();
-                onComplete(refMap);
+                onComplete();
                 start.complete();
             }
 
@@ -99,9 +103,15 @@ public abstract class ActorsModule extends AbstractVerticle {
      @return an ActorRef
      */
     @SuppressWarnings("unchecked")
-    //It's responsibility of the caller to make sure the object has the correct type
-    protected <I, O> ActorRef<I, O> getActorRef(final String key) {
-        return (ActorRef<I, O>) refMap.get(Objects.requireNonNull(key)).get();
+    protected <I, O> ActorRef<I, O> getRegisteredActor(final String key) {
+        return (ActorRef<I, O>) refMap.get(requireNonNull(key))
+                                      .get();
     }
 
+    protected <I, O> void registerActor(String key,
+                                        Exp<ActorRef<I, O>> exp) {
+        refExp = refExp.set(requireNonNull(key),
+                            ((Exp) Objects.requireNonNull(exp))
+                           );
+    }
 }
