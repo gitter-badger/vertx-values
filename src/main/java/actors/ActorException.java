@@ -15,12 +15,13 @@ public class ActorException extends ReplyException {
     }
 
     ActorException(final int code,final Throwable e) {
-        //todo @ sobra si no hay stacktrace
         super(RECIPIENT_FAILURE,
               code,
               e.toString() + "@" + Arrays.toString(e.getStackTrace())
              );
     }
+
+
 
 
 }

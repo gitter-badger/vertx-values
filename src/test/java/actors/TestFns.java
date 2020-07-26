@@ -1,11 +1,8 @@
 package actors;
 
 import io.vertx.core.AsyncResult;
-import io.vertx.core.CompositeFuture;
 import io.vertx.core.Handler;
 import io.vertx.junit5.VertxTestContext;
-
-import java.util.List;
 import java.util.function.Consumer;
 
 public class TestFns {

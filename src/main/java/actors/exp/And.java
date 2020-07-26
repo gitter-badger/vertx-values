@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class And extends AbstractExp<Boolean> {
+public final class And extends AbstractExp<Boolean> {
 
     And(final List<Exp<Boolean>> exps) {
         this.exps = exps;

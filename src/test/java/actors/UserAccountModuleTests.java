@@ -32,8 +32,7 @@ public class UserAccountModuleTests
   }
 
   @Test
-  public void _15_is_not_legal_age(final Vertx vertx,
-                                   final VertxTestContext context){
+  public void _15_is_not_legal_age(final VertxTestContext context){
     UserAccountModule.isLegalAge
                      .apply(13)
                      .onComplete(it -> context.verify(()->
@@ -42,13 +41,12 @@ public class UserAccountModuleTests
                                                         context.completeNow();
                                                       }
                                                       )
-                                );
+                                ).get();
   }
 
 
   @Test
-  public void _17_is_not_legal_age(final Vertx vertx,
-                                   final VertxTestContext context){
+  public void _17_is_not_legal_age(final VertxTestContext context){
     UserAccountModule.isLegalAge
                      .apply(17)
                      .onComplete(it -> context.verify(()->
@@ -57,15 +55,14 @@ public class UserAccountModuleTests
                                                         context.completeNow();
                                                       }
                                                       )
-                                );
+                                ).get();
 
 
   }
 
 
   @Test
-  public void _user_is_valid(final Vertx vertx,
-                             final VertxTestContext context){
+  public void _user_is_valid(final VertxTestContext context){
     UserAccountModule.isValid
       .apply(JsObj.of("email", JsStr.of("imrafaelmerino@gmail.com"),
                       "age", JsInt.of(17),

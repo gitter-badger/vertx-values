@@ -6,7 +6,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class Val<O> extends AbstractExp<O> {
+public final class Val<O> extends AbstractExp<O> {
 
     Supplier<Future<O>> fut;
 
@@ -14,7 +14,11 @@ public class Val<O> extends AbstractExp<O> {
         return new Val<>(supplier);
     }
 
-    public static <O> Val<O> cons(O o) {
+    public static <O> Val<O> of(Throwable failure){
+        return Val.of(()->Future.failedFuture(failure));
+    }
+
+    public static <O> Val<O> of(O o) {
         return new Val<>(() -> Future.succeededFuture(o));
     }
 
@@ -33,6 +37,8 @@ public class Val<O> extends AbstractExp<O> {
                                .map(fn)
                      );
     }
+
+
 
     @Override
     public O result() {
@@ -57,8 +63,8 @@ public class Val<O> extends AbstractExp<O> {
                     );
     }
 
-    private Exp<O> retry(Exp<O> exp,
-                         int attempts) {
+    private Exp<O> retry(final Exp<O> exp,
+                         final int attempts) {
         if (attempts == 0) return exp;
         return Val.of(() -> exp.get()
                                .compose(Future::succeededFuture,
@@ -69,9 +75,9 @@ public class Val<O> extends AbstractExp<O> {
                      );
     }
 
-    private Exp<O> retry(Exp<O> exp,
-                         int attempts,
-                         Predicate<Throwable> predicate) {
+    private Exp<O> retry(final Exp<O> exp,
+                         final int attempts,
+                         final Predicate<Throwable> predicate) {
         if (attempts == 0) return exp;
         return Val.of(() -> exp.get()
                                .compose(Future::succeededFuture,

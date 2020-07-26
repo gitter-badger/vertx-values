@@ -3,55 +3,53 @@ package actors;
 import actors.errors.InvalidUser;
 import actors.exp.And;
 import actors.exp.IfElse;
-import io.vertx.core.Future;
+import actors.exp.MapExp;
+import actors.exp.Val;
+import io.vavr.collection.Map;
 import jsonvalues.JsObj;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
+public class UserAccountModule extends ActorsModule {
 
-public class UserAccountModule extends ActorsModule
-{
+    public static Actor<Integer, Boolean> isLegalAge;
+    public static Actor<String, Boolean> isValidId;
+    public static Actor<JsObj, Boolean> isValidAddress;
+    public static Actor<String, Boolean> isValidEmail;
+    public static Actor<JsObj, JsObj> register;
 
-  public static Function<Integer,Future<Boolean>> isLegalAge;
-  public static Function<String,Future<Boolean>> isValidId;
-  public static Function<JsObj,Future<Boolean>> isValidAddress;
-  public static Function<String,Future<Boolean>> isValidEmail;
-  public static Function<JsObj,Future<JsObj>> register;
+    public static Actor<JsObj, Boolean> isValid = obj ->
+            And.of(isLegalAge.apply(obj.getInt("age")),
+                   isValidId.apply(obj.getStr("id")),
+                   isValidAddress.apply(obj.getObj("address")),
+                   isValidEmail.apply(obj.getStr("email"))
+                  );
 
-  public static Function<JsObj, Supplier<Future<Boolean>>> isValid = obj -> And.of(() -> isLegalAge.apply(obj.getInt("age")),
-                                                                                   () -> isValidId.apply(obj.getStr("id")),
-                                                                                  () -> isValidAddress.apply(obj.getObj("address")),
-                                                                                 () -> isValidEmail.apply(obj.getStr("email"))
-                                                                                  );
+    public static Actor<JsObj, JsObj> registerIfValid = obj ->
+            IfElse.<JsObj>predicate(isValid.apply(obj))
+                    .consequence(register.apply(obj))
+                    .alternative(Val.of(new InvalidUser()));
 
-  public static Function<JsObj,Future<JsObj>> registerIfValid = obj ->
-    IfElse.<JsObj>predicate(isValid.apply(obj))
-          .consequence(() -> register.apply(obj))
-          .alternative(() -> Future.failedFuture(new InvalidUser()))
-          .get();
+    @Override
+    protected void onComplete(final Map<String, ActorRef<?, ?>> futures) {
+        isLegalAge = this.<Integer, Boolean>getActorRef("isLegalAge").ask();
+        isValidId = this.<String, Boolean>getActorRef("isValidId").ask();
+        isValidAddress = this.<JsObj, Boolean>getActorRef("isValidAddress").ask();
+        isValidEmail = this.<String, Boolean>getActorRef("isValidEmail").ask();
+        register = this.<JsObj, JsObj>getActorRef("register").ask();
+    }
 
-
-  @Override
-  protected void defineActors(final List<Object> futures)
-  {
-    isLegalAge = this.<Integer,Boolean>toVerticleRef(futures.get(0)).ask();
-    isValidId = this.<String,Boolean>toVerticleRef(futures.get(1)).ask();
-    isValidAddress = this.<JsObj,Boolean>toVerticleRef(futures.get(2)).ask();
-    isValidEmail = this.<String,Boolean>toVerticleRef(futures.get(3)).ask();
-    register = this.<JsObj,JsObj>toVerticleRef(futures.get(4)).ask();
-  }
-
-  @Override
-  protected List<Future> registerActors()
-  {
-    return Arrays.asList(actors.register(UserAcountFunctions.isLegalAge),
+    @Override
+    protected MapExp defineActors() {
+        return MapExp.of("isLegalAge",
+                         actors.register(UserAcountFunctions.isLegalAge),
+                         "isValidId",
                          actors.register(UserAcountFunctions.isValidId),
+                         "isValidAddress",
                          actors.register(UserAcountFunctions.isValidAddress),
+                         "isValidEmail",
                          actors.register(UserAcountFunctions.isValidEmail),
+                         "register",
                          actors.register(UserAcountFunctions.register)
                         );
-  }
 
+    }
 }

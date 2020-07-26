@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Switch<O> extends AbstractExp<O> {
+public final class Switch<O> extends AbstractExp<O> {
 
     final List<Exp<Boolean>> predicates;
     final List<Exp<O>> branches;

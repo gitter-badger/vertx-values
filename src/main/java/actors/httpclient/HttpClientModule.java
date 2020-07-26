@@ -1,19 +1,20 @@
 package actors.httpclient;
 
 
-import actors.VerticleRef;
+import actors.Actor;
+import actors.ActorRef;
 import actors.ActorsModule;
 import actors.Handlers;
+import actors.exp.Exp;
+import actors.exp.MapExp;
+import io.vavr.collection.Map;
 import io.vertx.core.AsyncResult;
-import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.http.*;
 import jsonvalues.JsObj;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -26,25 +27,25 @@ public abstract class HttpClientModule extends ActorsModule {
 
     private final HttpClientOptions httpOptions;
 
-    private Function<JsObj, Future<JsObj>> httpClient;
+    private Actor<JsObj, JsObj> httpClient;
 
-    public Function<GetBuilder, Future<JsObj>> get = builder -> httpClient.apply(builder.createHttpReq());
+    public Function<GetBuilder, Exp<JsObj>> get = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<PostBuilder, Future<JsObj>> post = builder -> httpClient.apply(builder.createHttpReq());
+    public Function<PostBuilder, Exp<JsObj>> post = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<PutBuilder, Future<JsObj>> put = builder -> httpClient.apply(builder.createHttpReq());
+    public Function<PutBuilder, Exp<JsObj>> put = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<DeleteBuilder, Future<JsObj>> delete = builder -> httpClient.apply(builder.createHttpReq());
+    public Function<DeleteBuilder, Exp<JsObj>> delete = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<HeadBuilder, Future<JsObj>> head = builder -> httpClient.apply(builder.createHttpReq());
+    public Function<HeadBuilder, Exp<JsObj>> head = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<OptionsBuilder, Future<JsObj>> options = builder -> httpClient.apply(builder.createHttpReq());
+    public Function<OptionsBuilder, Exp<JsObj>> options = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<PatchBuilder, Future<JsObj>> patch = builder -> httpClient.apply(builder.createHttpReq());
+    public Function<PatchBuilder, Exp<JsObj>> patch = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<TraceBuilder, Future<JsObj>> trace = builder -> httpClient.apply(builder.createHttpReq());
+    public Function<TraceBuilder, Exp<JsObj>> trace = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<ConnectBuilder, Future<JsObj>> connect = builder -> httpClient.apply(builder.createHttpReq());
+    public Function<ConnectBuilder, Exp<JsObj>> connect = builder -> httpClient.apply(builder.createHttpReq());
 
     private static Consumer<Message<JsObj>> consumer(final HttpClient client) {
         return message -> {
@@ -148,17 +149,18 @@ public abstract class HttpClientModule extends ActorsModule {
     }
 
     @Override
-    protected void defineActors(final List<Object> futures) {
-        this.httpClient = req -> ((VerticleRef<JsObj, JsObj>) futures.get(0)).ask()
-                                                                             .apply(req);
+    protected void onComplete(final Map<String, ActorRef<?, ?>> futures) {
+        this.httpClient = this.<JsObj,JsObj>getActorRef("httpclient").ask();
         defineHttpActors();
     }
 
     protected abstract void defineHttpActors();
 
     @Override
-    protected List<Future> registerActors() {
-        return Arrays.asList(actors.register(consumer(vertx.createHttpClient(httpOptions))));
+    protected MapExp defineActors() {
 
+        return MapExp.of("httpclient",
+                         actors.register(consumer(vertx.createHttpClient(httpOptions)))
+                        );
     }
 }

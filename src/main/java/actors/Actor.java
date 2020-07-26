@@ -1,10 +1,8 @@
 package actors;
-
-import io.vertx.core.Future;
-
+import actors.exp.Exp;
 import java.util.function.Function;
 
-public interface Actor<I,O> extends Function<I, Future<O>> {
+public interface Actor<I,O> extends Function<I, Exp<O>> {
 
 
 }

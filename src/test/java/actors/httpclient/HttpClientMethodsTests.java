@@ -69,7 +69,8 @@ public class HttpClientMethodsTests {
     public void testGet(VertxTestContext testContext) {
         httpClient.get.apply(new GetBuilder().port(PORT)
                                              .uri("example"))
-                      .onComplete(TestFns.pipeTo(System.out::println,testContext));
+                      .onComplete(TestFns.pipeTo(System.out::println,testContext))
+                      .get();
     }
 
     @Test
@@ -80,6 +81,6 @@ public class HttpClientMethodsTests {
                        .onComplete(it -> {
                            System.out.println(it.result());
                            testContext.completeNow();
-                       });
+                       }).get();
     }
 }

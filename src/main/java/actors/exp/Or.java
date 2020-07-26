@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class Or extends AbstractExp<Boolean>{
+public final class Or extends AbstractExp<Boolean>{
 
     Or(final List<Exp<Boolean>> exps) {
         this.exps = exps;

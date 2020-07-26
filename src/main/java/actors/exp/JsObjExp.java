@@ -1,15 +1,17 @@
 package actors.exp;
 
 import io.vavr.Tuple2;
+import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.TreeMap;
+import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import jsonvalues.JsObj;
 import jsonvalues.JsValue;
 
-
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 
@@ -26,11 +28,12 @@ import static java.util.Objects.requireNonNull;
  ) =
  Future.succeededFuture(JsObj(a->1,b->"a",c->true))}
  */
-public class JsObjExp extends AbstractExp<JsObj> {
+public final class JsObjExp extends AbstractExp<JsObj> {
 
     private Map<String, Exp<? extends JsValue>> bindings = TreeMap.empty();
 
-    private JsObjExp(){}
+    private JsObjExp() {
+    }
 
     private JsObjExp(final Map<String, Exp<? extends JsValue>> bindings) {
         this.bindings = bindings;
@@ -48,11 +51,10 @@ public class JsObjExp extends AbstractExp<JsObj> {
                              ) {
         JsObjExp obj = new JsObjExp();
         obj.bindings = obj.bindings.put(key,
-                                fut
-                               );
+                                        fut
+                                       );
         return obj;
     }
-
 
 
     /**
@@ -70,9 +72,11 @@ public class JsObjExp extends AbstractExp<JsObj> {
                               final Exp<? extends JsValue> fut2
                              ) {
         JsObjExp obj = JsObjExp.of(key1,
-                                   fut1);
+                                   fut1
+                                  );
         obj.bindings = obj.bindings.put(requireNonNull(key2),
-                                        requireNonNull(fut2));
+                                        requireNonNull(fut2)
+                                       );
         return obj;
     }
 
@@ -95,12 +99,16 @@ public class JsObjExp extends AbstractExp<JsObj> {
                               final String key3,
                               final Exp<? extends JsValue> fut3
                              ) {
-        JsObjExp obj = JsObjExp.of(key1, fut1, key2, fut2);
+        JsObjExp obj = JsObjExp.of(key1,
+                                   fut1,
+                                   key2,
+                                   fut2
+                                  );
         obj.bindings = obj.bindings.put(requireNonNull(key3),
-                                        requireNonNull(fut3));
+                                        requireNonNull(fut3)
+                                       );
         return obj;
     }
-
 
 
     /**
@@ -126,12 +134,18 @@ public class JsObjExp extends AbstractExp<JsObj> {
                               final String key4,
                               final Exp<? extends JsValue> fut4
                              ) {
-        JsObjExp obj = JsObjExp.of(key1, fut1, key2, fut2, key3, fut3);
+        JsObjExp obj = JsObjExp.of(key1,
+                                   fut1,
+                                   key2,
+                                   fut2,
+                                   key3,
+                                   fut3
+                                  );
         obj.bindings = obj.bindings.put(requireNonNull(key4),
-                                        requireNonNull(fut4));
+                                        requireNonNull(fut4)
+                                       );
         return obj;
     }
-
 
 
     /**
@@ -161,13 +175,20 @@ public class JsObjExp extends AbstractExp<JsObj> {
                               final String key5,
                               final Exp<? extends JsValue> fut5
                              ) {
-        JsObjExp obj = JsObjExp.of(key1, fut1, key2, fut2, key3, fut3, key4, fut4);
+        JsObjExp obj = JsObjExp.of(key1,
+                                   fut1,
+                                   key2,
+                                   fut2,
+                                   key3,
+                                   fut3,
+                                   key4,
+                                   fut4
+                                  );
         obj.bindings = obj.bindings.put(requireNonNull(key5),
-                                        requireNonNull(fut5));
+                                        requireNonNull(fut5)
+                                       );
         return obj;
     }
-
-
 
 
     /**
@@ -201,12 +222,22 @@ public class JsObjExp extends AbstractExp<JsObj> {
                               final String key6,
                               final Exp<? extends JsValue> fut6
                              ) {
-        JsObjExp obj = JsObjExp.of(key1, fut1, key2, fut2, key3, fut3, key4, fut4, key5, fut5);
+        JsObjExp obj = JsObjExp.of(key1,
+                                   fut1,
+                                   key2,
+                                   fut2,
+                                   key3,
+                                   fut3,
+                                   key4,
+                                   fut4,
+                                   key5,
+                                   fut5
+                                  );
         obj.bindings = obj.bindings.put(requireNonNull(key6),
-                                        requireNonNull(fut6));
+                                        requireNonNull(fut6)
+                                       );
         return obj;
     }
-
 
 
     /**
@@ -244,9 +275,22 @@ public class JsObjExp extends AbstractExp<JsObj> {
                               final String key7,
                               final Exp<? extends JsValue> fut7
                              ) {
-        JsObjExp obj = JsObjExp.of(key1, fut1, key2, fut2, key3, fut3, key4, fut4, key5, fut5, key6, fut6);
+        JsObjExp obj = JsObjExp.of(key1,
+                                   fut1,
+                                   key2,
+                                   fut2,
+                                   key3,
+                                   fut3,
+                                   key4,
+                                   fut4,
+                                   key5,
+                                   fut5,
+                                   key6,
+                                   fut6
+                                  );
         obj.bindings = obj.bindings.put(requireNonNull(key7),
-                                        requireNonNull(fut7));
+                                        requireNonNull(fut7)
+                                       );
         return obj;
     }
 
@@ -290,9 +334,24 @@ public class JsObjExp extends AbstractExp<JsObj> {
                               final String key8,
                               final Exp<? extends JsValue> fut8
                              ) {
-        JsObjExp obj = JsObjExp.of(key1, fut1, key2, fut2, key3, fut3, key4, fut4, key5, fut5, key6, fut6, key7, fut7);
+        JsObjExp obj = JsObjExp.of(key1,
+                                   fut1,
+                                   key2,
+                                   fut2,
+                                   key3,
+                                   fut3,
+                                   key4,
+                                   fut4,
+                                   key5,
+                                   fut5,
+                                   key6,
+                                   fut6,
+                                   key7,
+                                   fut7
+                                  );
         obj.bindings = obj.bindings.put(requireNonNull(key8),
-                                        requireNonNull(fut8));
+                                        requireNonNull(fut8)
+                                       );
         return obj;
 
     }
@@ -341,14 +400,30 @@ public class JsObjExp extends AbstractExp<JsObj> {
                               final String key9,
                               final Exp<? extends JsValue> fut9
                              ) {
-        JsObjExp obj = JsObjExp.of(key1, fut1, key2, fut2, key3, fut3, key4, fut4, key5, fut5, key6, fut6, key7, fut7, key8, fut8);
+        JsObjExp obj = JsObjExp.of(key1,
+                                   fut1,
+                                   key2,
+                                   fut2,
+                                   key3,
+                                   fut3,
+                                   key4,
+                                   fut4,
+                                   key5,
+                                   fut5,
+                                   key6,
+                                   fut6,
+                                   key7,
+                                   fut7,
+                                   key8,
+                                   fut8
+                                  );
         obj.bindings = obj.bindings.put(requireNonNull(key9),
-                                        requireNonNull(fut9));
+                                        requireNonNull(fut9)
+                                       );
         return obj;
 
 
     }
-
 
 
     /**
@@ -398,10 +473,28 @@ public class JsObjExp extends AbstractExp<JsObj> {
                               final String key10,
                               final Exp<? extends JsValue> fut10
                              ) {
-        JsObjExp obj = JsObjExp.of(key1, fut1, key2, fut2, key3, fut3, key4, fut4, key5, fut5, key6, fut6, key7, fut7, key8, fut8,
-                                   key9, fut9);
+        JsObjExp obj = JsObjExp.of(key1,
+                                   fut1,
+                                   key2,
+                                   fut2,
+                                   key3,
+                                   fut3,
+                                   key4,
+                                   fut4,
+                                   key5,
+                                   fut5,
+                                   key6,
+                                   fut6,
+                                   key7,
+                                   fut7,
+                                   key8,
+                                   fut8,
+                                   key9,
+                                   fut9
+                                  );
         obj.bindings = obj.bindings.put(requireNonNull(key10),
-                                        requireNonNull(fut10));
+                                        requireNonNull(fut10)
+                                       );
         return obj;
 
     }
@@ -458,14 +551,33 @@ public class JsObjExp extends AbstractExp<JsObj> {
                               final String key11,
                               final Exp<? extends JsValue> fut11
                              ) {
-        JsObjExp obj = JsObjExp.of(key1, fut1, key2, fut2, key3, fut3, key4, fut4, key5, fut5, key6, fut6, key7, fut7, key8, fut8,
-                                   key9, fut9, key10, fut10);
+        JsObjExp obj = JsObjExp.of(key1,
+                                   fut1,
+                                   key2,
+                                   fut2,
+                                   key3,
+                                   fut3,
+                                   key4,
+                                   fut4,
+                                   key5,
+                                   fut5,
+                                   key6,
+                                   fut6,
+                                   key7,
+                                   fut7,
+                                   key8,
+                                   fut8,
+                                   key9,
+                                   fut9,
+                                   key10,
+                                   fut10
+                                  );
         obj.bindings = obj.bindings.put(requireNonNull(key11),
-                                        requireNonNull(fut11));
+                                        requireNonNull(fut11)
+                                       );
         return obj;
 
     }
-
 
 
     /**
@@ -523,10 +635,32 @@ public class JsObjExp extends AbstractExp<JsObj> {
                               final String key12,
                               final Exp<? extends JsValue> fut12
                              ) {
-        JsObjExp obj = JsObjExp.of(key1, fut1, key2, fut2, key3, fut3, key4, fut4, key5, fut5, key6, fut6, key7, fut7, key8, fut8,
-                                   key9, fut9, key10, fut10, key11, fut11);
+        JsObjExp obj = JsObjExp.of(key1,
+                                   fut1,
+                                   key2,
+                                   fut2,
+                                   key3,
+                                   fut3,
+                                   key4,
+                                   fut4,
+                                   key5,
+                                   fut5,
+                                   key6,
+                                   fut6,
+                                   key7,
+                                   fut7,
+                                   key8,
+                                   fut8,
+                                   key9,
+                                   fut9,
+                                   key10,
+                                   fut10,
+                                   key11,
+                                   fut11
+                                  );
         obj.bindings = obj.bindings.put(requireNonNull(key12),
-                                        requireNonNull(fut12));
+                                        requireNonNull(fut12)
+                                       );
         return obj;
 
     }
@@ -590,10 +724,34 @@ public class JsObjExp extends AbstractExp<JsObj> {
                               final String key13,
                               final Exp<? extends JsValue> fut13
                              ) {
-        JsObjExp obj = JsObjExp.of(key1, fut1, key2, fut2, key3, fut3, key4, fut4, key5, fut5, key6, fut6, key7, fut7, key8, fut8,
-                                   key9, fut9, key10, fut10, key11, fut11, key12, fut12);
+        JsObjExp obj = JsObjExp.of(key1,
+                                   fut1,
+                                   key2,
+                                   fut2,
+                                   key3,
+                                   fut3,
+                                   key4,
+                                   fut4,
+                                   key5,
+                                   fut5,
+                                   key6,
+                                   fut6,
+                                   key7,
+                                   fut7,
+                                   key8,
+                                   fut8,
+                                   key9,
+                                   fut9,
+                                   key10,
+                                   fut10,
+                                   key11,
+                                   fut11,
+                                   key12,
+                                   fut12
+                                  );
         obj.bindings = obj.bindings.put(requireNonNull(key13),
-                                        requireNonNull(fut13));
+                                        requireNonNull(fut13)
+                                       );
         return obj;
     }
 
@@ -661,14 +819,39 @@ public class JsObjExp extends AbstractExp<JsObj> {
                               final String key14,
                               final Exp<? extends JsValue> fut14
                              ) {
-        JsObjExp obj = JsObjExp.of(key1, fut1, key2, fut2, key3, fut3, key4, fut4, key5, fut5, key6, fut6, key7, fut7, key8, fut8,
-                                   key9, fut9, key10, fut10, key11, fut11, key12, fut12, key13, fut13);
+        JsObjExp obj = JsObjExp.of(key1,
+                                   fut1,
+                                   key2,
+                                   fut2,
+                                   key3,
+                                   fut3,
+                                   key4,
+                                   fut4,
+                                   key5,
+                                   fut5,
+                                   key6,
+                                   fut6,
+                                   key7,
+                                   fut7,
+                                   key8,
+                                   fut8,
+                                   key9,
+                                   fut9,
+                                   key10,
+                                   fut10,
+                                   key11,
+                                   fut11,
+                                   key12,
+                                   fut12,
+                                   key13,
+                                   fut13
+                                  );
         obj.bindings = obj.bindings.put(requireNonNull(key14),
-                                        requireNonNull(fut14));
+                                        requireNonNull(fut14)
+                                       );
         return obj;
 
     }
-
 
 
     /**
@@ -738,10 +921,38 @@ public class JsObjExp extends AbstractExp<JsObj> {
                               final String key15,
                               final Exp<? extends JsValue> fut15
                              ) {
-        JsObjExp obj = JsObjExp.of(key1, fut1, key2, fut2, key3, fut3, key4, fut4, key5, fut5, key6, fut6, key7, fut7, key8, fut8,
-                                   key9, fut9, key10, fut10, key11, fut11, key12, fut12, key13, fut13, key14, fut14);
+        JsObjExp obj = JsObjExp.of(key1,
+                                   fut1,
+                                   key2,
+                                   fut2,
+                                   key3,
+                                   fut3,
+                                   key4,
+                                   fut4,
+                                   key5,
+                                   fut5,
+                                   key6,
+                                   fut6,
+                                   key7,
+                                   fut7,
+                                   key8,
+                                   fut8,
+                                   key9,
+                                   fut9,
+                                   key10,
+                                   fut10,
+                                   key11,
+                                   fut11,
+                                   key12,
+                                   fut12,
+                                   key13,
+                                   fut13,
+                                   key14,
+                                   fut14
+                                  );
         obj.bindings = obj.bindings.put(requireNonNull(key15),
-                                        requireNonNull(fut15));
+                                        requireNonNull(fut15)
+                                       );
         return obj;
 
     }
@@ -772,7 +983,30 @@ public class JsObjExp extends AbstractExp<JsObj> {
     @Override
     public Future<jsonvalues.JsObj> get() {
 
-        Future<jsonvalues.JsObj> result = Future.succeededFuture(jsonvalues.JsObj.empty());
+        List<String> keys = bindings.keysIterator()
+                                    .toList();
+
+        java.util.List futures = bindings.values()
+                                          .map(Supplier::get)
+                                          .toJavaList();
+        return CompositeFuture.all(futures)
+                              .map(r -> {
+                                  JsObj result = JsObj.empty();
+                                  java.util.List<?> list = r.result()
+                                                         .list();
+                                  for (int i = 0; i < list.size(); i++) {
+                                      result = result.set(keys.get(i),
+                                                          ((JsValue) list.get(i))
+                                                         );
+                                  }
+
+                                  return result;
+
+                              });
+
+
+
+       /* Future<jsonvalues.JsObj> result = Future.succeededFuture(jsonvalues.JsObj.empty());
 
         for (final Tuple2<String, Exp<? extends JsValue>> tuple : bindings.iterator()) {
             result = result.flatMap(obj -> tuple._2.get()
@@ -782,13 +1016,13 @@ public class JsObjExp extends AbstractExp<JsObj> {
         }
 
 
-        return result;
+        return result;*/
     }
 
 
     @Override
     public <P> Exp<P> map(final Function<JsObj, P> fn) {
-        return Val.of(()->get().map(fn));
+        return Val.of(() -> get().map(fn));
     }
 
     @Override
@@ -797,24 +1031,25 @@ public class JsObjExp extends AbstractExp<JsObj> {
         for (final Tuple2<String, Exp<? extends JsValue>> tuple : bindings.iterator()) {
             result = result.set(tuple._1,
                                 tuple._2.get()
-                                        .result());
+                                        .result()
+                               );
         }
         return result;
     }
 
     @Override
     public Exp<JsObj> retry(final int attempts) {
-        return new JsObjExp(bindings.mapValues(it->it.retry(attempts)));
+        return new JsObjExp(bindings.mapValues(it -> it.retry(attempts)));
     }
 
     @Override
     public Exp<JsObj> retryIf(final Predicate<Throwable> predicate,
                               final int attempts) {
-        return new JsObjExp(bindings.mapValues(it->it.retryIf(predicate,attempts)));
+        return new JsObjExp(bindings.mapValues(it -> it.retryIf(predicate,
+                                                                attempts
+                                                               )));
 
     }
-
-
 
 
 }

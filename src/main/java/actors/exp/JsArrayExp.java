@@ -27,7 +27,7 @@ import static java.util.Objects.requireNonNull;
  }
  */
 
-public class JsArrayExp extends AbstractExp<JsArray> {
+public final class JsArrayExp extends AbstractExp<JsArray> {
     private List<Exp<? extends JsValue>> seq = List.empty();
 
     private JsArrayExp(List<Exp<? extends JsValue>> seq) {
