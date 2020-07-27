@@ -26,12 +26,7 @@ public final class Pair<A, B> extends AbstractExp<Tuple2<A, B>> {
         );
     }
 
-    public static <A, B> Pair<A, B> of(final Supplier<Future<A>> _1,
-                                       final Supplier<Future<B>> _2) {
-        return new Pair<>(Val.of(_1),
-                          Val.of(_2)
-        );
-    }
+
 
     @Override
     public <P> Exp<P> map(final Function<Tuple2<A, B>, P> fn) {

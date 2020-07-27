@@ -29,20 +29,11 @@ public final class IfElse<O> extends AbstractExp<O> {
         return this;
     }
 
-    public IfElse<O> consequence(final Supplier<Future<O>> consequence) {
-        this.consequence = Val.of(consequence);
-        return this;
-    }
-
     public IfElse<O> alternative(final Exp<O> alternative) {
         this.alternative = alternative;
         return this;
     }
 
-    public IfElse<O> alternative(final Supplier<Future<O>> alternative) {
-        this.alternative = Val.of(alternative);
-        return this;
-    }
 
     @Override
     public Future<O> get() {

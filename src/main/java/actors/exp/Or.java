@@ -27,16 +27,6 @@ public final class Or extends AbstractExp<Boolean>{
         return new Or(exps);
     }
 
-    public static Exp<Boolean> of(final Supplier<Future<Boolean>> a,
-                                  final Supplier<Future<Boolean>>... others) {
-        List<Exp<Boolean>> suppliers = new ArrayList<>();
-        suppliers.add(Val.of(a));
-        suppliers.addAll(Arrays.stream(others)
-                               .map(Val::of).collect(Collectors.toList()));
-        return new Or(suppliers);
-    }
-
-
     @Override
     public <P> Exp<P> map(final Function<Boolean, P> fn) {
         return Val.of(() -> get().map(fn));

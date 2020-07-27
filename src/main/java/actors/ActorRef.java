@@ -56,7 +56,7 @@ public class ActorRef<I, O> {
      @return a function that takes an object of type I and returns an object of type O wrapped in a
      future
      */
-    public Actor<I, O> ask(final DeliveryOptions options) {
+    public Fn<I, O> ask(final DeliveryOptions options) {
         requireNonNull(options);
         return body -> Val.of(() -> vertx.eventBus().<O>request(address,
                                                                 body,
@@ -71,7 +71,7 @@ public class ActorRef<I, O> {
      @return a function that takes an object of type I and returns an object of type O wrapped in a
      future
      */
-    public Actor<I, O> ask() {
+    public Fn<I, O> ask() {
         return ask(DEFAULT);
     }
 

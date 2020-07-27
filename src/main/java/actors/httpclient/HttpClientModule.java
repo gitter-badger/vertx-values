@@ -1,7 +1,7 @@
 package actors.httpclient;
 
 
-import actors.Actor;
+import actors.Fn;
 import actors.ActorsModule;
 import actors.Handlers;
 import actors.exp.Exp;
@@ -22,7 +22,7 @@ public abstract class HttpClientModule extends ActorsModule {
 
     private final HttpClientOptions httpOptions;
 
-    private Actor<JsObj, JsObj> httpClient;
+    private Fn<JsObj, JsObj> httpClient;
 
     public Function<GetBuilder, Exp<JsObj>> get = builder -> httpClient.apply(builder.createHttpReq());
 

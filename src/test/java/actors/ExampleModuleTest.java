@@ -62,8 +62,8 @@ public class ExampleModuleTest {
                 tripleExp
                )
             .onSuccess(pair -> {
-                Actor<Integer, Integer> addOne = pair._1.ask();
-                Actor<Integer, Integer> triple = pair._2.ask();
+                Fn<Integer, Integer> addOne = pair._1.ask();
+                Fn<Integer, Integer> triple = pair._2.ask();
                 addOne.apply(1)
                       .flatMap(triple::apply)
                       .onSuccess(result -> {

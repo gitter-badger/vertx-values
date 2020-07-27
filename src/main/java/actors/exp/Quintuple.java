@@ -6,7 +6,6 @@ import io.vertx.core.Future;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 
 public final class Quintuple<A, B, C, D, E> extends AbstractExp<Tuple5<A, B, C,D,E>> {
@@ -42,20 +41,6 @@ public final class Quintuple<A, B, C, D, E> extends AbstractExp<Tuple5<A, B, C,D
                                _5
         );
     }
-
-    public static <A, B, C, D, E> Quintuple<A, B, C, D, E> of(final Supplier<Future<A>> _1,
-                                                              final Supplier<Future<B>> _2,
-                                                              final Supplier<Future<C>> _3,
-                                                              final Supplier<Future<D>> _4,
-                                                              final Supplier<Future<E>> _5) {
-        return new Quintuple<>(Val.of(_1),
-                               Val.of(_2),
-                               Val.of(_3),
-                               Val.of(_4),
-                               Val.of(_5)
-        );
-    }
-
 
     @Override
     public <P> Exp<P> map(final Function<Tuple5<A, B, C, D, E>, P> fn) {

@@ -36,8 +36,7 @@ public class TestBankAccount {
         Pair.of(actors.register(new RegisterJsValuesCodecs()),
                 actors.register(module)
                )
-            .onComplete(pipeTo(testContext))
-            .get();
+            .onComplete(pipeTo(testContext)).get();
 
     }
 
@@ -70,8 +69,7 @@ public class TestBankAccount {
                             context.completeNow();
                         },
                         context::failNow
-                       )
-            .get();
+                       ).get();
     }
 
 
@@ -90,21 +88,19 @@ public class TestBankAccount {
                                                          .apply(JsObj.empty()));
 
         Pair.of(futRafaRef,
-                futRafaRef
+                futPhilipRef
                )
             .flatMap(
-                    pair ->
-                            module.makeTx.apply(pair._1.ask(),
-                                                pair._2.ask()
-                                               )
-                                         .apply(20)
-                                         .onComplete(it -> {
-                                             pair._1.unregister();
-                                             pair._2.unregister();
-                                             context.completeNow();
-                                         })
-                    )
-            .get();
+                    pair -> module.makeTx.apply(pair._1.ask(),
+                                            pair._2.ask()
+                                           )
+                                     .apply(20).onComplete(it-> {
+                                                            pair._1.unregister();
+                                                            pair._2.unregister();
+                            })
+
+
+                    ).onComplete(TestFns.pipeTo(context)).get();
     }
 
 

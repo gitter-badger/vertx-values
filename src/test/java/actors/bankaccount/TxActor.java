@@ -1,8 +1,7 @@
 package actors.bankaccount;
 
-import actors.Actor;
+import actors.Fn;
 import actors.exp.Val;
-import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import jsonvalues.JsObj;
 
@@ -14,11 +13,11 @@ import static actors.bankaccount.Operation.makeWithdraw;
 
 public class TxActor implements Consumer<Message<Integer>> {
 
-    private Actor<JsObj, Integer> from;
-    private Actor<JsObj, Integer> to;
+    private Fn<JsObj, Integer> from;
+    private Fn<JsObj, Integer> to;
 
-    public TxActor(final Actor<JsObj, Integer> from,
-                   final Actor<JsObj, Integer> to) {
+    public TxActor(final Fn<JsObj, Integer> from,
+                   final Fn<JsObj, Integer> to) {
         this.from = from;
         this.to = to;
     }
@@ -31,8 +30,7 @@ public class TxActor implements Consumer<Message<Integer>> {
                              to.apply(makeDeposit.apply(amount)) :
                              Val.of(resp)
                     )
-            .pipeTo(message)
-            .get();
+            .pipeTo(message).get();
 
 
     }

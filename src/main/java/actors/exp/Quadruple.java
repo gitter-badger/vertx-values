@@ -6,7 +6,6 @@ import io.vertx.core.Future;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 
 public class Quadruple<A, B, C, D> extends AbstractExp<Tuple4<A, B,C,D>> {
@@ -37,16 +36,6 @@ public class Quadruple<A, B, C, D> extends AbstractExp<Tuple4<A, B,C,D>> {
         );
     }
 
-    public static <A, B, C, D> Quadruple<A, B, C, D> of(final Supplier<Future<A>> _1,
-                                                        final Supplier<Future<B>> _2,
-                                                        final Supplier<Future<C>> _3,
-                                                        final Supplier<Future<D>> _4) {
-        return new Quadruple<>(Val.of(_1),
-                               Val.of(_2),
-                               Val.of(_3),
-                               Val.of(_4)
-        );
-    }
 
 
     @Override

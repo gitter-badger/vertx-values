@@ -5,7 +5,10 @@ import actors.exp.Val;
 import io.vertx.core.*;
 import io.vertx.core.eventbus.Message;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -235,7 +238,7 @@ public class Actors {
      @param <O>      the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Actor<I, O> spawn(final Consumer<Message<I>> consumer) {
+    public <I, O> Fn<I, O> spawn(final Consumer<Message<I>> consumer) {
         return spawn(generateProcessAddress(),
                      consumer,
                      deploymentOptions
@@ -249,10 +252,10 @@ public class Actors {
      @param <O>      the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Actor<I, O> spawn(final String address,
-                                    final Consumer<Message<I>> consumer,
-                                    final DeploymentOptions options
-                                   ) {
+    public <I, O> Fn<I, O> spawn(final String address,
+                                 final Consumer<Message<I>> consumer,
+                                 final DeploymentOptions options
+                                ) {
         return n ->
         {
             Exp<ActorRef<I, O>> future = register(address,
@@ -262,8 +265,7 @@ public class Actors {
 
             return future.flatMap(r -> r.ask()
                                         .apply(n)
-                                        .onComplete(a -> r.unregister())
-                                 );
+                                        .onComplete(a -> r.unregister()));
         };
     }
 
@@ -273,8 +275,8 @@ public class Actors {
      @param <O>      the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Actor<I, O> spawn(final String address,
-                                    final Consumer<Message<I>> consumer) {
+    public <I, O> Fn<I, O> spawn(final String address,
+                                 final Consumer<Message<I>> consumer) {
         return spawn(address,
                      consumer,
                      deploymentOptions
@@ -287,7 +289,7 @@ public class Actors {
      @param <O> the type of the output
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Actor<I, O> spawn(final Function<I, O> fn) {
+    public <I, O> Fn<I, O> spawn(final Function<I, O> fn) {
         return spawn(generateProcessAddress(),
                      fn,
                      deploymentOptions
@@ -301,10 +303,10 @@ public class Actors {
      @param <O>     the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Actor<I, O> spawn(final String address,
-                                    final Function<I, O> fn,
-                                    final DeploymentOptions options
-                                   ) {
+    public <I, O> Fn<I, O> spawn(final String address,
+                                 final Function<I, O> fn,
+                                 final DeploymentOptions options
+                                ) {
         return n ->
         {
             Consumer<Message<I>> consumer = m -> m.reply(fn.apply(m.body()));
@@ -315,8 +317,7 @@ public class Actors {
                                                  );
             return future.flatMap(r -> r.ask()
                                         .apply(n)
-                                        .onComplete(a -> r.unregister())
-                                 );
+                                        .onComplete(a -> r.unregister()));
         };
     }
 
@@ -326,8 +327,8 @@ public class Actors {
      @param <O> the type of the output
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Actor<I, O> spawn(final String address,
-                                    final Function<I, O> fn) {
+    public <I, O> Fn<I, O> spawn(final String address,
+                                 final Function<I, O> fn) {
         return spawn(address,
                      fn,
                      deploymentOptions

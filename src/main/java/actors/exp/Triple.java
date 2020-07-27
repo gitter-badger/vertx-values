@@ -6,7 +6,6 @@ import io.vertx.core.Future;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 
 public final class Triple<A, B, C> extends AbstractExp<Tuple3<A, B, C>> {
@@ -29,15 +28,6 @@ public final class Triple<A, B, C> extends AbstractExp<Tuple3<A, B, C>> {
         return new Triple<>(_1,
                             _2,
                             _3
-        );
-    }
-
-    public static <A, B, C> Triple<A, B, C> of(final Supplier<Future<A>> _1,
-                                               final Supplier<Future<B>> _2,
-                                               final Supplier<Future<C>> _3) {
-        return new Triple<>(Val.of(_1),
-                            Val.of(_2),
-                            Val.of(_3)
         );
     }
 

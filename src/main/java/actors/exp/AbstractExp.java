@@ -52,7 +52,7 @@ abstract class AbstractExp<O> implements Exp<O> {
     }
 
     @Override
-    public Exp<O> onSuccess(final Consumer<O> success){
+    public Exp<O> onSuccess(final Consumer<O> success) {
         requireNonNull(success);
         return Val.of(() -> get().onSuccess(success::accept));
     }
@@ -63,9 +63,10 @@ abstract class AbstractExp<O> implements Exp<O> {
         requireNonNull(successConsumer);
         requireNonNull(throwableConsumer);
         return Val.of(() -> get().onComplete(event -> {
-            if (event.succeeded()) successConsumer.accept(event.result());
-            else throwableConsumer.accept(event.cause());
-        }));
+                          if (event.succeeded()) successConsumer.accept(event.result());
+                          else throwableConsumer.accept(event.cause());
+                      })
+                     );
     }
 
     //todo poner en el javadoc que la exception del caso de fallo tiene que ser ReplyException
@@ -86,14 +87,17 @@ abstract class AbstractExp<O> implements Exp<O> {
         requireNonNull(message);
         requireNonNull(successMapper);
         requireNonNull(failureMapper);
+
         return Val.of(() -> {
             get().onComplete(event -> {
                 if (event.succeeded()) message.reply(successMapper.apply(event.result()));
                 else message.reply(failureMapper.apply(event.cause()));
+
             });
             return null;
         });
     }
+
     @Override
     public <U> Exp<U> flatMap(final Function<O, Exp<U>> successMapper,
                               final Function<Throwable, Exp<U>> failureMapper) {
@@ -110,6 +114,8 @@ abstract class AbstractExp<O> implements Exp<O> {
 
     @Override
     public Exp<O> onComplete(final Handler<AsyncResult<O>> handler) {
+
         return Val.of(() -> get().onComplete(handler));
+
     }
 }

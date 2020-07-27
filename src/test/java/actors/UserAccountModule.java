@@ -8,20 +8,20 @@ import jsonvalues.JsObj;
 
 public class UserAccountModule extends ActorsModule {
 
-    public static Actor<Integer, Boolean> isLegalAge;
-    public static Actor<String, Boolean> isValidId;
-    public static Actor<JsObj, Boolean> isValidAddress;
-    public static Actor<String, Boolean> isValidEmail;
-    public static Actor<JsObj, JsObj> register;
+    public static Fn<Integer, Boolean> isLegalAge;
+    public static Fn<String, Boolean> isValidId;
+    public static Fn<JsObj, Boolean> isValidAddress;
+    public static Fn<String, Boolean> isValidEmail;
+    public static Fn<JsObj, JsObj> register;
 
-    public static Actor<JsObj, Boolean> isValid = obj ->
+    public static Fn<JsObj, Boolean> isValid = obj ->
             And.of(isLegalAge.apply(obj.getInt("age")),
                    isValidId.apply(obj.getStr("id")),
                    isValidAddress.apply(obj.getObj("address")),
                    isValidEmail.apply(obj.getStr("email"))
                   );
 
-    public static Actor<JsObj, JsObj> registerIfValid = obj ->
+    public static Fn<JsObj, JsObj> registerIfValid = obj ->
             IfElse.<JsObj>predicate(isValid.apply(obj))
                     .consequence(register.apply(obj))
                     .alternative(Val.of(new InvalidUser()));
@@ -38,19 +38,19 @@ public class UserAccountModule extends ActorsModule {
     @Override
     protected void registerActors() {
         registerActor("isLegalAge",
-                      actors.register(UserAcountFunctions.isLegalAge)
+                      actors.register(UserAccountFunctions.isLegalAge)
                      );
         registerActor("isValidId",
-                      actors.register(UserAcountFunctions.isValidId)
+                      actors.register(UserAccountFunctions.isValidId)
                      );
         registerActor("isValidAddress",
-                      actors.register(UserAcountFunctions.isValidAddress)
+                      actors.register(UserAccountFunctions.isValidAddress)
                      );
         registerActor("isValidEmail",
-                      actors.register(UserAcountFunctions.isValidEmail)
+                      actors.register(UserAccountFunctions.isValidEmail)
                      );
         registerActor("register",
-                      actors.register(UserAcountFunctions.register)
+                      actors.register(UserAccountFunctions.register)
                      );
 
     }

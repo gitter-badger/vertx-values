@@ -1,6 +1,6 @@
 package actors.bankaccount;
 
-import actors.Actor;
+import actors.Fn;
 import actors.ActorRef;
 import actors.ActorsModule;
 import actors.exp.Exp;
@@ -32,7 +32,7 @@ public class BankAccountModule extends ActorsModule {
      Performs a transaction between two accounts. The transaction contains the accounts and the amount of money
      to move
      */
-    public BiFunction<Actor<JsObj, Integer>, Actor<JsObj, Integer>, Actor<Integer, Integer>> makeTx;
+    public BiFunction<Fn<JsObj, Integer>, Fn<JsObj, Integer>, Fn<Integer, Integer>> makeTx;
 
 
     @Override

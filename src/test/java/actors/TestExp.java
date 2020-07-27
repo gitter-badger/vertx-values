@@ -3,6 +3,7 @@ package actors;
 import actors.exp.Exp;
 import actors.exp.IfElse;
 import actors.exp.JsObjExp;
+import actors.exp.Val;
 import io.vertx.core.Future;
 import jsonvalues.JsBool;
 import jsonvalues.JsInt;
@@ -14,16 +15,16 @@ public class TestExp {
     public void test() {
 
         Exp<Boolean> a = IfElse.<Boolean>predicate(() -> Future.succeededFuture(true))
-                .consequence(() -> Future.succeededFuture(false))
-                .alternative(() -> Future.succeededFuture(true));
+                .consequence(Val.of(() -> Future.succeededFuture(false)))
+                .alternative(Val.of(() -> Future.succeededFuture(true)));
 
         IfElse<Integer> b = IfElse.<Integer>predicate(() -> Future.succeededFuture(true))
-                .consequence(() -> Future.succeededFuture(1))
-                .alternative(() -> Future.succeededFuture(2));
+                .consequence(Val.of(() -> Future.succeededFuture(1)))
+                .alternative(Val.of(() -> Future.succeededFuture(2)));
 
         IfElse<Integer> c = IfElse.<Integer>predicate(() -> Future.succeededFuture(true))
-                .consequence(() -> Future.succeededFuture(89))
-                .alternative(() -> Future.succeededFuture(99));
+                .consequence(Val.of(() -> Future.succeededFuture(89)))
+                .alternative(Val.of(() -> Future.succeededFuture(99)));
 
         IfElse<Integer> d = IfElse.<Integer>predicate(a).consequence(b)
                                                         .alternative(c);
@@ -41,8 +42,8 @@ public class TestExp {
 
 
         jsonvalues.JsObj result = of
-                               .get()
-                               .result();
+                .get()
+                .result();
 
         Assertions.assertEquals(jsonvalues.JsObj.of("a",
                                                     JsBool.FALSE,

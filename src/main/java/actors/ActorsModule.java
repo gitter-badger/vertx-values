@@ -20,11 +20,11 @@ public abstract class ActorsModule extends AbstractVerticle {
 
     private static final DeploymentOptions DEFAULT_DEPLOYMENT_OPTIONS = new DeploymentOptions();
     protected final DeploymentOptions deploymentOptions;
-    private MapExp<ActorRef<?,?>> refExp;
+    private MapExp<ActorRef<?, ?>> refExp;
     private Map<String, ActorRef<?, ?>> refMap;
 
 
-    public ActorsModule(final MapExp<ActorRef<?,?>> refExp,
+    public ActorsModule(final MapExp<ActorRef<?, ?>> refExp,
                         final DeploymentOptions deploymentOptions) {
         this.refExp = requireNonNull(refExp);
         this.deploymentOptions = requireNonNull(deploymentOptions);
@@ -69,7 +69,7 @@ public abstract class ActorsModule extends AbstractVerticle {
                                       if (event.failed()) start.fail(event.cause());
                                       else {
                                           try {
-                                              refMap =  event.result();
+                                              refMap = event.result();
                                               onComplete();
                                               start.complete();
                                           } catch (Exception e) {

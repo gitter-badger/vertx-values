@@ -35,42 +35,40 @@ public class TestFutures extends ActorsModule {
     }
 
     @Test
-    public void testJsObjFuture(final Vertx vertx,
-                                final VertxTestContext context) {
+    public void testJsObjFuture(final VertxTestContext context) {
 
-        JsObjExp future = JsObjExp.of("a",
-                                      multiplyBy10.apply(10)
-                                                  .map(JsInt::of),
-                                      "b",
-                                      add10.apply(5)
-                                           .map(JsInt::of),
-                                      "c",
-                                      toUpper.apply("abc")
-                                             .map(JsStr::of),
-                                      "d",
-                                      JsArrayExp.tuple(multiplyBy10.apply(1)
-                                                                   .map(JsInt::of),
-                                                       multiplyBy10.apply(5)
-                                                                   .map(JsInt::of)
-                                                      )
-                                     );
+        JsObjExp.of("a",
+                    multiplyBy10.apply(10)
+                                .map(JsInt::of),
+                    "b",
+                    add10.apply(5)
+                         .map(JsInt::of),
+                    "c",
+                    toUpper.apply("abc")
+                           .map(JsStr::of),
+                    "d",
+                    JsArrayExp.tuple(multiplyBy10.apply(1)
+                                                 .map(JsInt::of),
+                                     multiplyBy10.apply(5)
+                                                 .map(JsInt::of)
+                                    )
+                   )
+                .get()
+                .onSuccess(o -> {
+                    if (o.equals(jsonvalues.JsObj.of("a",
+                                                     JsInt.of(100),
+                                                     "b",
+                                                     JsInt.of(15),
+                                                     "c",
+                                                     JsStr.of("ABC"),
+                                                     "d",
+                                                     jsonvalues.JsArray.of(10,
+                                                                           50
+                                                                          )
+                                                    ))
+                    ) context.completeNow();
 
-        future.get()
-              .onSuccess(o -> {
-                  if (o.equals(jsonvalues.JsObj.of("a",
-                                                   JsInt.of(100),
-                                                   "b",
-                                                   JsInt.of(15),
-                                                   "c",
-                                                   JsStr.of("ABC"),
-                                                   "d",
-                                                   jsonvalues.JsArray.of(10,
-                                                                         50
-                                                                        )
-                                                  ))
-                  ) context.completeNow();
-
-              });
+                });
     }
 
     @Override

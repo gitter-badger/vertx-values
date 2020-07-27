@@ -35,13 +35,14 @@ public class UserAccountModuleTests
   public void _15_is_not_legal_age(final VertxTestContext context){
     UserAccountModule.isLegalAge
                      .apply(13)
+                     .get()
                      .onComplete(it -> context.verify(()->
                                                       {
                                                         Assertions.assertFalse(it.result());
                                                         context.completeNow();
                                                       }
                                                       )
-                                ).get();
+                                );
   }
 
 

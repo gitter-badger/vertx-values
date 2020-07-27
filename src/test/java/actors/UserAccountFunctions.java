@@ -6,7 +6,7 @@ import jsonvalues.JsObj;
 import java.util.Random;
 import java.util.function.Function;
 
-public class UserAcountFunctions
+public class UserAccountFunctions
 {
   private static Random random = new Random();
 
