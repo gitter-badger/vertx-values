@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -43,10 +44,9 @@ public class ExampleModuleTest {
         int i = 100000;
 
         final Checkpoint               checkpoint = context.checkpoint(i);
-        final Consumer<Message<JsObj>> consumer   = m -> m.reply(m.body());
 
         for (int i1 = 0; i1 < i; i1++) {
-            deployer.deployConsumer(consumer,
+            deployer.deployFn(Function.<JsObj>identity(),
                                      new DeploymentOptions().setWorker(true)
                             )
                     .onComplete(r -> checkpoint.flag()).get();
@@ -81,8 +81,7 @@ public class ExampleModuleTest {
 
     @Test
     public void test_verticle_consumer(VertxTestContext context) {
-        final Consumer<Message<JsObj>> consumer = m -> m.reply(m.body());
-        deployer.deployConsumer(consumer)
+        deployer.deployFn(Function.<JsObj>identity())
                 .onComplete(r -> r.result()
                                 .ask()
                                 .apply(JsObj.empty())
@@ -103,8 +102,7 @@ public class ExampleModuleTest {
     public void test_verticle_deployment(Vertx vertx,
                                          VertxTestContext context
                                         ) {
-        final Consumer<Message<JsObj>> messageConsumer = m -> m.reply(m.body());
-        deployer.deployConsumer(messageConsumer)
+        deployer.deployFn(Function.<JsObj>identity())
                 .onComplete(r ->
                           {
                               context.verify(() -> assertTrue(r.succeeded()));
