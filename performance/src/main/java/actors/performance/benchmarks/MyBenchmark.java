@@ -1,11 +1,11 @@
-package actors.performance.benchmarks;
+package vertxval.performance.benchmarks;
 
-import actors.performance.Module;
+import vertxval.performance.Module;
 import io.vertx.core.Vertx;
 import org.openjdk.jmh.annotations.*;
 
-import static actors.performance.Functions.await20segForEnding;
-import static actors.performance.Module.*;
+import static vertxval.performance.Functions.await20segForEnding;
+import static vertxval.performance.Module.*;
 
 public class MyBenchmark
 {
