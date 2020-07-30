@@ -1,6 +1,6 @@
 package vertxval;
 
-import vertxval.exp.Val;
+import vertxval.exp.Cons;
 import vertxval.exp.λ;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
@@ -59,10 +59,10 @@ public class VerticleRef<I, O> {
      */
     public λ<I, O> ask(final DeliveryOptions options) {
         requireNonNull(options);
-        return body -> Val.success(() -> vertx.eventBus().<O>request(address,
-                                                                     body,
-                                                                     options
-                                                                    ).map(Message::body));
+        return body -> Cons.of(() -> vertx.eventBus().<O>request(address,
+                                                                 body,
+                                                                 options
+                                                                ).map(Message::body));
     }
 
     /**
@@ -106,6 +106,7 @@ public class VerticleRef<I, O> {
 
      @return a future that will be completed when all the instances are undeployed
      */
+    @SuppressWarnings({"rawtypes"})
     public Future<Void> undeploy() {
 
         List<Future> futures = new ArrayList<>();

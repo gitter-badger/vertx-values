@@ -3,7 +3,7 @@ package vertxval.httpclient;
 import vertxval.Deployer;
 import vertxval.TestFns;
 import vertxval.codecs.RegisterJsValuesCodecs;
-import vertxval.exp.Exp;
+import vertxval.exp.Val;
 import vertxval.exp.Pair;
 import io.vavr.Tuple2;
 import io.vertx.core.Vertx;
@@ -29,7 +29,7 @@ public class HttpExampleModuleTest {
 
         httpModule = new HttpExampleModule(new HttpClientOptions());
 
-        Pair.of(deployer.deployVerticle(new RegisterJsValuesCodecs()),
+        Pair.of(deployer.deployTask(RegisterJsValuesCodecs::new),
                 deployer.deployVerticle(httpModule)
                )
             .onComplete(TestFns.pipeTo(testContext)).get();
@@ -39,8 +39,8 @@ public class HttpExampleModuleTest {
 
     //@Test
     public void testSearchGoogle(VertxTestContext context) {
-        Exp<JsObj> search1 = httpModule.search.apply("vertx");
-        Exp<JsObj> search2 = httpModule.search.apply("reactive");
+        Val<JsObj> search1 = httpModule.search.apply("vertx");
+        Val<JsObj> search2 = httpModule.search.apply("reactive");
         Pair.of(search1,
                 search2
                )

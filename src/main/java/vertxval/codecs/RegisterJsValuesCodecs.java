@@ -4,8 +4,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import jsonvalues.JsArray;
 import jsonvalues.JsObj;
-
-import java.util.Arrays;
+import vertxval.VertxValException;
 
 public class RegisterJsValuesCodecs extends AbstractVerticle {
 
@@ -24,7 +23,7 @@ public class RegisterJsValuesCodecs extends AbstractVerticle {
 
             startPromise.complete();
         } catch (Exception e) {
-           startPromise.fail(e.toString()+" @ "+ Arrays.toString(e.getStackTrace()));
+           startPromise.fail(VertxValException.GET_ERROR_DEPLOYING_CODECS_EXCEPTION.apply(e));
         }
 
 

@@ -9,8 +9,7 @@ import io.vertx.core.eventbus.ReplyException;
 import java.util.function.Function;
 
 import static java.util.Objects.*;
-import static vertxval.Exceptions.GET_ERROR_HANDLING_FAILURE_EVENT_EXCEPTION;
-import static vertxval.Exceptions.GET_ERROR_HANDLING_SUCCESSFUL_EVENT_EXCEPTION;
+import static vertxval.VertxValException.*;
 
 public class Handlers {
 
@@ -26,14 +25,14 @@ public class Handlers {
                 try {
                     message.reply(mapSuccess.apply(event.result()));
                 } catch (Throwable e) {
-                    message.reply(GET_ERROR_HANDLING_SUCCESSFUL_EVENT_EXCEPTION.apply(e));
+                    message.reply(GET_ERROR_EXECUTING_VERTIClE_EXCEPTION.apply(e));
                 }
             }
             else {
                 try {
                     message.reply(mapError.apply(event.cause()));
                 } catch (Throwable e) {
-                    message.reply(GET_ERROR_HANDLING_FAILURE_EVENT_EXCEPTION.apply(e));
+                    message.reply(GET_ERROR_EXECUTING_VERTIClE_EXCEPTION.apply(e));
                 }
             }
         };
@@ -61,7 +60,7 @@ public class Handlers {
                 try {
                     message.reply(mapSuccess.apply(event.result()));
                 } catch (Throwable e) {
-                    message.reply(GET_ERROR_HANDLING_SUCCESSFUL_EVENT_EXCEPTION.apply(e));
+                    message.reply(GET_ERROR_EXECUTING_VERTIClE_EXCEPTION.apply(e));
                 }
             }
             else {

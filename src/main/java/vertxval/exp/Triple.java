@@ -8,23 +8,23 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 
-public final class Triple<A, B, C> extends AbstractExp<Tuple3<A, B, C>> {
+public final class Triple<A, B, C> extends AbstractVal<Tuple3<A, B, C>> {
 
-    private final Exp<A> _1;
-    private final Exp<B> _2;
-    private final Exp<C> _3;
+    private final Val<A> _1;
+    private final Val<B> _2;
+    private final Val<C> _3;
 
-    private Triple(final Exp<A> _1,
-                   final Exp<B> _2,
-                   final Exp<C> _3) {
+    private Triple(final Val<A> _1,
+                   final Val<B> _2,
+                   final Val<C> _3) {
         this._1 = _1;
         this._2 = _2;
         this._3 = _3;
     }
 
-    public static <A, B, C> Triple<A, B, C> of(final Exp<A> _1,
-                                               final Exp<B> _2,
-                                               final Exp<C> _3) {
+    public static <A, B, C> Triple<A, B, C> of(final Val<A> _1,
+                                               final Val<B> _2,
+                                               final Val<C> _3) {
         return new Triple<>(_1,
                             _2,
                             _3
@@ -32,8 +32,8 @@ public final class Triple<A, B, C> extends AbstractExp<Tuple3<A, B, C>> {
     }
 
     @Override
-    public <P> Exp<P> map(final Function<Tuple3<A, B, C>, P> fn) {
-        return Val.success(() -> get().map(fn));
+    public <P> Val<P> map(final Function<Tuple3<A, B, C>, P> fn) {
+        return Cons.of(() -> get().map(fn));
     }
 
 
@@ -51,7 +51,7 @@ public final class Triple<A, B, C> extends AbstractExp<Tuple3<A, B, C>> {
 
 
     @Override
-    public Exp<Tuple3<A, B, C>> retry(final int attempts) {
+    public Val<Tuple3<A, B, C>> retry(final int attempts) {
         return new Triple<>(_1.retry(attempts),
                             _2.retry(attempts),
                             _3.retry(attempts)
@@ -59,7 +59,7 @@ public final class Triple<A, B, C> extends AbstractExp<Tuple3<A, B, C>> {
     }
 
     @Override
-    public Exp<Tuple3<A, B, C>> retryIf(final Predicate<Throwable> predicate,
+    public Val<Tuple3<A, B, C>> retryIf(final Predicate<Throwable> predicate,
                                         final int attempts) {
         return new Triple<>(_1.retryIf(predicate,
                                        attempts

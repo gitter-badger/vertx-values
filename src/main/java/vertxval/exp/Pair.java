@@ -6,20 +6,20 @@ import io.vertx.core.Future;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public final class Pair<A, B> extends AbstractExp<Tuple2<A, B>> {
+public final class Pair<A, B> extends AbstractVal<Tuple2<A, B>> {
 
-    private final Exp<A> _1;
-    private final Exp<B> _2;
+    private final Val<A> _1;
+    private final Val<B> _2;
 
-    private Pair(final Exp<A> _1,
-                 final Exp<B> _2) {
+    private Pair(final Val<A> _1,
+                 final Val<B> _2) {
         this._1 = _1;
         this._2 = _2;
     }
 
 
-    public static <A, B> Pair<A, B> of(final Exp<A> _1,
-                                       final Exp<B> _2) {
+    public static <A, B> Pair<A, B> of(final Val<A> _1,
+                                       final Val<B> _2) {
         return new Pair<>(_1,
                           _2
         );
@@ -28,8 +28,8 @@ public final class Pair<A, B> extends AbstractExp<Tuple2<A, B>> {
 
 
     @Override
-    public <P> Exp<P> map(final Function<Tuple2<A, B>, P> fn) {
-        return Val.success(() -> get().map(fn));
+    public <P> Val<P> map(final Function<Tuple2<A, B>, P> fn) {
+        return Cons.of(() -> get().map(fn));
     }
 
 
@@ -44,14 +44,14 @@ public final class Pair<A, B> extends AbstractExp<Tuple2<A, B>> {
     }
 
     @Override
-    public Exp<Tuple2<A, B>> retry(final int attempts) {
+    public Val<Tuple2<A, B>> retry(final int attempts) {
         return new Pair<>(_1.retry(attempts),
                           _2.retry(attempts)
         );
     }
 
     @Override
-    public Exp<Tuple2<A, B>> retryIf(final Predicate<Throwable> predicate,
+    public Val<Tuple2<A, B>> retryIf(final Predicate<Throwable> predicate,
                                      final int attempts) {
         return new Pair<>(_1.retryIf(predicate,
                                      attempts

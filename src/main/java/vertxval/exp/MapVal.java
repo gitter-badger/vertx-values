@@ -25,16 +25,16 @@ import static java.util.Objects.requireNonNull;
  ) =
  Future.succeededFuture(JsObj(a->1,b->"a",c->true))}
  */
-public final class MapExp<O> extends AbstractExp<Map<String, O>> {
+public final class MapVal<O> extends AbstractVal<Map<String, O>> {
 
-    public final static MapExp<?> EMPTY = new MapExp<>();
+    public final static MapVal<?> EMPTY = new MapVal<>();
 
-    private Map<String, Exp<O>> bindings = LinkedHashMap.empty();
+    private Map<String, Val<O>> bindings = LinkedHashMap.empty();
 
-    private MapExp() {
+    private MapVal() {
     }
 
-    private MapExp(final Map<String, Exp<O>> bindings) {
+    private MapVal(final Map<String, Val<O>> bindings) {
         this.bindings = bindings;
     }
 
@@ -44,12 +44,13 @@ public final class MapExp<O> extends AbstractExp<Map<String, O>> {
 
      @param key the key
      @param exp the mapping associated to the key
+     @param <O> the type of the map values
      @return a JsObjFuture
      */
-    public static <O> MapExp<O> of(final String key,
-                                   final Exp<O> exp
+    public static <O> MapVal<O> of(final String key,
+                                   final Val<O> exp
                                   ) {
-        MapExp<O> obj = new MapExp<>();
+        MapVal<O> obj = new MapVal<>();
         obj.bindings = obj.bindings.put(key,
                                         exp
                                        );
@@ -64,14 +65,15 @@ public final class MapExp<O> extends AbstractExp<Map<String, O>> {
      @param exp1 the mapping associated to the first key
      @param key2 the second key
      @param exp2 the mapping associated to the second key
+     @param <O> the type of the map values
      @return a JsObjFuture
      */
-    public static <O> MapExp<O> of(final String key1,
-                                   final Exp<O> exp1,
+    public static <O> MapVal<O> of(final String key1,
+                                   final Val<O> exp1,
                                    final String key2,
-                                   final Exp<O> exp2
+                                   final Val<O> exp2
                                   ) {
-        MapExp<O> obj = MapExp.of(key1,
+        MapVal<O> obj = MapVal.of(key1,
                                   exp1
                                  );
         obj.bindings = obj.bindings.put(requireNonNull(key2),
@@ -89,17 +91,18 @@ public final class MapExp<O> extends AbstractExp<Map<String, O>> {
      @param exp2 the mapping associated to the second key
      @param key3 the third key
      @param exp3 the mapping associated to the third key
+     @param <O> the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static <O> MapExp<O> of(final String key1,
-                                   final Exp<O> exp1,
+    public static <O> MapVal<O> of(final String key1,
+                                   final Val<O> exp1,
                                    final String key2,
-                                   final Exp<O> exp2,
+                                   final Val<O> exp2,
                                    final String key3,
-                                   final Exp<O> exp3
+                                   final Val<O> exp3
                                   ) {
-        MapExp<O> obj = MapExp.of(key1,
+        MapVal<O> obj = MapVal.of(key1,
                                   exp1,
                                   key2,
                                   exp2
@@ -122,19 +125,20 @@ public final class MapExp<O> extends AbstractExp<Map<String, O>> {
      @param exp3 the mapping associated to the third key
      @param key4 the fourth key
      @param exp4 the mapping associated to the fourth key
+     @param <O> the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static <O> MapExp<O> of(final String key1,
-                                   final Exp<O> exp1,
+    public static <O> MapVal<O> of(final String key1,
+                                   final Val<O> exp1,
                                    final String key2,
-                                   final Exp<O> exp2,
+                                   final Val<O> exp2,
                                    final String key3,
-                                   final Exp<O> exp3,
+                                   final Val<O> exp3,
                                    final String key4,
-                                   final Exp<O> exp4
+                                   final Val<O> exp4
                                   ) {
-        MapExp<O> obj = MapExp.of(key1,
+        MapVal<O> obj = MapVal.of(key1,
                                   exp1,
                                   key2,
                                   exp2,
@@ -161,21 +165,22 @@ public final class MapExp<O> extends AbstractExp<Map<String, O>> {
      @param exp4 the mapping associated to the fourth key
      @param key5 the fifth key
      @param exp5 the mapping associated to the fifth key
+     @param <O> the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static <O> MapExp<O> of(final String key1,
-                                   final Exp<O> exp1,
+    public static <O> MapVal<O> of(final String key1,
+                                   final Val<O> exp1,
                                    final String key2,
-                                   final Exp<O> exp2,
+                                   final Val<O> exp2,
                                    final String key3,
-                                   final Exp<O> exp3,
+                                   final Val<O> exp3,
                                    final String key4,
-                                   final Exp<O> exp4,
+                                   final Val<O> exp4,
                                    final String key5,
-                                   final Exp<O> exp5
+                                   final Val<O> exp5
                                   ) {
-        MapExp<O> obj = MapExp.of(key1,
+        MapVal<O> obj = MapVal.of(key1,
                                   exp1,
                                   key2,
                                   exp2,
@@ -206,23 +211,24 @@ public final class MapExp<O> extends AbstractExp<Map<String, O>> {
      @param exp5 the mapping associated to the fifth key
      @param key6 the sixth key
      @param exp6 the mapping associated to the sixth key
+     @param <O> the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static <O> MapExp<O> of(final String key1,
-                                   final Exp<O> exp1,
+    public static <O> MapVal<O> of(final String key1,
+                                   final Val<O> exp1,
                                    final String key2,
-                                   final Exp<O> exp2,
+                                   final Val<O> exp2,
                                    final String key3,
-                                   final Exp<O> exp3,
+                                   final Val<O> exp3,
                                    final String key4,
-                                   final Exp<O> exp4,
+                                   final Val<O> exp4,
                                    final String key5,
-                                   final Exp<O> exp5,
+                                   final Val<O> exp5,
                                    final String key6,
-                                   final Exp<O> exp6
+                                   final Val<O> exp6
                                   ) {
-        MapExp<O> obj = MapExp.of(key1,
+        MapVal<O> obj = MapVal.of(key1,
                                   exp1,
                                   key2,
                                   exp2,
@@ -257,25 +263,26 @@ public final class MapExp<O> extends AbstractExp<Map<String, O>> {
      @param exp6 the mapping associated to the sixth key
      @param key7 the seventh key
      @param exp7 the mapping associated to the seventh key
+     @param <O> the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static <O> MapExp<O> of(final String key1,
-                                   final Exp<O> exp1,
+    public static <O> MapVal<O> of(final String key1,
+                                   final Val<O> exp1,
                                    final String key2,
-                                   final Exp<O> exp2,
+                                   final Val<O> exp2,
                                    final String key3,
-                                   final Exp<O> exp3,
+                                   final Val<O> exp3,
                                    final String key4,
-                                   final Exp<O> exp4,
+                                   final Val<O> exp4,
                                    final String key5,
-                                   final Exp<O> exp5,
+                                   final Val<O> exp5,
                                    final String key6,
-                                   final Exp<O> exp6,
+                                   final Val<O> exp6,
                                    final String key7,
-                                   final Exp<O> exp7
+                                   final Val<O> exp7
                                   ) {
-        MapExp<O> obj = MapExp.of(key1,
+        MapVal<O> obj = MapVal.of(key1,
                                   exp1,
                                   key2,
                                   exp2,
@@ -314,27 +321,28 @@ public final class MapExp<O> extends AbstractExp<Map<String, O>> {
      @param exp7 the mapping associated to the seventh key
      @param key8 the eighth key
      @param exp8 the mapping associated to the eighth key
+     @param <O> the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static <O> MapExp<O> of(final String key1,
-                                   final Exp<O> exp1,
+    public static <O> MapVal<O> of(final String key1,
+                                   final Val<O> exp1,
                                    final String key2,
-                                   final Exp<O> exp2,
+                                   final Val<O> exp2,
                                    final String key3,
-                                   final Exp<O> exp3,
+                                   final Val<O> exp3,
                                    final String key4,
-                                   final Exp<O> exp4,
+                                   final Val<O> exp4,
                                    final String key5,
-                                   final Exp<O> exp5,
+                                   final Val<O> exp5,
                                    final String key6,
-                                   final Exp<O> exp6,
+                                   final Val<O> exp6,
                                    final String key7,
-                                   final Exp<O> exp7,
+                                   final Val<O> exp7,
                                    final String key8,
-                                   final Exp<O> exp8
+                                   final Val<O> exp8
                                   ) {
-        MapExp<O> obj = MapExp.of(key1,
+        MapVal<O> obj = MapVal.of(key1,
                                   exp1,
                                   key2,
                                   exp2,
@@ -378,29 +386,30 @@ public final class MapExp<O> extends AbstractExp<Map<String, O>> {
      @param exp8 the mapping associated to the eighth key
      @param key9 the ninth key
      @param exp9 the mapping associated to the ninth key
+     @param <O> the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static <O> MapExp<O> of(final String key1,
-                                   final Exp<O> exp1,
+    public static <O> MapVal<O> of(final String key1,
+                                   final Val<O> exp1,
                                    final String key2,
-                                   final Exp<O> exp2,
+                                   final Val<O> exp2,
                                    final String key3,
-                                   final Exp<O> exp3,
+                                   final Val<O> exp3,
                                    final String key4,
-                                   final Exp<O> exp4,
+                                   final Val<O> exp4,
                                    final String key5,
-                                   final Exp<O> exp5,
+                                   final Val<O> exp5,
                                    final String key6,
-                                   final Exp<O> exp6,
+                                   final Val<O> exp6,
                                    final String key7,
-                                   final Exp<O> exp7,
+                                   final Val<O> exp7,
                                    final String key8,
-                                   final Exp<O> exp8,
+                                   final Val<O> exp8,
                                    final String key9,
-                                   final Exp<O> exp9
+                                   final Val<O> exp9
                                   ) {
-        MapExp<O> obj = MapExp.of(key1,
+        MapVal<O> obj = MapVal.of(key1,
                                   exp1,
                                   key2,
                                   exp2,
@@ -449,31 +458,32 @@ public final class MapExp<O> extends AbstractExp<Map<String, O>> {
      @param exp9  the mapping associated to the ninth key
      @param key10 the tenth key
      @param exp10 the mapping associated to the tenth key
+     @param <O> the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static <O> MapExp<O> of(final String key1,
-                                   final Exp<O> exp1,
+    public static <O> MapVal<O> of(final String key1,
+                                   final Val<O> exp1,
                                    final String key2,
-                                   final Exp<O> exp2,
+                                   final Val<O> exp2,
                                    final String key3,
-                                   final Exp<O> exp3,
+                                   final Val<O> exp3,
                                    final String key4,
-                                   final Exp<O> exp4,
+                                   final Val<O> exp4,
                                    final String key5,
-                                   final Exp<O> exp5,
+                                   final Val<O> exp5,
                                    final String key6,
-                                   final Exp<O> exp6,
+                                   final Val<O> exp6,
                                    final String key7,
-                                   final Exp<O> exp7,
+                                   final Val<O> exp7,
                                    final String key8,
-                                   final Exp<O> exp8,
+                                   final Val<O> exp8,
                                    final String key9,
-                                   final Exp<O> exp9,
+                                   final Val<O> exp9,
                                    final String key10,
-                                   final Exp<O> exp10
+                                   final Val<O> exp10
                                   ) {
-        MapExp<O> obj = MapExp.of(key1,
+        MapVal<O> obj = MapVal.of(key1,
                                   exp1,
                                   key2,
                                   exp2,
@@ -525,33 +535,34 @@ public final class MapExp<O> extends AbstractExp<Map<String, O>> {
      @param exp10 the mapping associated to the eleventh key
      @param key11 the tenth key
      @param exp11 the mapping associated to the eleventh key
+     @param <O> the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static <O> MapExp<O> of(final String key1,
-                                   final Exp<O> exp1,
+    public static <O> MapVal<O> of(final String key1,
+                                   final Val<O> exp1,
                                    final String key2,
-                                   final Exp<O> exp2,
+                                   final Val<O> exp2,
                                    final String key3,
-                                   final Exp<O> exp3,
+                                   final Val<O> exp3,
                                    final String key4,
-                                   final Exp<O> exp4,
+                                   final Val<O> exp4,
                                    final String key5,
-                                   final Exp<O> exp5,
+                                   final Val<O> exp5,
                                    final String key6,
-                                   final Exp<O> exp6,
+                                   final Val<O> exp6,
                                    final String key7,
-                                   final Exp<O> exp7,
+                                   final Val<O> exp7,
                                    final String key8,
-                                   final Exp<O> exp8,
+                                   final Val<O> exp8,
                                    final String key9,
-                                   final Exp<O> exp9,
+                                   final Val<O> exp9,
                                    final String key10,
-                                   final Exp<O> exp10,
+                                   final Val<O> exp10,
                                    final String key11,
-                                   final Exp<O> exp11
+                                   final Val<O> exp11
                                   ) {
-        MapExp<O> obj = MapExp.of(key1,
+        MapVal<O> obj = MapVal.of(key1,
                                   exp1,
                                   key2,
                                   exp2,
@@ -607,35 +618,36 @@ public final class MapExp<O> extends AbstractExp<Map<String, O>> {
      @param exp11 the mapping associated to the eleventh key
      @param key12 the twelfth key
      @param exp12 the mapping associated to the twelfth key
+     @param <O> the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static <O> MapExp<O> of(final String key1,
-                                   final Exp<O> exp1,
+    public static <O> MapVal<O> of(final String key1,
+                                   final Val<O> exp1,
                                    final String key2,
-                                   final Exp<O> exp2,
+                                   final Val<O> exp2,
                                    final String key3,
-                                   final Exp<O> exp3,
+                                   final Val<O> exp3,
                                    final String key4,
-                                   final Exp<O> exp4,
+                                   final Val<O> exp4,
                                    final String key5,
-                                   final Exp<O> exp5,
+                                   final Val<O> exp5,
                                    final String key6,
-                                   final Exp<O> exp6,
+                                   final Val<O> exp6,
                                    final String key7,
-                                   final Exp<O> exp7,
+                                   final Val<O> exp7,
                                    final String key8,
-                                   final Exp<O> exp8,
+                                   final Val<O> exp8,
                                    final String key9,
-                                   final Exp<O> exp9,
+                                   final Val<O> exp9,
                                    final String key10,
-                                   final Exp<O> exp10,
+                                   final Val<O> exp10,
                                    final String key11,
-                                   final Exp<O> exp11,
+                                   final Val<O> exp11,
                                    final String key12,
-                                   final Exp<O> exp12
+                                   final Val<O> exp12
                                   ) {
-        MapExp<O> obj = MapExp.of(key1,
+        MapVal<O> obj = MapVal.of(key1,
                                   exp1,
                                   key2,
                                   exp2,
@@ -694,37 +706,38 @@ public final class MapExp<O> extends AbstractExp<Map<String, O>> {
      @param exp12 the mapping associated to the twelfth key,
      @param key13 the thirteenth key
      @param exp13 the mapping associated to the thirteenth key
+     @param <O> the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static <O> MapExp<O> of(final String key1,
-                                   final Exp<O> exp1,
+    public static <O> MapVal<O> of(final String key1,
+                                   final Val<O> exp1,
                                    final String key2,
-                                   final Exp<O> exp2,
+                                   final Val<O> exp2,
                                    final String key3,
-                                   final Exp<O> exp3,
+                                   final Val<O> exp3,
                                    final String key4,
-                                   final Exp<O> exp4,
+                                   final Val<O> exp4,
                                    final String key5,
-                                   final Exp<O> exp5,
+                                   final Val<O> exp5,
                                    final String key6,
-                                   final Exp<O> exp6,
+                                   final Val<O> exp6,
                                    final String key7,
-                                   final Exp<O> exp7,
+                                   final Val<O> exp7,
                                    final String key8,
-                                   final Exp<O> exp8,
+                                   final Val<O> exp8,
                                    final String key9,
-                                   final Exp<O> exp9,
+                                   final Val<O> exp9,
                                    final String key10,
-                                   final Exp<O> exp10,
+                                   final Val<O> exp10,
                                    final String key11,
-                                   final Exp<O> exp11,
+                                   final Val<O> exp11,
                                    final String key12,
-                                   final Exp<O> exp12,
+                                   final Val<O> exp12,
                                    final String key13,
-                                   final Exp<O> exp13
+                                   final Val<O> exp13
                                   ) {
-        MapExp<O> obj = MapExp.of(key1,
+        MapVal<O> obj = MapVal.of(key1,
                                   exp1,
                                   key2,
                                   exp2,
@@ -787,39 +800,40 @@ public final class MapExp<O> extends AbstractExp<Map<String, O>> {
      @param exp13 the mapping associated to the thirteenth key
      @param key14 the fourteenth key
      @param exp14 the mapping associated to the fourteenth key
+     @param <O> the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static <O> MapExp<O> of(final String key1,
-                                   final Exp<O> exp1,
+    public static <O> MapVal<O> of(final String key1,
+                                   final Val<O> exp1,
                                    final String key2,
-                                   final Exp<O> exp2,
+                                   final Val<O> exp2,
                                    final String key3,
-                                   final Exp<O> exp3,
+                                   final Val<O> exp3,
                                    final String key4,
-                                   final Exp<O> exp4,
+                                   final Val<O> exp4,
                                    final String key5,
-                                   final Exp<O> exp5,
+                                   final Val<O> exp5,
                                    final String key6,
-                                   final Exp<O> exp6,
+                                   final Val<O> exp6,
                                    final String key7,
-                                   final Exp<O> exp7,
+                                   final Val<O> exp7,
                                    final String key8,
-                                   final Exp<O> exp8,
+                                   final Val<O> exp8,
                                    final String key9,
-                                   final Exp<O> exp9,
+                                   final Val<O> exp9,
                                    final String key10,
-                                   final Exp<O> exp10,
+                                   final Val<O> exp10,
                                    final String key11,
-                                   final Exp<O> exp11,
+                                   final Val<O> exp11,
                                    final String key12,
-                                   final Exp<O> exp12,
+                                   final Val<O> exp12,
                                    final String key13,
-                                   final Exp<O> exp13,
+                                   final Val<O> exp13,
                                    final String key14,
-                                   final Exp<O> exp14
+                                   final Val<O> exp14
                                   ) {
-        MapExp<O> obj = MapExp.of(key1,
+        MapVal<O> obj = MapVal.of(key1,
                                   exp1,
                                   key2,
                                   exp2,
@@ -887,41 +901,42 @@ public final class MapExp<O> extends AbstractExp<Map<String, O>> {
      @param exp14 the mapping associated to the fourteenth key
      @param key15 the fifteenth key
      @param exp15 the mapping associated to the fifteenth key
+     @param <O> the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static <O> MapExp<O> of(final String key1,
-                                   final Exp<O> exp1,
+    public static <O> MapVal<O> of(final String key1,
+                                   final Val<O> exp1,
                                    final String key2,
-                                   final Exp<O> exp2,
+                                   final Val<O> exp2,
                                    final String key3,
-                                   final Exp<O> exp3,
+                                   final Val<O> exp3,
                                    final String key4,
-                                   final Exp<O> exp4,
+                                   final Val<O> exp4,
                                    final String key5,
-                                   final Exp<O> exp5,
+                                   final Val<O> exp5,
                                    final String key6,
-                                   final Exp<O> exp6,
+                                   final Val<O> exp6,
                                    final String key7,
-                                   final Exp<O> exp7,
+                                   final Val<O> exp7,
                                    final String key8,
-                                   final Exp<O> exp8,
+                                   final Val<O> exp8,
                                    final String key9,
-                                   final Exp<O> exp9,
+                                   final Val<O> exp9,
                                    final String key10,
-                                   final Exp<O> exp10,
+                                   final Val<O> exp10,
                                    final String key11,
-                                   final Exp<O> exp11,
+                                   final Val<O> exp11,
                                    final String key12,
-                                   final Exp<O> exp12,
+                                   final Val<O> exp12,
                                    final String key13,
-                                   final Exp<O> exp13,
+                                   final Val<O> exp13,
                                    final String key14,
-                                   final Exp<O> exp14,
+                                   final Val<O> exp14,
                                    final String key15,
-                                   final Exp<O> exp15
+                                   final Val<O> exp15
                                   ) {
-        MapExp<O> obj = MapExp.of(key1,
+        MapVal<O> obj = MapVal.of(key1,
                                   exp1,
                                   key2,
                                   exp2,
@@ -965,10 +980,10 @@ public final class MapExp<O> extends AbstractExp<Map<String, O>> {
      @param exp the given future
      @return a new JsObjFuture
      */
-    public MapExp<O> set(final String key,
-                         final Exp<O> exp
+    public MapVal<O> set(final String key,
+                         final Val<O> exp
                         ) {
-        return new MapExp<>(bindings.put(requireNonNull(key),
+        return new MapVal<>(bindings.put(requireNonNull(key),
                                          requireNonNull(exp)
                                         ));
     }
@@ -979,8 +994,8 @@ public final class MapExp<O> extends AbstractExp<Map<String, O>> {
 
 
     @Override
-    public <P> Exp<P> map(final Function<Map<String, O>, P> fn) {
-        return Val.success(() -> get().map(fn));
+    public <P> Val<P> map(final Function<Map<String, O>, P> fn) {
+        return Cons.of(() -> get().map(fn));
     }
 
     @Override
@@ -993,20 +1008,21 @@ public final class MapExp<O> extends AbstractExp<Map<String, O>> {
     }
 
     @Override
-    public Exp<Map<String, O>> retry(final int attempts) {
-        return new MapExp<>(bindings.mapValues(it -> it.retry(attempts)));
+    public Val<Map<String, O>> retry(final int attempts) {
+        return new MapVal<>(bindings.mapValues(it -> it.retry(attempts)));
     }
 
     @Override
-    public Exp<Map<String, O>> retryIf(final Predicate<Throwable> predicate,
+    public Val<Map<String, O>> retryIf(final Predicate<Throwable> predicate,
                                        final int attempts) {
-        return new MapExp<>(bindings.mapValues(it -> it.retryIf(predicate,
+        return new MapVal<>(bindings.mapValues(it -> it.retryIf(predicate,
                                                                 attempts
                                                                )));
 
     }
 
     @Override
+    @SuppressWarnings({"rawtypes"})
     public Future<Map<String, O>> get() {
 
 

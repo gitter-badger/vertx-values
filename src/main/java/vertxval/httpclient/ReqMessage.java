@@ -10,7 +10,7 @@ import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
 
-abstract class ReqBuilder<T extends ReqBuilder<T>> {
+abstract class ReqMessage<T extends ReqMessage<T>> {
     protected TYPE type;
 
 
@@ -32,34 +32,44 @@ abstract class ReqBuilder<T extends ReqBuilder<T>> {
     private Boolean ssl;
 
 
+    @SuppressWarnings("unchecked")
     public T header(String key,
-                             String value) {
+                    String value) {
         JsValue values = headers.get(key);
         if (values.isNothing()) headers = headers.set(key,
                                                       JsArray.of(value)
                                                      );
-        else headers = headers.set(key,values.toJsArray().append(JsStr.of(value)));
+        else headers = headers.set(key,
+                                   values.toJsArray()
+                                         .append(JsStr.of(value))
+                                  );
         return (T) this;
     }
 
+    @SuppressWarnings("unchecked")
 
     public T timeout(final int timeout,
-                              final TimeUnit unit) {
+                     final TimeUnit unit) {
         if (timeout < 0) throw new IllegalArgumentException("timeout < 0");
         this.timeout = requireNonNull(unit).toMillis(timeout);
         return (T) this;
     }
 
+    @SuppressWarnings("unchecked")
 
     public T ssl(final boolean ssl) {
         this.ssl = ssl;
         return (T) this;
     }
 
+    @SuppressWarnings("unchecked")
+
     public T followRedirects(final boolean followRedirects) {
         this.followRedirects = followRedirects;
         return (T) this;
     }
+
+    @SuppressWarnings("unchecked")
 
     public T port(final int port) {
         if (port < 0) throw new IllegalArgumentException("port < 0");
@@ -67,11 +77,15 @@ abstract class ReqBuilder<T extends ReqBuilder<T>> {
         return (T) this;
     }
 
+    @SuppressWarnings("unchecked")
+
     public T host(final String host) {
         if (requireNonNull(host).isEmpty()) throw new IllegalArgumentException("host is empty");
         this.host = host;
         return (T) this;
     }
+
+    @SuppressWarnings("unchecked")
 
     public T uri(final String uri) {
         if (requireNonNull(uri).isEmpty()) throw new IllegalArgumentException("uri is empty");

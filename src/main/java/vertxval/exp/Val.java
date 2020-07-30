@@ -1,93 +1,42 @@
 package vertxval.exp;
 
+import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
+import io.vertx.core.Handler;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public final class Val<O> extends AbstractExp<O> {
+public interface Val<O> extends Supplier<Future<O>> {
 
-    Supplier<Future<O>> fut;
+    <P> Val<P> map(Function<O, P> fn);
 
-    public static <O> Val<O> success(Supplier<Future<O>> supplier) {
-        return new Val<>(supplier);
-    }
+    <Q> Val<Q> flatMap(Function<O, Val<Q>> fn);
 
-    public static <O> Val<O> failure(Throwable failure){
-        return Val.success(()->Future.failedFuture(failure));
-    }
+    O result();
 
-    public static <O> Val<O> success(O o) {
-        return new Val<>(() -> Future.succeededFuture(o));
-    }
+    Val<O> retry(int attempts);
 
-    Val(final Supplier<Future<O>> fut) {
-        this.fut = fut;
-    }
+    Val<O> retryIf(Predicate<Throwable> predicate,
+                   int attempts);
 
-    @Override
-    public Future<O> get() {
-        return fut.get();
-    }
+    Val<O> recover(Function<Throwable, O> fn);
 
-    @Override
-    public <P> Exp<P> map(final Function<O, P> fn) {
-        return Val.success(() -> fut.get()
-                                    .map(fn)
-                          );
-    }
+    Val<O> recoverWith(Function<Throwable, Val<O>> fn);
 
+    Val<O> fallbackTo(Function<Throwable, Val<O>> fn);
 
+    Val<O> onSuccess(Consumer<O> success);
 
-    @Override
-    public O result() {
-        return get().result();
-    }
+    Val<O> onComplete(Consumer<O> success,
+                      Consumer<Throwable> thowable);
 
-    @Override
-    public Exp<O> retry(final int attempts) {
-        if (attempts < 1) throw new IllegalArgumentException("tries < 0");
-        return retry(this,
-                     attempts
-                    );
-    }
+    <U> Val<U> flatMap(Function<O, Val<U>> successMapper,
+                       Function<Throwable, Val<U>> failureMapper);
 
-    @Override
-    public Exp<O> retryIf(final Predicate<Throwable> predicate,
-                          final int attempts) {
-        if (attempts < 1) throw new IllegalArgumentException("tries < 0");
-        return retry(this,
-                     attempts,
-                     predicate
-                    );
-    }
+    Val<O> onComplete(Handler<AsyncResult<O>> handler);
 
-    private Exp<O> retry(final Exp<O> exp,
-                         final int attempts) {
-        if (attempts == 0) return exp;
-        return Val.success(() -> exp.get()
-                                    .compose(Future::succeededFuture,
-                                        e -> retry(exp,
-                                                   attempts - 1
-                                                  ).get()
-                                       )
-                          );
-    }
-
-    private Exp<O> retry(final Exp<O> exp,
-                         final int attempts,
-                         final Predicate<Throwable> predicate) {
-        if (attempts == 0) return exp;
-        return Val.success(() -> exp.get()
-                                    .compose(Future::succeededFuture,
-                                        e -> (predicate.test(e)) ?
-                                             retry(exp,
-                                                   attempts - 1
-                                                  ).get() :
-                                             Future.failedFuture(e)
-                                       )
-                          );
-    }
 
 }

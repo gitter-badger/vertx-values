@@ -11,25 +11,28 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public final class And extends AbstractExp<Boolean> {
+public final class And extends AbstractVal<Boolean> {
 
-    And(final List<Exp<Boolean>> exps) {
+    And(final List<Val<Boolean>> exps) {
         this.exps = exps;
     }
 
-    final List<Exp<Boolean>> exps;
+    final List<Val<Boolean>> exps;
 
-    public static Exp<Boolean> of(final Exp<Boolean> a,
-                                  final Exp<Boolean>... others) {
-        List<Exp<Boolean>> exps = new ArrayList<>();
+    @SafeVarargs
+    public static Val<Boolean> of(final Val<Boolean> a,
+                                  final Val<Boolean>... others) {
+        List<Val<Boolean>> exps = new ArrayList<>();
         exps.add(a);
-        exps.addAll(Arrays.asList(others));
+        for (final Val<Boolean> other : others) {
+            exps.add(other);
+        }
         return new And(exps);
     }
 
     @Override
-    public <P> Exp<P> map(final Function<Boolean, P> fn) {
-        return Val.success(() -> get().map(fn));
+    public <P> Val<P> map(final Function<Boolean, P> fn) {
+        return Cons.of(() -> get().map(fn));
     }
 
     @Override
@@ -44,14 +47,14 @@ public final class And extends AbstractExp<Boolean> {
     }
 
     @Override
-    public Exp<Boolean> retry(final int attempts) {
+    public Val<Boolean> retry(final int attempts) {
         return new And(exps.stream()
                            .map(it -> it.retry(attempts))
                            .collect(Collectors.toList()));
     }
 
     @Override
-    public Exp<Boolean> retryIf(final Predicate<Throwable> predicate,
+    public Val<Boolean> retryIf(final Predicate<Throwable> predicate,
                                 final int attempts) {
         return new And(exps.stream()
                            .map(it -> it.retryIf(predicate,attempts))

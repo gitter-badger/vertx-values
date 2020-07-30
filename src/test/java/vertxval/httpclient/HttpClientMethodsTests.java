@@ -67,14 +67,14 @@ public class HttpClientMethodsTests {
 
     @Test
     public void testGet(VertxTestContext testContext) {
-        httpClient.get.apply(new GetBuilder().port(PORT)
+        httpClient.get.apply(new GetMessage().port(PORT)
                                              .uri("example"))
                       .onComplete(TestFns.pipeTo(System.out::println,testContext)).get();
     }
 
     @Test
     public void testPost(VertxTestContext testContext) {
-        httpClient.post.apply(new PostBuilder("hi".getBytes())
+        httpClient.post.apply(new PostMessage("hi".getBytes())
                                       .port(PORT)
                                       .uri("example"))
                        .onComplete(it -> {

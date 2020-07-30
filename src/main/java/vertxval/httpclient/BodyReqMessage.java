@@ -5,8 +5,8 @@ import jsonvalues.JsObj;
 
 import java.util.Objects;
 
-abstract class BodyReqBuilder<T extends BodyReqBuilder<T>> extends ReqBuilder<T> {
-    public BodyReqBuilder(final byte[] body) {
+abstract class BodyReqMessage<T extends BodyReqMessage<T>> extends ReqMessage<T> {
+    public BodyReqMessage(final byte[] body) {
         this.body = Objects.requireNonNull(body);
     }
 

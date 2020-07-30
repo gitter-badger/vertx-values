@@ -1,23 +1,20 @@
 package vertxval;
 
-import vertxval.codecs.RegisterJsValuesCodecs;
-import vertxval.exp.Exp;
-import vertxval.exp.Pair;
-import vertxval.exp.λ;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
-import io.vertx.core.eventbus.Message;
 import io.vertx.junit5.Checkpoint;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 import jsonvalues.JsObj;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import vertxval.codecs.RegisterJsValuesCodecs;
+import vertxval.exp.Val;
+import vertxval.exp.Pair;
+import vertxval.exp.λ;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,38 +40,42 @@ public class ExampleModuleTest {
     public void test_number_of_instances(VertxTestContext context) {
         int i = 100000;
 
-        final Checkpoint               checkpoint = context.checkpoint(i);
+        final Checkpoint checkpoint = context.checkpoint(i);
 
         for (int i1 = 0; i1 < i; i1++) {
             deployer.deployFn(Function.<JsObj>identity(),
-                                     new DeploymentOptions().setWorker(true)
-                            )
-                    .onComplete(r -> checkpoint.flag()).get();
+                              new DeploymentOptions().setWorker(true)
+                             )
+                    .onComplete(r -> checkpoint.flag())
+                    .get();
         }
     }
 
     @Test
     public void test_sending_messages(VertxTestContext context) {
 
-        Exp<VerticleRef<Integer, Integer>> addOneExp = deployer.deployFn(i -> i + 1);
-        Exp<VerticleRef<Integer, Integer>> tripleExp = deployer.deployFn(i -> i + 3);
+        Val<VerticleRef<Integer, Integer>> addOneExp = deployer.deployFn(i -> i + 1);
+        Val<VerticleRef<Integer, Integer>> tripleExp = deployer.deployFn(i -> i + 3);
 
         Pair.of(addOneExp,
                 tripleExp
                )
-            .onSuccess(pair -> {
+            .flatMap(pair -> {
                 λ<Integer, Integer> addOne = pair._1.ask();
                 λ<Integer, Integer> triple = pair._2.ask();
-                addOne.apply(1)
-                      .flatMap(triple::apply)
+                return addOne.apply(1)
+                      .flatMap(triple)
                       .onSuccess(result -> {
-                          context.verify(() -> Assertions.assertEquals(5,
-                                                                       result));
-                          context.completeNow();
+                          context.verify(() -> assertEquals(5,
+                                                            result
+                                                           )
+                                        );
                           pair._1.undeploy();
                           pair._2.undeploy();
-                      }).get();
-            }).get();
+                          context.completeNow();
+                      });
+            })
+            .get();
 
 
     }
@@ -83,18 +84,20 @@ public class ExampleModuleTest {
     public void test_verticle_consumer(VertxTestContext context) {
         deployer.deployFn(Function.<JsObj>identity())
                 .onComplete(r -> r.result()
-                                .ask()
-                                .apply(JsObj.empty())
-                                .onComplete(h -> context.verify(() ->
-                                                                {
-                                                                    assertEquals(h.result(),
-                                                                                 JsObj.empty()
-                                                                                );
-                                                                    context.completeNow();
-                                                                }
-                                                               )
-                                           ).get()
-                         ).get();
+                                  .ask()
+                                  .apply(JsObj.empty())
+                                  .onComplete(h -> context.verify(() ->
+                                                                  {
+                                                                      assertEquals(h.result(),
+                                                                                   JsObj.empty()
+                                                                                  );
+                                                                      context.completeNow();
+                                                                  }
+                                                                 )
+                                             )
+                                  .get()
+                           )
+                .get();
     }
 
     @Test
@@ -104,11 +107,12 @@ public class ExampleModuleTest {
                                         ) {
         deployer.deployFn(Function.<JsObj>identity())
                 .onComplete(r ->
-                          {
-                              context.verify(() -> assertTrue(r.succeeded()));
-                              context.completeNow();
-                          }
-                         ).get();
+                            {
+                                context.verify(() -> assertTrue(r.succeeded()));
+                                context.completeNow();
+                            }
+                           )
+                .get();
 
     }
 

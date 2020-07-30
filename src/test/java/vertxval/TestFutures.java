@@ -9,17 +9,17 @@ import jsonvalues.JsStr;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import vertxval.exp.Exp;
-import vertxval.exp.JsArrayExp;
-import vertxval.exp.JsObjExp;
+import vertxval.exp.Val;
+import vertxval.exp.JsArrayVal;
+import vertxval.exp.JsObjVal;
 import java.util.function.Function;
 
 @ExtendWith(VertxExtension.class)
-public class TestFutures extends Module {
+public class TestFutures extends VertxModule {
 
-    public static Function<Integer, Exp<Integer>> multiplyBy10;
-    public static Function<Integer, Exp<Integer>> add10;
-    public static Function<String, Exp<String>> toUpper;
+    public static Function<Integer, Val<Integer>> multiplyBy10;
+    public static Function<Integer, Val<Integer>> add10;
+    public static Function<String, Val<String>> toUpper;
 
 
     @BeforeAll
@@ -36,7 +36,7 @@ public class TestFutures extends Module {
     @Test
     public void testJsObjFuture(final VertxTestContext context) {
 
-        JsObjExp.of("a",
+        JsObjVal.of("a",
                     multiplyBy10.apply(10)
                                 .map(JsInt::of),
                     "b",
@@ -46,7 +46,7 @@ public class TestFutures extends Module {
                     toUpper.apply("abc")
                            .map(JsStr::of),
                     "d",
-                    JsArrayExp.tuple(multiplyBy10.apply(1)
+                    JsArrayVal.tuple(multiplyBy10.apply(1)
                                                  .map(JsInt::of),
                                      multiplyBy10.apply(5)
                                                  .map(JsInt::of)
@@ -71,7 +71,7 @@ public class TestFutures extends Module {
     }
 
     @Override
-    protected void onComplete() {
+    protected void define() {
         toUpper = this.<String, String>getDeployedVerticle("toUpper").ask();
         multiplyBy10 = this.<Integer, Integer>getDeployedVerticle("multiplyByTen").ask();
         add10 = this.<Integer, Integer>getDeployedVerticle("addTen").ask();

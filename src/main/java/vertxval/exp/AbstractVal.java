@@ -9,44 +9,44 @@ import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
 
-abstract class AbstractExp<O> implements Exp<O> {
+abstract class AbstractVal<O> implements Val<O> {
     @Override
-    public Exp<O> recover(final Function<Throwable, O> fn) {
+    public Val<O> recover(final Function<Throwable, O> fn) {
         requireNonNull(fn);
-        return Val.success(() -> get().compose(Future::succeededFuture,
+        return Cons.of(() -> get().compose(Future::succeededFuture,
                                           e -> Future.succeededFuture(fn.apply(e))
-                                              )
-                          );
+                                          )
+                      );
     }
 
     @Override
-    public Exp<O> recoverWith(final Function<Throwable, Exp<O>> fn) {
+    public Val<O> recoverWith(final Function<Throwable, Val<O>> fn) {
         requireNonNull(fn);
-        return Val.success(() -> get().compose(Future::succeededFuture,
+        return Cons.of(() -> get().compose(Future::succeededFuture,
                                           e -> fn.apply(e)
                                                  .get()
-                                              )
-                          );
+                                          )
+                      );
     }
 
     @Override
-    public Exp<O> fallbackTo(final Function<Throwable, Exp<O>> fn) {
+    public Val<O> fallbackTo(final Function<Throwable, Val<O>> fn) {
         requireNonNull(fn);
-        return Val.success(() -> get().compose(Future::succeededFuture,
+        return Cons.of(() -> get().compose(Future::succeededFuture,
                                           e -> fn.apply(e)
                                                  .get()
                                                  .compose(Future::succeededFuture,
                                                           e1 -> Future.failedFuture(e)
                                                          )
-                                              )
-                          );
+                                          )
+                      );
 
     }
 
     @Override
-    public <Q> Exp<Q> flatMap(final Function<O, Exp<Q>> fn) {
+    public <Q> Val<Q> flatMap(final Function<O, Val<Q>> fn) {
         requireNonNull(fn);
-        return Val.success(
+        return Cons.of(
                 () ->
                         get().flatMap(o ->
                                               fn.apply(o)
@@ -54,41 +54,41 @@ abstract class AbstractExp<O> implements Exp<O> {
     }
 
     @Override
-    public Exp<O> onSuccess(final Consumer<O> success) {
+    public Val<O> onSuccess(final Consumer<O> success) {
         requireNonNull(success);
-        return Val.success(() -> get().onSuccess(success::accept));
+        return Cons.of(() -> get().onSuccess(success::accept));
     }
 
     @Override
-    public Exp<O> onComplete(final Consumer<O> successConsumer,
+    public Val<O> onComplete(final Consumer<O> successConsumer,
                              final Consumer<Throwable> throwableConsumer) {
         requireNonNull(successConsumer);
         requireNonNull(throwableConsumer);
-        return Val.success(() -> get().onComplete(event -> {
+        return Cons.of(() -> get().onComplete(event -> {
                           if (event.succeeded()) successConsumer.accept(event.result());
                           else throwableConsumer.accept(event.cause());
                       })
-                          );
+                      );
     }
 
     @Override
-    public <U> Exp<U> flatMap(final Function<O, Exp<U>> successMapper,
-                              final Function<Throwable, Exp<U>> failureMapper) {
+    public <U> Val<U> flatMap(final Function<O, Val<U>> successMapper,
+                              final Function<Throwable, Val<U>> failureMapper) {
         requireNonNull(successMapper);
         requireNonNull(failureMapper);
-        return Val.success(() -> get().compose(result -> successMapper.apply(result)
-                                                                      .get(),
+        return Cons.of(() -> get().compose(result -> successMapper.apply(result)
+                                                                  .get(),
                                           failure -> failureMapper.apply(failure)
                                                                   .get()
-                                              )
-                          );
+                                          )
+                      );
 
     }
 
     @Override
-    public Exp<O> onComplete(final Handler<AsyncResult<O>> handler) {
+    public Val<O> onComplete(final Handler<AsyncResult<O>> handler) {
 
-        return Val.success(() -> get().onComplete(handler));
+        return Cons.of(() -> get().onComplete(handler));
 
     }
 }

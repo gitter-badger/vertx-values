@@ -6,30 +6,30 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public final class IfElse<O> extends AbstractExp<O> {
+public final class IfElse<O> extends AbstractVal<O> {
 
-    final Exp<Boolean> predicate;
-    Exp<O> consequence;
-    Exp<O> alternative;
+    final Val<Boolean> predicate;
+    Val<O> consequence;
+    Val<O> alternative;
 
-    public static <O> IfElse<O> predicate(Exp<Boolean> predicate) {
+    public static <O> IfElse<O> predicate(Val<Boolean> predicate) {
         return new IfElse<>(predicate);
     }
 
     public static <O> IfElse<O> predicate(Supplier<Future<Boolean>> predicate) {
-        return new IfElse<>(Val.success(predicate));
+        return new IfElse<>(Cons.of(predicate));
     }
 
-    IfElse(final Exp<Boolean> predicate) {
+    IfElse(final Val<Boolean> predicate) {
         this.predicate = predicate;
     }
 
-    public IfElse<O> consequence(final Exp<O> consequence) {
+    public IfElse<O> consequence(final Val<O> consequence) {
         this.consequence = consequence;
         return this;
     }
 
-    public IfElse<O> alternative(final Exp<O> alternative) {
+    public IfElse<O> alternative(final Val<O> alternative) {
         this.alternative = alternative;
         return this;
     }
@@ -45,7 +45,7 @@ public final class IfElse<O> extends AbstractExp<O> {
     }
 
     @Override
-    public <P> Exp<P> map(final Function<O, P> fn) {
+    public <P> Val<P> map(final Function<O, P> fn) {
         return new IfElse<P>(predicate).alternative(alternative.map(fn))
                                        .consequence(consequence.map(fn));
     }
@@ -56,14 +56,14 @@ public final class IfElse<O> extends AbstractExp<O> {
     }
 
     @Override
-    public Exp<O> retry(final int attempts) {
+    public Val<O> retry(final int attempts) {
         return new IfElse<O>(predicate.retry(attempts))
                 .consequence(consequence.retry(attempts))
                 .alternative(alternative.retry(attempts));
     }
 
     @Override
-    public Exp<O> retryIf(final Predicate<Throwable> predicate,
+    public Val<O> retryIf(final Predicate<Throwable> predicate,
                           final int attempts) {
         return new IfElse<O>(this.predicate.retryIf(predicate,attempts))
                 .consequence(consequence.retryIf(predicate,attempts))

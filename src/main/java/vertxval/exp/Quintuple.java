@@ -8,20 +8,20 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 
-public final class Quintuple<A, B, C, D, E> extends AbstractExp<Tuple5<A, B, C,D,E>> {
+public final class Quintuple<A, B, C, D, E> extends AbstractVal<Tuple5<A, B, C,D,E>> {
 
-    private final Exp<A> _1;
-    private final Exp<B> _2;
-    private final Exp<C> _3;
-    private final Exp<D> _4;
-    private final Exp<E> _5;
+    private final Val<A> _1;
+    private final Val<B> _2;
+    private final Val<C> _3;
+    private final Val<D> _4;
+    private final Val<E> _5;
 
 
-    private Quintuple(final Exp<A> _1,
-                      final Exp<B> _2,
-                      final Exp<C> _3,
-                      final Exp<D> _4,
-                      final Exp<E> _5) {
+    private Quintuple(final Val<A> _1,
+                      final Val<B> _2,
+                      final Val<C> _3,
+                      final Val<D> _4,
+                      final Val<E> _5) {
         this._1 = _1;
         this._2 = _2;
         this._3 = _3;
@@ -29,11 +29,11 @@ public final class Quintuple<A, B, C, D, E> extends AbstractExp<Tuple5<A, B, C,D
         this._5 = _5;
     }
 
-    public static <A, B, C, D, E> Quintuple<A, B, C, D, E> of(Exp<A> _1,
-                                                              Exp<B> _2,
-                                                              Exp<C> _3,
-                                                              Exp<D> _4,
-                                                              Exp<E> _5) {
+    public static <A, B, C, D, E> Quintuple<A, B, C, D, E> of(Val<A> _1,
+                                                              Val<B> _2,
+                                                              Val<C> _3,
+                                                              Val<D> _4,
+                                                              Val<E> _5) {
         return new Quintuple<>(_1,
                                _2,
                                _3,
@@ -43,8 +43,8 @@ public final class Quintuple<A, B, C, D, E> extends AbstractExp<Tuple5<A, B, C,D
     }
 
     @Override
-    public <P> Exp<P> map(final Function<Tuple5<A, B, C, D, E>, P> fn) {
-        return Val.success(() -> get().map(fn));
+    public <P> Val<P> map(final Function<Tuple5<A, B, C, D, E>, P> fn) {
+        return Cons.of(() -> get().map(fn));
     }
 
 
@@ -65,7 +65,7 @@ public final class Quintuple<A, B, C, D, E> extends AbstractExp<Tuple5<A, B, C,D
     }
 
     @Override
-    public Exp<Tuple5<A, B, C, D, E>> retry(final int attempts) {
+    public Val<Tuple5<A, B, C, D, E>> retry(final int attempts) {
         return new Quintuple<>(_1.retry(attempts),
                                _2.retry(attempts),
                                _3.retry(attempts),
@@ -75,7 +75,7 @@ public final class Quintuple<A, B, C, D, E> extends AbstractExp<Tuple5<A, B, C,D
     }
 
     @Override
-    public Exp<Tuple5<A, B, C, D, E>> retryIf(final Predicate<Throwable> predicate,
+    public Val<Tuple5<A, B, C, D, E>> retryIf(final Predicate<Throwable> predicate,
                                               final int attempts) {
         return new Quintuple<>(_1.retryIf(predicate,
                                           attempts

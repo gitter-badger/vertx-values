@@ -11,7 +11,7 @@ import vertxval.Deployer;
 import vertxval.TestFns;
 import vertxval.VerticleRef;
 import vertxval.codecs.RegisterJsValuesCodecs;
-import vertxval.exp.Exp;
+import vertxval.exp.Val;
 import vertxval.exp.Pair;
 
 import static vertxval.TestFns.pipeTo;
@@ -33,7 +33,7 @@ public class TestBankAccount {
 
         module = new BankAccountModule();
 
-        Pair.of(deployer.deployVerticle(new RegisterJsValuesCodecs()),
+        Pair.of(deployer.deployTask(RegisterJsValuesCodecs::new),
                 deployer.deployVerticle(module)
                )
             .onComplete(pipeTo(testContext))
@@ -46,12 +46,12 @@ public class TestBankAccount {
     public void testCreateAndStopPersons(VertxTestContext context) {
 
 
-        Exp<VerticleRef<JsObj, Integer>> futRafaRef =
+        Val<VerticleRef<JsObj, Integer>> futRafaRef =
                 module.registerAccount.apply(nameLens.set.apply("Rafa")
                                                          .andThen(creditLens.set.apply(10000))
                                                          .apply(JsObj.empty()));
 
-        Exp<VerticleRef<JsObj, Integer>> futPhilipRef =
+        Val<VerticleRef<JsObj, Integer>> futPhilipRef =
                 module.registerAccount.apply(nameLens.set.apply("Philip")
                                                          .andThen(creditLens.set.apply(1000))
                                                          .apply(JsObj.empty()));
@@ -79,12 +79,12 @@ public class TestBankAccount {
     public void testMakeTx(VertxTestContext context) {
 
 
-        Exp<VerticleRef<JsObj, Integer>> futRafaRef =
+        Val<VerticleRef<JsObj, Integer>> futRafaRef =
                 module.registerAccount.apply(nameLens.set.apply("Rafa")
                                                          .andThen(creditLens.set.apply(10000))
                                                          .apply(JsObj.empty()));
 
-        Exp<VerticleRef<JsObj, Integer>> futPhilipRef =
+        Val<VerticleRef<JsObj, Integer>> futPhilipRef =
                 module.registerAccount.apply(nameLens.set.apply("Philip")
                                                          .andThen(creditLens.set.apply(1000))
                                                          .apply(JsObj.empty()));

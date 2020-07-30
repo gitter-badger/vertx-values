@@ -8,27 +8,27 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 
-public class Quadruple<A, B, C, D> extends AbstractExp<Tuple4<A, B,C,D>> {
+public class Quadruple<A, B, C, D> extends AbstractVal<Tuple4<A, B,C,D>> {
 
-    private final Exp<A> _1;
-    private final Exp<B> _2;
-    private final Exp<C> _3;
-    private final Exp<D> _4;
+    private final Val<A> _1;
+    private final Val<B> _2;
+    private final Val<C> _3;
+    private final Val<D> _4;
 
-    private Quadruple(final Exp<A> _1,
-                      final Exp<B> _2,
-                      final Exp<C> _3,
-                      final Exp<D> _4) {
+    private Quadruple(final Val<A> _1,
+                      final Val<B> _2,
+                      final Val<C> _3,
+                      final Val<D> _4) {
         this._1 = _1;
         this._2 = _2;
         this._3 = _3;
         this._4 = _4;
     }
 
-    public static <A, B, C, D> Quadruple<A, B, C, D> of(final Exp<A> _1,
-                                                        final Exp<B> _2,
-                                                        final Exp<C> _3,
-                                                        final Exp<D> _4) {
+    public static <A, B, C, D> Quadruple<A, B, C, D> of(final Val<A> _1,
+                                                        final Val<B> _2,
+                                                        final Val<C> _3,
+                                                        final Val<D> _4) {
         return new Quadruple<>(_1,
                                _2,
                                _3,
@@ -39,8 +39,8 @@ public class Quadruple<A, B, C, D> extends AbstractExp<Tuple4<A, B,C,D>> {
 
 
     @Override
-    public <P> Exp<P> map(final Function<Tuple4<A, B, C, D>, P> fn) {
-        return Val.success(() -> get().map(fn));
+    public <P> Val<P> map(final Function<Tuple4<A, B, C, D>, P> fn) {
+        return Cons.of(() -> get().map(fn));
     }
 
 
@@ -58,7 +58,7 @@ public class Quadruple<A, B, C, D> extends AbstractExp<Tuple4<A, B,C,D>> {
     }
 
     @Override
-    public Exp<Tuple4<A, B, C, D>> retry(final int attempts) {
+    public Val<Tuple4<A, B, C, D>> retry(final int attempts) {
         return new Quadruple<>(_1.retry(attempts),
                                _2.retry(attempts),
                                _3.retry(attempts),
@@ -67,7 +67,7 @@ public class Quadruple<A, B, C, D> extends AbstractExp<Tuple4<A, B,C,D>> {
     }
 
     @Override
-    public Exp<Tuple4<A, B, C, D>> retryIf(final Predicate<Throwable> predicate,
+    public Val<Tuple4<A, B, C, D>> retryIf(final Predicate<Throwable> predicate,
                                            final int attempts) {
         return new Quadruple<>(_1.retryIf(predicate,
                                           attempts

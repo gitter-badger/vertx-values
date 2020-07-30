@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.imrafaelmerino</groupId>
-  <artifactId>vertx-deployer</artifactId>
+  <artifactId>vertx-values</artifactId>
   <packaging>jar</packaging>
-  <version>0.3</version>
-  <name>vertx-deployer</name>
-  <description>vertx-deployer is a lightweight library to work with Vertx following a functional style and the Earlang philosophy based on deployer. </description>
-  <url>https://github.com/imrafaelmerino/vertx-deployer</url>
+  <version>0.2</version>
+  <name>vertx-values</name>
+  <description>vertx-values is a lightweight library to work with Vertx following a functional style and the Earlang philosophy based on deployer. </description>
+  <url>https://github.com/imrafaelmerino/vertx-values</url>
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
@@ -53,7 +53,12 @@
         <configuration>
           <source>${MAVEN-COMPILER-PLUGIN.SOURCE}</source>
           <target>${MAVEN-COMPILER-PLUGIN.TARGET}</target>
+          <showWarnings>true</showWarnings>
+          <compilerArgs>
+            <arg>-Xlint:all</arg>
+          </compilerArgs>
         </configuration>
+
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -65,7 +70,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${MAVEN-JAVADOC-PLUGIN.VERSION}</version>
         <configuration>
-          <source>8</source>
+          <source>11</source>
         </configuration>
         <executions>
           <execution>

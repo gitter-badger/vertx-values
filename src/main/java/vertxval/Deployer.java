@@ -2,7 +2,7 @@ package vertxval;
 
 import io.vertx.core.*;
 import io.vertx.core.eventbus.Message;
-import vertxval.exp.Exp;
+import vertxval.exp.Cons;
 import vertxval.exp.Val;
 import vertxval.exp.λ;
 
@@ -13,9 +13,10 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
-import static vertxval.Exceptions.GET_ERROR_HANDLING_MESSAGE_IN_CONSUMER_EXCEPTION;
+import static vertxval.VertxValException.GET_ERROR_EXECUTING_VERTIClE_EXCEPTION;
 
 /**
  Wrapper around the vertx instance. It registers and spawns verticles. If an address is not provided, one is generated. You only
@@ -25,7 +26,8 @@ import static vertxval.Exceptions.GET_ERROR_HANDLING_MESSAGE_IN_CONSUMER_EXCEPTI
  */
 public class Deployer {
     private static final DeploymentOptions DEFAULT_OPTIONS = new DeploymentOptions();
-    private final static AtomicLong processSequence = new AtomicLong(0);
+    private final static AtomicLong processSeq = new AtomicLong(0);
+    private final static AtomicLong verticleSeq = new AtomicLong(0);
     private final Vertx vertx;
     private final DeploymentOptions deploymentOptions;
 
@@ -62,9 +64,9 @@ public class Deployer {
      @param <O>      the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Exp<VerticleRef<I, O>> deployConsumer(final Consumer<Message<I>> consumer) {
+    public <I, O> Val<VerticleRef<I, O>> deployConsumer(final Consumer<Message<I>> consumer) {
 
-        return deployConsumer(generateProcessAddress(),
+        return deployConsumer(generateVerticleAddress(),
                               consumer,
                               DEFAULT_OPTIONS
                              );
@@ -73,13 +75,14 @@ public class Deployer {
     /**
      @param consumer the consumer that will process the messages sent to the verticle
      @param <I>      the type of the message sent to the verticle
+     @param options  options for configuring the verticle deployment
      @param <O>      the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Exp<VerticleRef<I, O>> deployConsumer(final Consumer<Message<I>> consumer,
+    public <I, O> Val<VerticleRef<I, O>> deployConsumer(final Consumer<Message<I>> consumer,
                                                         final DeploymentOptions options) {
 
-        return deployConsumer(generateProcessAddress(),
+        return deployConsumer(generateVerticleAddress(),
                               consumer,
                               options
                              );
@@ -92,7 +95,7 @@ public class Deployer {
      @param <O>      the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Exp<VerticleRef<I, O>> deployConsumer(final String address,
+    public <I, O> Val<VerticleRef<I, O>> deployConsumer(final String address,
                                                         final Consumer<Message<I>> consumer
                                                        ) {
 
@@ -110,13 +113,13 @@ public class Deployer {
      @param <O>      the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Exp<VerticleRef<I, O>> deployConsumer(final String address,
+    public <I, O> Val<VerticleRef<I, O>> deployConsumer(final String address,
                                                         final Consumer<Message<I>> consumer,
                                                         final DeploymentOptions options
                                                        ) {
-        final int          instances = options.getInstances();
-        final Set<String>  ids       = new HashSet<>();
-        final List<Future> futures   = new ArrayList<>();
+        final int         instances = options.getInstances();
+        final Set<String> ids       = new HashSet<>();
+        @SuppressWarnings("rawtypes") final List<Future> futures = new ArrayList<>();
         final MyVerticle<I> verticle = new MyVerticle<>(consumer,
                                                         address
         );
@@ -127,24 +130,25 @@ public class Deployer {
             futures.add(future.onSuccess(ids::add));
         }
 
-        return Val.success(() -> CompositeFuture.all(futures)
-                                                .flatMap(cf -> getVerticleRefFuture(address,
-                                                                                    ids,
-                                                                                    cf
-                                                                                   )
-                                                        )
-                          );
+        return Cons.of(() -> CompositeFuture.all(futures)
+                                            .flatMap(cf -> getVerticleRefFuture(address,
+                                                                                ids,
+                                                                                cf
+                                                                               )
+                                                    )
+                      );
     }
 
     /**
-     @param fn  the function that takes the messages and produces an output
-     @param <I> the type of the message sent to the verticle
-     @param <O> the type of the reply
+     @param fn      the function that takes the messages and produces an output
+     @param options options for configuring the verticle deployment
+     @param <I>     the type of the message sent to the verticle
+     @param <O>     the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Exp<VerticleRef<I, O>> deployFn(final Function<I, O> fn,
+    public <I, O> Val<VerticleRef<I, O>> deployFn(final Function<I, O> fn,
                                                   final DeploymentOptions options) {
-        return deployFn(generateProcessAddress(),
+        return deployFn(generateVerticleAddress(),
                         fn,
                         options
                        );
@@ -156,8 +160,8 @@ public class Deployer {
      @param <O> the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Exp<VerticleRef<I, O>> deployFn(final Function<I, O> fn) {
-        return deployFn(generateProcessAddress(),
+    public <I, O> Val<VerticleRef<I, O>> deployFn(final Function<I, O> fn) {
+        return deployFn(generateVerticleAddress(),
                         fn,
                         deploymentOptions
                        );
@@ -170,7 +174,7 @@ public class Deployer {
      @param <O>     the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Exp<VerticleRef<I, O>> deployFn(final String address,
+    public <I, O> Val<VerticleRef<I, O>> deployFn(final String address,
                                                   final Function<I, O> fn
                                                  ) {
         return deployFn(address,
@@ -187,13 +191,13 @@ public class Deployer {
      @param <O>     the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Exp<VerticleRef<I, O>> deployFn(final String address,
+    public <I, O> Val<VerticleRef<I, O>> deployFn(final String address,
                                                   final Function<I, O> fn,
                                                   final DeploymentOptions options
                                                  ) {
-        final int          instances = options.getInstances();
-        final Set<String>  ids       = new HashSet<>();
-        final List<Future> futures   = new ArrayList<>();
+        final int         instances = options.getInstances();
+        final Set<String> ids       = new HashSet<>();
+        @SuppressWarnings("rawtypes") final List<Future> futures = new ArrayList<>();
         final MyVerticle<I> verticle = new MyVerticle<>(m -> m.reply(fn.apply(m.body())),
                                                         address
         );
@@ -204,14 +208,14 @@ public class Deployer {
             futures.add(future.onSuccess(ids::add));
         }
 
-        return Val.success(() -> CompositeFuture.all(futures)
-                                                .flatMap(cf -> getVerticleRefFuture(
-                                                        address,
-                                                        ids,
-                                                        cf
-                                                                                   )
-                                                        )
-                          );
+        return Cons.of(() -> CompositeFuture.all(futures)
+                                            .flatMap(cf -> getVerticleRefFuture(
+                                                    address,
+                                                    ids,
+                                                    cf
+                                                                               )
+                                                    )
+                      );
     }
 
     /**
@@ -221,12 +225,41 @@ public class Deployer {
      @param <O>     the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Exp<VerticleRef<I, O>> deployλ(final String address,
+    public <I, O> Val<VerticleRef<I, O>> deployλ(final String address,
                                                  final λ<I, O> fn
                                                 ) {
         return deployλ(address,
                        fn,
                        DEFAULT_OPTIONS
+                      );
+    }
+
+    /**
+     @param fn  the function that takes a message of type I and produces an output of type O
+     @param <I> the type of the message sent to the verticle
+     @param <O> the type of the reply
+     @return an ActorRef wrapped in a future
+     */
+    public <I, O> Val<VerticleRef<I, O>> deployλ(final λ<I, O> fn
+                                                ) {
+        return deployλ(generateVerticleAddress(),
+                       fn,
+                       DEFAULT_OPTIONS
+                      );
+    }
+
+    /**
+     @param fn  the function that takes a message of type I and produces an output of type O
+     @param <I> the type of the message sent to the verticle
+     @param <O> the type of the reply
+     @return an ActorRef wrapped in a future
+     */
+    public <I, O> Val<VerticleRef<I, O>> deployλ(final λ<I, O> fn,
+                                                 final DeploymentOptions options
+                                                ) {
+        return deployλ(generateVerticleAddress(),
+                       fn,
+                       options
                       );
     }
 
@@ -238,13 +271,13 @@ public class Deployer {
      @param <O>     the type of the reply
      @return an ActorRef wrapped in a future
      */
-    public <I, O> Exp<VerticleRef<I, O>> deployλ(final String address,
+    public <I, O> Val<VerticleRef<I, O>> deployλ(final String address,
                                                  final λ<I, O> fn,
                                                  final DeploymentOptions options
                                                 ) {
-        final int          instances = options.getInstances();
-        final Set<String>  ids       = new HashSet<>();
-        final List<Future> futures   = new ArrayList<>();
+        final int         instances = options.getInstances();
+        final Set<String> ids       = new HashSet<>();
+        @SuppressWarnings("rawtypes") final List<Future> futures = new ArrayList<>();
         final MyVerticle<I> verticle = new MyVerticle<>(message -> fn.apply(message.body())
                                                                      .onComplete(Handlers.pipeTo(message))
                                                                      .get(),
@@ -257,13 +290,13 @@ public class Deployer {
             futures.add(future.onSuccess(ids::add));
         }
 
-        return Val.success(() -> CompositeFuture.all(futures)
-                                                .flatMap(cf -> getVerticleRefFuture(address,
-                                                                                    ids,
-                                                                                    cf
-                                                                                   )
-                                                        )
-                          );
+        return Cons.of(() -> CompositeFuture.all(futures)
+                                            .flatMap(cf -> getVerticleRefFuture(address,
+                                                                                ids,
+                                                                                cf
+                                                                               )
+                                                    )
+                      );
     }
 
 
@@ -281,9 +314,10 @@ public class Deployer {
     }
 
     /**
-     @param λ   the function that takes a message of type I and produces an output of type O
-     @param <I> the type of the message sent to the verticle
-     @param <O> the type of the reply
+     @param λ       the function that takes a message of type I and produces an output of type O
+     @param options options for configuring the verticle deployment
+     @param <I>     the type of the message sent to the verticle
+     @param <O>     the type of the reply
      @return an ActorRef wrapped in a future
      */
     public <I, O> λ<I, O> spawnλ(final λ<I, O> λ,
@@ -307,7 +341,7 @@ public class Deployer {
 
         return n ->
         {
-            Exp<VerticleRef<I, O>> future = deployConsumer(address,
+            Val<VerticleRef<I, O>> future = deployConsumer(address,
                                                            message -> λ.apply(message.body())
                                                                        .onComplete(Handlers.pipeTo(message))
                                                                        .get(),
@@ -349,7 +383,7 @@ public class Deployer {
         {
             Consumer<Message<I>> consumer = m -> m.reply(fn.apply(m.body()));
 
-            Exp<VerticleRef<I, O>> future = deployConsumer(generateProcessAddress(),
+            Val<VerticleRef<I, O>> future = deployConsumer(generateProcessAddress(),
                                                            consumer,
                                                            options
                                                           );
@@ -359,12 +393,62 @@ public class Deployer {
         };
     }
 
-
-    public Exp<String> deployVerticle(final AbstractVerticle verticle) {
-        requireNonNull(verticle);
-        return Val.success(() -> vertx.deployVerticle(verticle));
+    public Supplier<Val<String>> spawnTask(final Runnable task) {
+        return () -> deployTask(task);
     }
 
+    public Supplier<Val<String>> spawnTask(final Runnable task,
+                                           final DeploymentOptions options) {
+        return () -> deployTask(task,
+                                options);
+    }
+
+    public Supplier<Val<String>> spawnVerticle(final AbstractVerticle verticle) {
+        requireNonNull(verticle);
+        return () -> deployVerticle(verticle,
+                                    DEFAULT_OPTIONS);
+    }
+
+    public Supplier<Val<String>> spawnVerticle(final AbstractVerticle verticle,
+                                               final DeploymentOptions options) {
+        requireNonNull(verticle);
+        return () -> deployVerticle(verticle,
+                                    options);
+    }
+
+    public Val<String> deployVerticle(final AbstractVerticle verticle,
+                                      final DeploymentOptions options) {
+        requireNonNull(verticle);
+        return Cons.of(() -> vertx.deployVerticle(verticle,
+                                                  options));
+    }
+
+    public Val<String> deployVerticle(final AbstractVerticle verticle) {
+        return deployVerticle(verticle,
+                              DEFAULT_OPTIONS);
+    }
+
+    public Val<String> deployTask(final Runnable task,
+                                  final DeploymentOptions options) {
+        return Cons.of(() -> vertx.deployVerticle(new AbstractVerticle() {
+                                                      @Override
+                                                      public void start(final Promise<Void> promise) {
+                                                          try {
+                                                              task.run();
+                                                              promise.complete();
+                                                          } catch (Exception e) {
+                                                              promise.fail(e);
+                                                          }
+                                                      }
+                                                  },
+                                                  options));
+    }
+
+
+    public Val<String> deployTask(final Runnable task) {
+        return deployTask(task,
+                          DEFAULT_OPTIONS);
+    }
 
     protected <O> Consumer<O> registerPublisher(final String address) {
         requireNonNull(address);
@@ -384,7 +468,7 @@ public class Deployer {
                                              O body = message.body();
                                              consumer.accept(body);
                                          } catch (Throwable e) {
-                                             message.reply(GET_ERROR_HANDLING_MESSAGE_IN_CONSUMER_EXCEPTION.apply(e));
+                                             message.reply(GET_ERROR_EXECUTING_VERTIClE_EXCEPTION.apply(e));
                                          }
                                      }
                                     );
@@ -404,7 +488,11 @@ public class Deployer {
 
 
     private static String generateProcessAddress() {
-        return "__vertx.generated." + processSequence.incrementAndGet();
+        return "__vertx.process." + processSeq.incrementAndGet();
+    }
+
+    private static String generateVerticleAddress() {
+        return "__vertx.verticle." + verticleSeq.incrementAndGet();
     }
 
 

@@ -1,9 +1,9 @@
 package vertxval.bankaccount;
 
 import jsonvalues.JsObj;
-import vertxval.Module;
+import vertxval.VertxModule;
 import vertxval.VerticleRef;
-import vertxval.exp.Exp;
+import vertxval.exp.Val;
 import vertxval.exp.λ;
 
 import java.util.function.BiFunction;
@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 import static vertxval.bankaccount.Account.creditLens;
 import static vertxval.bankaccount.Account.nameLens;
 
-public class BankAccountModule extends Module {
+public class BankAccountModule extends VertxModule {
 
 
     public static final Predicate<Integer> IS_OK_RESP = i -> i >= 0;
@@ -27,7 +27,7 @@ public class BankAccountModule extends Module {
      it returns the credit of the account after the operation or -1 if
      Spawns a person account to send operations like deposits and withdraws
      */
-    public Function<JsObj, Exp<VerticleRef<JsObj, Integer>>> registerAccount;
+    public Function<JsObj, Val<VerticleRef<JsObj, Integer>>> registerAccount;
 
     /**
      Transaction -> Code
@@ -38,7 +38,7 @@ public class BankAccountModule extends Module {
 
 
     @Override
-    protected void onComplete() {
+    protected void define() {
         registerAccount = account -> deployer.deployλ(nameLens.get.apply(account),
                                                       new AccountActor(creditLens.get.apply(account))
                                                      );

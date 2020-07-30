@@ -1,36 +1,36 @@
 package vertxval;
 
-import vertxval.exp.Exp;
-import vertxval.exp.IfElse;
-import vertxval.exp.JsObjExp;
 import vertxval.exp.Val;
+import vertxval.exp.IfElse;
+import vertxval.exp.JsObjVal;
+import vertxval.exp.Cons;
 import io.vertx.core.Future;
 import jsonvalues.JsBool;
 import jsonvalues.JsInt;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class TestExp {
+public class TestVal {
     @Test
     public void test() {
 
-        Exp<Boolean> a = IfElse.<Boolean>predicate(() -> Future.succeededFuture(true))
-                .consequence(Val.success(false))
-                .alternative(Val.success(true));
+        Val<Boolean> a = IfElse.<Boolean>predicate(() -> Future.succeededFuture(true))
+                .consequence(Cons.success(false))
+                .alternative(Cons.success(true));
 
         IfElse<Integer> b = IfElse.<Integer>predicate(() -> Future.succeededFuture(true))
-                .consequence(Val.success(1))
-                .alternative(Val.success(2));
+                .consequence(Cons.success(1))
+                .alternative(Cons.success(2));
 
         IfElse<Integer> c = IfElse.<Integer>predicate(() -> Future.succeededFuture(true))
-                .consequence(Val.success(89))
-                .alternative(Val.success(99));
+                .consequence(Cons.success(89))
+                .alternative(Cons.success(99));
 
         IfElse<Integer> d = IfElse.<Integer>predicate(a).consequence(b)
                                                         .alternative(c);
 
 
-        JsObjExp of = JsObjExp.of("a",
+        JsObjVal of = JsObjVal.of("a",
                                   a.map(JsBool::of),
                                   "b",
                                   b.map(JsInt::of),

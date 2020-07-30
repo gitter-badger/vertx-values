@@ -27,20 +27,23 @@ import static java.util.Objects.requireNonNull;
  }
  */
 
-public final class JsArrayExp extends AbstractExp<JsArray> {
-    private List<Exp<? extends JsValue>> seq = List.empty();
+public final class JsArrayVal extends AbstractVal<JsArray> {
+    private List<Val<? extends JsValue>> seq = List.empty();
 
-    private JsArrayExp(List<Exp<? extends JsValue>> seq) {
+    private JsArrayVal(List<Val<? extends JsValue>> seq) {
         this.seq = seq;
     }
 
-    private JsArrayExp(){}
+    private JsArrayVal(){}
 
-    private JsArrayExp(final Exp<? extends JsValue> fut,
-                       final Exp<? extends JsValue>... others
+    @SafeVarargs
+    private JsArrayVal(final Val<? extends JsValue> fut,
+                       final Val<? extends JsValue>... others
                       ) {
-        seq = seq.append(fut)
-                 .appendAll(Arrays.asList(others));
+        seq = seq.append(fut);
+        for (Val<? extends JsValue> other : others) {
+            seq = seq.append(other);
+        }
     }
 
 
@@ -51,10 +54,11 @@ public final class JsArrayExp extends AbstractExp<JsArray> {
      @param tail the tail
      @return a new JsArrayFuture
      */
-    public static JsArrayExp tuple(final Exp<? extends JsValue> head,
-                                   final Exp<? extends JsValue>... tail
+    @SafeVarargs
+    public static JsArrayVal tuple(final Val<? extends JsValue> head,
+                                   final Val<? extends JsValue>... tail
                                   ) {
-        return new JsArrayExp(requireNonNull(head),
+        return new JsArrayVal(requireNonNull(head),
                               requireNonNull(tail)
         );
     }
@@ -69,30 +73,30 @@ public final class JsArrayExp extends AbstractExp<JsArray> {
     public Future<jsonvalues.JsArray> get() {
         Future<jsonvalues.JsArray> result = Future.succeededFuture(jsonvalues.JsArray.empty());
 
-        for (final Exp<? extends JsValue> future : seq) {
+        for (final Val<? extends JsValue> future : seq) {
             result = result.flatMap(arr -> future.get()
                                                  .map(v -> arr.append(v)));
         }
         return result;
     }
 
-    public JsArrayExp append(final Exp<? extends JsValue> future) {
+    public JsArrayVal append(final Val<? extends JsValue> future) {
 
-        final JsArrayExp arrayFuture = new JsArrayExp();
+        final JsArrayVal arrayFuture = new JsArrayVal();
         arrayFuture.seq = arrayFuture.seq.append(future);
         return arrayFuture;
     }
 
     @Override
-    public <P> Exp<P> map(final Function<jsonvalues.JsArray, P> fn) {
-        return Val.success(() -> get().map(fn));
+    public <P> Val<P> map(final Function<jsonvalues.JsArray, P> fn) {
+        return Cons.of(() -> get().map(fn));
     }
 
     @Override
     public jsonvalues.JsArray result() {
         jsonvalues.JsArray result = jsonvalues.JsArray.empty();
 
-        for (final Exp<? extends JsValue> future : seq) {
+        for (final Val<? extends JsValue> future : seq) {
             result = result.append(future.get()
                                          .result());
         }
@@ -101,14 +105,14 @@ public final class JsArrayExp extends AbstractExp<JsArray> {
     }
 
     @Override
-    public Exp<JsArray> retry(final int attempts) {
-        return new JsArrayExp(seq.map(it->it.retry(attempts)));
+    public Val<JsArray> retry(final int attempts) {
+        return new JsArrayVal(seq.map(it->it.retry(attempts)));
     }
 
     @Override
-    public Exp<JsArray> retryIf(final Predicate<Throwable> predicate,
+    public Val<JsArray> retryIf(final Predicate<Throwable> predicate,
                                 final int attempts) {
-        return new JsArrayExp(seq.map(it->it.retryIf(predicate,attempts)));
+        return new JsArrayVal(seq.map(it->it.retryIf(predicate, attempts)));
 
     }
 

@@ -1,8 +1,8 @@
 package vertxval.bankaccount;
 
 import vertxval.exp.λ;
-import vertxval.exp.Exp;
 import vertxval.exp.Val;
+import vertxval.exp.Cons;
 import jsonvalues.JsObj;
 
 import static vertxval.bankaccount.BankAccountModule.IS_OK_RESP;
@@ -22,11 +22,11 @@ public class TxActor implements λ<Integer, Integer> {
 
 
     @Override
-    public Exp<Integer> apply(final Integer amount) {
+    public Val<Integer> apply(final Integer amount) {
         return from.apply(makeWithdraw.apply(amount))
                    .flatMap(resp -> IS_OK_RESP.test(resp) ?
                                     to.apply(makeDeposit.apply(amount)) :
-                                    Val.success(resp)
+                                    Cons.success(resp)
                            );
     }
 }

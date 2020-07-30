@@ -8,8 +8,8 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.http.*;
 import jsonvalues.JsObj;
 import vertxval.Handlers;
-import vertxval.Module;
-import vertxval.exp.Exp;
+import vertxval.VertxModule;
+import vertxval.exp.Val;
 import vertxval.exp.λ;
 
 import java.util.function.Consumer;
@@ -18,29 +18,30 @@ import java.util.function.Function;
 import static vertxval.httpclient.Req.BODY_LENS;
 
 
-public abstract class HttpClientModule extends Module {
+public abstract class HttpClientModule extends VertxModule {
 
     private final HttpClientOptions httpOptions;
+    private final static String HTTPCLIENT_ADDRESS = "httpclient";
 
     private λ<JsObj, JsObj> httpClient;
 
-    public Function<GetBuilder, Exp<JsObj>> get = builder -> httpClient.apply(builder.createHttpReq());
+    public Function<GetMessage, Val<JsObj>> get = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<PostBuilder, Exp<JsObj>> post = builder -> httpClient.apply(builder.createHttpReq());
+    public Function<PostMessage, Val<JsObj>> post = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<PutBuilder, Exp<JsObj>> put = builder -> httpClient.apply(builder.createHttpReq());
+    public Function<PutMessage, Val<JsObj>> put = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<DeleteBuilder, Exp<JsObj>> delete = builder -> httpClient.apply(builder.createHttpReq());
+    public Function<DeleteMessage, Val<JsObj>> delete = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<HeadBuilder, Exp<JsObj>> head = builder -> httpClient.apply(builder.createHttpReq());
+    public Function<HeadMessage, Val<JsObj>> head = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<OptionsBuilder, Exp<JsObj>> options = builder -> httpClient.apply(builder.createHttpReq());
+    public Function<OptionsMessage, Val<JsObj>> options = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<PatchBuilder, Exp<JsObj>> patch = builder -> httpClient.apply(builder.createHttpReq());
+    public Function<PatchMessage, Val<JsObj>> patch = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<TraceBuilder, Exp<JsObj>> trace = builder -> httpClient.apply(builder.createHttpReq());
+    public Function<TraceMessage, Val<JsObj>> trace = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<ConnectBuilder, Exp<JsObj>> connect = builder -> httpClient.apply(builder.createHttpReq());
+    public Function<ConnectMessage, Val<JsObj>> connect = builder -> httpClient.apply(builder.createHttpReq());
 
     private static Consumer<Message<JsObj>> consumer(final HttpClient client) {
         return message -> {
@@ -131,18 +132,21 @@ public abstract class HttpClientModule extends Module {
     }
 
     @Override
-    protected void onComplete() {
-        this.httpClient = this.<JsObj, JsObj>getDeployedVerticle("httpclient").ask();
-        defineHttpActors();
+    protected void define() {
+        this.httpClient = this.<JsObj, JsObj>getDeployedVerticle(HTTPCLIENT_ADDRESS).ask();
+        defineOperations();
     }
 
-    protected abstract void defineHttpActors();
+    protected abstract void defineOperations();
 
 
     @Override
     protected void deploy() {
-        this.deployConsumer("httpclient",
+        this.deployConsumer(HTTPCLIENT_ADDRESS,
                             consumer(vertx.createHttpClient(httpOptions))
                            );
+        deployOperations();
     }
+
+    protected abstract void deployOperations();
 }

@@ -28,14 +28,14 @@ import static java.util.Objects.requireNonNull;
  ) =
  Future.succeededFuture(JsObj(a->1,b->"a",c->true))}
  */
-public final class JsObjExp extends AbstractExp<JsObj> {
+public final class JsObjVal extends AbstractVal<JsObj> {
 
-    private Map<String, Exp<? extends JsValue>> bindings = TreeMap.empty();
+    private Map<String, Val<? extends JsValue>> bindings = TreeMap.empty();
 
-    private JsObjExp() {
+    private JsObjVal() {
     }
 
-    private JsObjExp(final Map<String, Exp<? extends JsValue>> bindings) {
+    private JsObjVal(final Map<String, Val<? extends JsValue>> bindings) {
         this.bindings = bindings;
     }
 
@@ -46,10 +46,10 @@ public final class JsObjExp extends AbstractExp<JsObj> {
      @param fut the mapping associated to the key
      @return a JsObjFuture
      */
-    public static JsObjExp of(final String key,
-                              final Exp<? extends JsValue> fut
+    public static JsObjVal of(final String key,
+                              final Val<? extends JsValue> fut
                              ) {
-        JsObjExp obj = new JsObjExp();
+        JsObjVal obj = new JsObjVal();
         obj.bindings = obj.bindings.put(key,
                                         fut
                                        );
@@ -66,12 +66,12 @@ public final class JsObjExp extends AbstractExp<JsObj> {
      @param fut2 the mapping associated to the second key
      @return a JsObjFuture
      */
-    public static JsObjExp of(final String key1,
-                              final Exp<? extends JsValue> fut1,
+    public static JsObjVal of(final String key1,
+                              final Val<? extends JsValue> fut1,
                               final String key2,
-                              final Exp<? extends JsValue> fut2
+                              final Val<? extends JsValue> fut2
                              ) {
-        JsObjExp obj = JsObjExp.of(key1,
+        JsObjVal obj = JsObjVal.of(key1,
                                    fut1
                                   );
         obj.bindings = obj.bindings.put(requireNonNull(key2),
@@ -92,14 +92,14 @@ public final class JsObjExp extends AbstractExp<JsObj> {
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static JsObjExp of(final String key1,
-                              final Exp<? extends JsValue> fut1,
+    public static JsObjVal of(final String key1,
+                              final Val<? extends JsValue> fut1,
                               final String key2,
-                              final Exp<? extends JsValue> fut2,
+                              final Val<? extends JsValue> fut2,
                               final String key3,
-                              final Exp<? extends JsValue> fut3
+                              final Val<? extends JsValue> fut3
                              ) {
-        JsObjExp obj = JsObjExp.of(key1,
+        JsObjVal obj = JsObjVal.of(key1,
                                    fut1,
                                    key2,
                                    fut2
@@ -125,16 +125,16 @@ public final class JsObjExp extends AbstractExp<JsObj> {
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static JsObjExp of(final String key1,
-                              final Exp<? extends JsValue> fut1,
+    public static JsObjVal of(final String key1,
+                              final Val<? extends JsValue> fut1,
                               final String key2,
-                              final Exp<? extends JsValue> fut2,
+                              final Val<? extends JsValue> fut2,
                               final String key3,
-                              final Exp<? extends JsValue> fut3,
+                              final Val<? extends JsValue> fut3,
                               final String key4,
-                              final Exp<? extends JsValue> fut4
+                              final Val<? extends JsValue> fut4
                              ) {
-        JsObjExp obj = JsObjExp.of(key1,
+        JsObjVal obj = JsObjVal.of(key1,
                                    fut1,
                                    key2,
                                    fut2,
@@ -164,18 +164,18 @@ public final class JsObjExp extends AbstractExp<JsObj> {
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static JsObjExp of(final String key1,
-                              final Exp<? extends JsValue> fut1,
+    public static JsObjVal of(final String key1,
+                              final Val<? extends JsValue> fut1,
                               final String key2,
-                              final Exp<? extends JsValue> fut2,
+                              final Val<? extends JsValue> fut2,
                               final String key3,
-                              final Exp<? extends JsValue> fut3,
+                              final Val<? extends JsValue> fut3,
                               final String key4,
-                              final Exp<? extends JsValue> fut4,
+                              final Val<? extends JsValue> fut4,
                               final String key5,
-                              final Exp<? extends JsValue> fut5
+                              final Val<? extends JsValue> fut5
                              ) {
-        JsObjExp obj = JsObjExp.of(key1,
+        JsObjVal obj = JsObjVal.of(key1,
                                    fut1,
                                    key2,
                                    fut2,
@@ -209,20 +209,20 @@ public final class JsObjExp extends AbstractExp<JsObj> {
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static JsObjExp of(final String key1,
-                              final Exp<? extends JsValue> fut1,
+    public static JsObjVal of(final String key1,
+                              final Val<? extends JsValue> fut1,
                               final String key2,
-                              final Exp<? extends JsValue> fut2,
+                              final Val<? extends JsValue> fut2,
                               final String key3,
-                              final Exp<? extends JsValue> fut3,
+                              final Val<? extends JsValue> fut3,
                               final String key4,
-                              final Exp<? extends JsValue> fut4,
+                              final Val<? extends JsValue> fut4,
                               final String key5,
-                              final Exp<? extends JsValue> fut5,
+                              final Val<? extends JsValue> fut5,
                               final String key6,
-                              final Exp<? extends JsValue> fut6
+                              final Val<? extends JsValue> fut6
                              ) {
-        JsObjExp obj = JsObjExp.of(key1,
+        JsObjVal obj = JsObjVal.of(key1,
                                    fut1,
                                    key2,
                                    fut2,
@@ -260,22 +260,22 @@ public final class JsObjExp extends AbstractExp<JsObj> {
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static JsObjExp of(final String key1,
-                              final Exp<? extends JsValue> fut1,
+    public static JsObjVal of(final String key1,
+                              final Val<? extends JsValue> fut1,
                               final String key2,
-                              final Exp<? extends JsValue> fut2,
+                              final Val<? extends JsValue> fut2,
                               final String key3,
-                              final Exp<? extends JsValue> fut3,
+                              final Val<? extends JsValue> fut3,
                               final String key4,
-                              final Exp<? extends JsValue> fut4,
+                              final Val<? extends JsValue> fut4,
                               final String key5,
-                              final Exp<? extends JsValue> fut5,
+                              final Val<? extends JsValue> fut5,
                               final String key6,
-                              final Exp<? extends JsValue> fut6,
+                              final Val<? extends JsValue> fut6,
                               final String key7,
-                              final Exp<? extends JsValue> fut7
+                              final Val<? extends JsValue> fut7
                              ) {
-        JsObjExp obj = JsObjExp.of(key1,
+        JsObjVal obj = JsObjVal.of(key1,
                                    fut1,
                                    key2,
                                    fut2,
@@ -317,24 +317,24 @@ public final class JsObjExp extends AbstractExp<JsObj> {
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static JsObjExp of(final String key1,
-                              final Exp<? extends JsValue> fut1,
+    public static JsObjVal of(final String key1,
+                              final Val<? extends JsValue> fut1,
                               final String key2,
-                              final Exp<? extends JsValue> fut2,
+                              final Val<? extends JsValue> fut2,
                               final String key3,
-                              final Exp<? extends JsValue> fut3,
+                              final Val<? extends JsValue> fut3,
                               final String key4,
-                              final Exp<? extends JsValue> fut4,
+                              final Val<? extends JsValue> fut4,
                               final String key5,
-                              final Exp<? extends JsValue> fut5,
+                              final Val<? extends JsValue> fut5,
                               final String key6,
-                              final Exp<? extends JsValue> fut6,
+                              final Val<? extends JsValue> fut6,
                               final String key7,
-                              final Exp<? extends JsValue> fut7,
+                              final Val<? extends JsValue> fut7,
                               final String key8,
-                              final Exp<? extends JsValue> fut8
+                              final Val<? extends JsValue> fut8
                              ) {
-        JsObjExp obj = JsObjExp.of(key1,
+        JsObjVal obj = JsObjVal.of(key1,
                                    fut1,
                                    key2,
                                    fut2,
@@ -381,26 +381,26 @@ public final class JsObjExp extends AbstractExp<JsObj> {
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static JsObjExp of(final String key1,
-                              final Exp<? extends JsValue> fut1,
+    public static JsObjVal of(final String key1,
+                              final Val<? extends JsValue> fut1,
                               final String key2,
-                              final Exp<? extends JsValue> fut2,
+                              final Val<? extends JsValue> fut2,
                               final String key3,
-                              final Exp<? extends JsValue> fut3,
+                              final Val<? extends JsValue> fut3,
                               final String key4,
-                              final Exp<? extends JsValue> fut4,
+                              final Val<? extends JsValue> fut4,
                               final String key5,
-                              final Exp<? extends JsValue> fut5,
+                              final Val<? extends JsValue> fut5,
                               final String key6,
-                              final Exp<? extends JsValue> fut6,
+                              final Val<? extends JsValue> fut6,
                               final String key7,
-                              final Exp<? extends JsValue> fut7,
+                              final Val<? extends JsValue> fut7,
                               final String key8,
-                              final Exp<? extends JsValue> fut8,
+                              final Val<? extends JsValue> fut8,
                               final String key9,
-                              final Exp<? extends JsValue> fut9
+                              final Val<? extends JsValue> fut9
                              ) {
-        JsObjExp obj = JsObjExp.of(key1,
+        JsObjVal obj = JsObjVal.of(key1,
                                    fut1,
                                    key2,
                                    fut2,
@@ -452,28 +452,28 @@ public final class JsObjExp extends AbstractExp<JsObj> {
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static JsObjExp of(final String key1,
-                              final Exp<? extends JsValue> fut1,
+    public static JsObjVal of(final String key1,
+                              final Val<? extends JsValue> fut1,
                               final String key2,
-                              final Exp<? extends JsValue> fut2,
+                              final Val<? extends JsValue> fut2,
                               final String key3,
-                              final Exp<? extends JsValue> fut3,
+                              final Val<? extends JsValue> fut3,
                               final String key4,
-                              final Exp<? extends JsValue> fut4,
+                              final Val<? extends JsValue> fut4,
                               final String key5,
-                              final Exp<? extends JsValue> fut5,
+                              final Val<? extends JsValue> fut5,
                               final String key6,
-                              final Exp<? extends JsValue> fut6,
+                              final Val<? extends JsValue> fut6,
                               final String key7,
-                              final Exp<? extends JsValue> fut7,
+                              final Val<? extends JsValue> fut7,
                               final String key8,
-                              final Exp<? extends JsValue> fut8,
+                              final Val<? extends JsValue> fut8,
                               final String key9,
-                              final Exp<? extends JsValue> fut9,
+                              final Val<? extends JsValue> fut9,
                               final String key10,
-                              final Exp<? extends JsValue> fut10
+                              final Val<? extends JsValue> fut10
                              ) {
-        JsObjExp obj = JsObjExp.of(key1,
+        JsObjVal obj = JsObjVal.of(key1,
                                    fut1,
                                    key2,
                                    fut2,
@@ -528,30 +528,30 @@ public final class JsObjExp extends AbstractExp<JsObj> {
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static JsObjExp of(final String key1,
-                              final Exp<? extends JsValue> fut1,
+    public static JsObjVal of(final String key1,
+                              final Val<? extends JsValue> fut1,
                               final String key2,
-                              final Exp<? extends JsValue> fut2,
+                              final Val<? extends JsValue> fut2,
                               final String key3,
-                              final Exp<? extends JsValue> fut3,
+                              final Val<? extends JsValue> fut3,
                               final String key4,
-                              final Exp<? extends JsValue> fut4,
+                              final Val<? extends JsValue> fut4,
                               final String key5,
-                              final Exp<? extends JsValue> fut5,
+                              final Val<? extends JsValue> fut5,
                               final String key6,
-                              final Exp<? extends JsValue> fut6,
+                              final Val<? extends JsValue> fut6,
                               final String key7,
-                              final Exp<? extends JsValue> fut7,
+                              final Val<? extends JsValue> fut7,
                               final String key8,
-                              final Exp<? extends JsValue> fut8,
+                              final Val<? extends JsValue> fut8,
                               final String key9,
-                              final Exp<? extends JsValue> fut9,
+                              final Val<? extends JsValue> fut9,
                               final String key10,
-                              final Exp<? extends JsValue> fut10,
+                              final Val<? extends JsValue> fut10,
                               final String key11,
-                              final Exp<? extends JsValue> fut11
+                              final Val<? extends JsValue> fut11
                              ) {
-        JsObjExp obj = JsObjExp.of(key1,
+        JsObjVal obj = JsObjVal.of(key1,
                                    fut1,
                                    key2,
                                    fut2,
@@ -610,32 +610,32 @@ public final class JsObjExp extends AbstractExp<JsObj> {
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static JsObjExp of(final String key1,
-                              final Exp<? extends JsValue> fut1,
+    public static JsObjVal of(final String key1,
+                              final Val<? extends JsValue> fut1,
                               final String key2,
-                              final Exp<? extends JsValue> fut2,
+                              final Val<? extends JsValue> fut2,
                               final String key3,
-                              final Exp<? extends JsValue> fut3,
+                              final Val<? extends JsValue> fut3,
                               final String key4,
-                              final Exp<? extends JsValue> fut4,
+                              final Val<? extends JsValue> fut4,
                               final String key5,
-                              final Exp<? extends JsValue> fut5,
+                              final Val<? extends JsValue> fut5,
                               final String key6,
-                              final Exp<? extends JsValue> fut6,
+                              final Val<? extends JsValue> fut6,
                               final String key7,
-                              final Exp<? extends JsValue> fut7,
+                              final Val<? extends JsValue> fut7,
                               final String key8,
-                              final Exp<? extends JsValue> fut8,
+                              final Val<? extends JsValue> fut8,
                               final String key9,
-                              final Exp<? extends JsValue> fut9,
+                              final Val<? extends JsValue> fut9,
                               final String key10,
-                              final Exp<? extends JsValue> fut10,
+                              final Val<? extends JsValue> fut10,
                               final String key11,
-                              final Exp<? extends JsValue> fut11,
+                              final Val<? extends JsValue> fut11,
                               final String key12,
-                              final Exp<? extends JsValue> fut12
+                              final Val<? extends JsValue> fut12
                              ) {
-        JsObjExp obj = JsObjExp.of(key1,
+        JsObjVal obj = JsObjVal.of(key1,
                                    fut1,
                                    key2,
                                    fut2,
@@ -697,34 +697,34 @@ public final class JsObjExp extends AbstractExp<JsObj> {
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static JsObjExp of(final String key1,
-                              final Exp<? extends JsValue> fut1,
+    public static JsObjVal of(final String key1,
+                              final Val<? extends JsValue> fut1,
                               final String key2,
-                              final Exp<? extends JsValue> fut2,
+                              final Val<? extends JsValue> fut2,
                               final String key3,
-                              final Exp<? extends JsValue> fut3,
+                              final Val<? extends JsValue> fut3,
                               final String key4,
-                              final Exp<? extends JsValue> fut4,
+                              final Val<? extends JsValue> fut4,
                               final String key5,
-                              final Exp<? extends JsValue> fut5,
+                              final Val<? extends JsValue> fut5,
                               final String key6,
-                              final Exp<? extends JsValue> fut6,
+                              final Val<? extends JsValue> fut6,
                               final String key7,
-                              final Exp<? extends JsValue> fut7,
+                              final Val<? extends JsValue> fut7,
                               final String key8,
-                              final Exp<? extends JsValue> fut8,
+                              final Val<? extends JsValue> fut8,
                               final String key9,
-                              final Exp<? extends JsValue> fut9,
+                              final Val<? extends JsValue> fut9,
                               final String key10,
-                              final Exp<? extends JsValue> fut10,
+                              final Val<? extends JsValue> fut10,
                               final String key11,
-                              final Exp<? extends JsValue> fut11,
+                              final Val<? extends JsValue> fut11,
                               final String key12,
-                              final Exp<? extends JsValue> fut12,
+                              final Val<? extends JsValue> fut12,
                               final String key13,
-                              final Exp<? extends JsValue> fut13
+                              final Val<? extends JsValue> fut13
                              ) {
-        JsObjExp obj = JsObjExp.of(key1,
+        JsObjVal obj = JsObjVal.of(key1,
                                    fut1,
                                    key2,
                                    fut2,
@@ -790,36 +790,36 @@ public final class JsObjExp extends AbstractExp<JsObj> {
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static JsObjExp of(final String key1,
-                              final Exp<? extends JsValue> fut1,
+    public static JsObjVal of(final String key1,
+                              final Val<? extends JsValue> fut1,
                               final String key2,
-                              final Exp<? extends JsValue> fut2,
+                              final Val<? extends JsValue> fut2,
                               final String key3,
-                              final Exp<? extends JsValue> fut3,
+                              final Val<? extends JsValue> fut3,
                               final String key4,
-                              final Exp<? extends JsValue> fut4,
+                              final Val<? extends JsValue> fut4,
                               final String key5,
-                              final Exp<? extends JsValue> fut5,
+                              final Val<? extends JsValue> fut5,
                               final String key6,
-                              final Exp<? extends JsValue> fut6,
+                              final Val<? extends JsValue> fut6,
                               final String key7,
-                              final Exp<? extends JsValue> fut7,
+                              final Val<? extends JsValue> fut7,
                               final String key8,
-                              final Exp<? extends JsValue> fut8,
+                              final Val<? extends JsValue> fut8,
                               final String key9,
-                              final Exp<? extends JsValue> fut9,
+                              final Val<? extends JsValue> fut9,
                               final String key10,
-                              final Exp<? extends JsValue> fut10,
+                              final Val<? extends JsValue> fut10,
                               final String key11,
-                              final Exp<? extends JsValue> fut11,
+                              final Val<? extends JsValue> fut11,
                               final String key12,
-                              final Exp<? extends JsValue> fut12,
+                              final Val<? extends JsValue> fut12,
                               final String key13,
-                              final Exp<? extends JsValue> fut13,
+                              final Val<? extends JsValue> fut13,
                               final String key14,
-                              final Exp<? extends JsValue> fut14
+                              final Val<? extends JsValue> fut14
                              ) {
-        JsObjExp obj = JsObjExp.of(key1,
+        JsObjVal obj = JsObjVal.of(key1,
                                    fut1,
                                    key2,
                                    fut2,
@@ -890,38 +890,38 @@ public final class JsObjExp extends AbstractExp<JsObj> {
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
-    public static JsObjExp of(final String key1,
-                              final Exp<? extends JsValue> fut1,
+    public static JsObjVal of(final String key1,
+                              final Val<? extends JsValue> fut1,
                               final String key2,
-                              final Exp<? extends JsValue> fut2,
+                              final Val<? extends JsValue> fut2,
                               final String key3,
-                              final Exp<? extends JsValue> fut3,
+                              final Val<? extends JsValue> fut3,
                               final String key4,
-                              final Exp<? extends JsValue> fut4,
+                              final Val<? extends JsValue> fut4,
                               final String key5,
-                              final Exp<? extends JsValue> fut5,
+                              final Val<? extends JsValue> fut5,
                               final String key6,
-                              final Exp<? extends JsValue> fut6,
+                              final Val<? extends JsValue> fut6,
                               final String key7,
-                              final Exp<? extends JsValue> fut7,
+                              final Val<? extends JsValue> fut7,
                               final String key8,
-                              final Exp<? extends JsValue> fut8,
+                              final Val<? extends JsValue> fut8,
                               final String key9,
-                              final Exp<? extends JsValue> fut9,
+                              final Val<? extends JsValue> fut9,
                               final String key10,
-                              final Exp<? extends JsValue> fut10,
+                              final Val<? extends JsValue> fut10,
                               final String key11,
-                              final Exp<? extends JsValue> fut11,
+                              final Val<? extends JsValue> fut11,
                               final String key12,
-                              final Exp<? extends JsValue> fut12,
+                              final Val<? extends JsValue> fut12,
                               final String key13,
-                              final Exp<? extends JsValue> fut13,
+                              final Val<? extends JsValue> fut13,
                               final String key14,
-                              final Exp<? extends JsValue> fut14,
+                              final Val<? extends JsValue> fut14,
                               final String key15,
-                              final Exp<? extends JsValue> fut15
+                              final Val<? extends JsValue> fut15
                              ) {
-        JsObjExp obj = JsObjExp.of(key1,
+        JsObjVal obj = JsObjVal.of(key1,
                                    fut1,
                                    key2,
                                    fut2,
@@ -965,13 +965,13 @@ public final class JsObjExp extends AbstractExp<JsObj> {
      @param future the given future
      @return a new JsObjFuture
      */
-    public JsObjExp set(final String key,
-                        final Exp<? extends JsValue> future
+    public JsObjVal set(final String key,
+                        final Val<? extends JsValue> future
                        ) {
-        final Map<String, Exp<? extends JsValue>> a = bindings.put(requireNonNull(key),
+        final Map<String, Val<? extends JsValue>> a = bindings.put(requireNonNull(key),
                                                                    requireNonNull(future)
                                                                   );
-        return new JsObjExp(a);
+        return new JsObjVal(a);
     }
 
 
@@ -981,10 +981,12 @@ public final class JsObjExp extends AbstractExp<JsObj> {
      @return a Future of a json object
      */
     @Override
+    @SuppressWarnings({"unchecked","rawtypes"})
     public Future<jsonvalues.JsObj> get() {
 
         List<String> keys = bindings.keysIterator()
                                     .toList();
+
 
         java.util.List futures = bindings.values()
                                           .map(Supplier::get)
@@ -1021,14 +1023,14 @@ public final class JsObjExp extends AbstractExp<JsObj> {
 
 
     @Override
-    public <P> Exp<P> map(final Function<JsObj, P> fn) {
-        return Val.success(() -> get().map(fn));
+    public <P> Val<P> map(final Function<JsObj, P> fn) {
+        return Cons.of(() -> get().map(fn));
     }
 
     @Override
     public jsonvalues.JsObj result() {
         jsonvalues.JsObj result = jsonvalues.JsObj.empty();
-        for (final Tuple2<String, Exp<? extends JsValue>> tuple : bindings.iterator()) {
+        for (final Tuple2<String, Val<? extends JsValue>> tuple : bindings.iterator()) {
             result = result.set(tuple._1,
                                 tuple._2.get()
                                         .result()
@@ -1038,14 +1040,14 @@ public final class JsObjExp extends AbstractExp<JsObj> {
     }
 
     @Override
-    public Exp<JsObj> retry(final int attempts) {
-        return new JsObjExp(bindings.mapValues(it -> it.retry(attempts)));
+    public Val<JsObj> retry(final int attempts) {
+        return new JsObjVal(bindings.mapValues(it -> it.retry(attempts)));
     }
 
     @Override
-    public Exp<JsObj> retryIf(final Predicate<Throwable> predicate,
+    public Val<JsObj> retryIf(final Predicate<Throwable> predicate,
                               final int attempts) {
-        return new JsObjExp(bindings.mapValues(it -> it.retryIf(predicate,
+        return new JsObjVal(bindings.mapValues(it -> it.retryIf(predicate,
                                                                 attempts
                                                                )));
 

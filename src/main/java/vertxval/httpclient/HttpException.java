@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 import static io.vertx.core.eventbus.ReplyFailure.RECIPIENT_FAILURE;
 
+@SuppressWarnings("serial")
 public class HttpException extends ReplyException {
 
 

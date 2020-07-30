@@ -13,19 +13,19 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public final class Switch<O> extends AbstractExp<O> {
+public final class Switch<O> extends AbstractVal<O> {
 
-    final List<Exp<Boolean>> predicates;
-    final List<Exp<O>> branches;
+    final List<Val<Boolean>> predicates;
+    final List<Val<O>> branches;
 
 
-    public static <O> Switch<O> of(final Exp<Boolean> predicate1,
-                                   final Exp<O> branch1,
-                                   final Exp<Boolean> predicate2,
-                                   final Exp<O> branch2) {
+    public static <O> Switch<O> of(final Val<Boolean> predicate1,
+                                   final Val<O> branch1,
+                                   final Val<Boolean> predicate2,
+                                   final Val<O> branch2) {
 
-        List<Exp<Boolean>> predicates = new ArrayList<>();
-        List<Exp<O>>       branches   = new ArrayList<>();
+        List<Val<Boolean>> predicates = new ArrayList<>();
+        List<Val<O>>       branches   = new ArrayList<>();
         predicates.add(predicate1);
         predicates.add(predicate2);
         branches.add(branch1);
@@ -37,15 +37,15 @@ public final class Switch<O> extends AbstractExp<O> {
     }
 
 
-    public static <O> Switch<O> of(final Exp<Boolean> predicate1,
-                                   final Exp<O> branch1,
-                                   final Exp<Boolean> predicate2,
-                                   final Exp<O> branch2,
-                                   final Exp<Boolean> predicate3,
-                                   final Exp<O> branch3) {
+    public static <O> Switch<O> of(final Val<Boolean> predicate1,
+                                   final Val<O> branch1,
+                                   final Val<Boolean> predicate2,
+                                   final Val<O> branch2,
+                                   final Val<Boolean> predicate3,
+                                   final Val<O> branch3) {
 
-        List<Exp<Boolean>> predicates = new ArrayList<>();
-        List<Exp<O>>       branches   = new ArrayList<>();
+        List<Val<Boolean>> predicates = new ArrayList<>();
+        List<Val<O>>       branches   = new ArrayList<>();
         predicates.add(predicate1);
         predicates.add(predicate2);
         predicates.add(predicate3);
@@ -60,17 +60,17 @@ public final class Switch<O> extends AbstractExp<O> {
     }
 
 
-    public static <O> Switch<O> of(final Exp<Boolean> predicate1,
-                                   final Exp<O> branch1,
-                                   final Exp<Boolean> predicate2,
-                                   final Exp<O> branch2,
-                                   final Exp<Boolean> predicate3,
-                                   final Exp<O> branch3,
-                                   final Exp<Boolean> predicate4,
-                                   final Exp<O> branch4) {
+    public static <O> Switch<O> of(final Val<Boolean> predicate1,
+                                   final Val<O> branch1,
+                                   final Val<Boolean> predicate2,
+                                   final Val<O> branch2,
+                                   final Val<Boolean> predicate3,
+                                   final Val<O> branch3,
+                                   final Val<Boolean> predicate4,
+                                   final Val<O> branch4) {
 
-        List<Exp<Boolean>> predicates = new ArrayList<>();
-        List<Exp<O>>       branches   = new ArrayList<>();
+        List<Val<Boolean>> predicates = new ArrayList<>();
+        List<Val<O>>       branches   = new ArrayList<>();
         predicates.add(predicate1);
         predicates.add(predicate2);
         predicates.add(predicate3);
@@ -87,20 +87,20 @@ public final class Switch<O> extends AbstractExp<O> {
     }
 
 
-    public static <I, O> Switch<O> of(final Exp<Boolean> predicate1,
-                                      final Exp<O> branch1,
-                                      final Exp<Boolean> predicate2,
-                                      final Exp<O> branch2,
-                                      final Exp<Boolean> predicate3,
-                                      final Exp<O> branch3,
-                                      final Exp<Boolean> predicate4,
-                                      final Exp<O> branch4,
-                                      final Exp<Boolean> predicate5,
-                                      final Exp<O> branch5) {
+    public static <I, O> Switch<O> of(final Val<Boolean> predicate1,
+                                      final Val<O> branch1,
+                                      final Val<Boolean> predicate2,
+                                      final Val<O> branch2,
+                                      final Val<Boolean> predicate3,
+                                      final Val<O> branch3,
+                                      final Val<Boolean> predicate4,
+                                      final Val<O> branch4,
+                                      final Val<Boolean> predicate5,
+                                      final Val<O> branch5) {
 
 
-        List<Exp<Boolean>> predicates = new ArrayList<>();
-        List<Exp<O>>       branches   = new ArrayList<>();
+        List<Val<Boolean>> predicates = new ArrayList<>();
+        List<Val<O>>       branches   = new ArrayList<>();
         predicates.add(predicate1);
         predicates.add(predicate2);
         predicates.add(predicate3);
@@ -120,27 +120,27 @@ public final class Switch<O> extends AbstractExp<O> {
     }
 
 
-    public Switch(final List<Exp<Boolean>> predicates,
-                  final List<Exp<O>> branches) {
+    public Switch(final List<Val<Boolean>> predicates,
+                  final List<Val<O>> branches) {
         this.predicates = predicates;
         this.branches = branches;
     }
 
-    public static <I, O> Switch<O> of(final Exp<Boolean> predicate1,
-                                      final Exp<O> branch1,
-                                      final Exp<Boolean> predicate2,
-                                      final Exp<O> branch2,
-                                      final Exp<Boolean> predicate3,
-                                      final Exp<O> branch3,
-                                      final Exp<Boolean> predicate4,
-                                      final Exp<O> branch4,
-                                      final Exp<Boolean> predicate5,
-                                      final Exp<O> branch5,
-                                      final Exp<Boolean> predicate6,
-                                      final Exp<O> branch6) {
+    public static <I, O> Switch<O> of(final Val<Boolean> predicate1,
+                                      final Val<O> branch1,
+                                      final Val<Boolean> predicate2,
+                                      final Val<O> branch2,
+                                      final Val<Boolean> predicate3,
+                                      final Val<O> branch3,
+                                      final Val<Boolean> predicate4,
+                                      final Val<O> branch4,
+                                      final Val<Boolean> predicate5,
+                                      final Val<O> branch5,
+                                      final Val<Boolean> predicate6,
+                                      final Val<O> branch6) {
 
-        List<Exp<Boolean>> predicates = new ArrayList<>();
-        List<Exp<O>>       branches   = new ArrayList<>();
+        List<Val<Boolean>> predicates = new ArrayList<>();
+        List<Val<O>>       branches   = new ArrayList<>();
         predicates.add(predicate1);
         predicates.add(predicate2);
         predicates.add(predicate3);
@@ -160,8 +160,8 @@ public final class Switch<O> extends AbstractExp<O> {
     }
 
     @Override
-    public <P> Exp<P> map(final Function<O, P> fn) {
-        return Val.success(()->get().map(fn));
+    public <P> Val<P> map(final Function<O, P> fn) {
+        return Cons.of(()->get().map(fn));
     }
 
     @Override
@@ -180,14 +180,14 @@ public final class Switch<O> extends AbstractExp<O> {
     }
 
     @Override
-    public Exp<O> retry(final int attempts) {
+    public Val<O> retry(final int attempts) {
         return new Switch<>(predicates.stream().map(it->it.retry(attempts)).collect(Collectors.toList()),
                             branches.stream().map(it->it.retry(attempts)).collect(Collectors.toList())
         );
     }
 
     @Override
-    public Exp<O> retryIf(final Predicate<Throwable> predicate,
+    public Val<O> retryIf(final Predicate<Throwable> predicate,
                           final int attempts) {
         return new Switch<>(predicates.stream().map(it->it.retryIf(predicate,attempts)).collect(Collectors.toList()),
                             branches.stream().map(it->it.retryIf(predicate,attempts)).collect(Collectors.toList())

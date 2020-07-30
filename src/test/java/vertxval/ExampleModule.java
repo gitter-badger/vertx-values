@@ -1,26 +1,30 @@
 package vertxval;
 
 import io.vertx.core.eventbus.Message;
-import vertxval.exp.Exp;
+import vertxval.exp.Val;
+
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class ExampleModule extends Module {
+public class ExampleModule extends VertxModule {
 
 
-    public Function<Integer, Exp<Integer>> triple;
-    public Function<Integer, Exp<Integer>> quadruple;
-    public Function<Integer, Exp<Integer>> addOne;
-    public Consumer<Integer> printNumber;
+    public static Function<Integer, Val<Integer>> triple;
+    public static  Function<Integer, Val<Integer>> quadruple;
+    public static Function<Integer, Val<Integer>> addOne;
+    public static Consumer<Integer> printNumber;
+    {
+        Function<Integer, Integer> integerIntegerFn = i -> i * 4;
+        quadruple = deployer.spawnFn(integerIntegerFn);
+    }
+
 
 
     @Override
-    protected void onComplete() {
+    protected void define() {
         triple = this.<Integer, Integer>getDeployedVerticle("triple").ask();
         addOne = this.<Integer, Integer>getDeployedVerticle("addOne").ask();
         printNumber = this.<Integer, Void>getDeployedVerticle("print").tell();
-        Function<Integer, Integer> integerIntegerFn = i -> i * 4;
-        quadruple = deployer.spawnFn(integerIntegerFn);
     }
 
     @Override
@@ -35,8 +39,12 @@ public class ExampleModule extends Module {
         this.deployFn("addOne",
                       addOne
                      );
+
         this.deployConsumer("printNumber",
                             printNumber
                            );
+
+
+
     }
 }
