@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
-import static vertxval.VertxValException.GET_ERROR_DEPLOYING_MODULE_CODE_EXCEPTION;
+import static vertxval.VertxValException.GET_DEPLOYING_MODULE_EXCEPTION;
 
 
 /**
@@ -26,7 +26,7 @@ public abstract class VertxModule extends AbstractVerticle {
     private Map<String, VerticleRef<?, ?>> refMap;
 
 
-    @SuppressWarnings({"rawtypes","unchecked"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private VertxModule(final MapVal refExp,
                         final DeploymentOptions deploymentOptions) {
         this.refExpMap = requireNonNull(refExp);
@@ -84,14 +84,14 @@ public abstract class VertxModule extends AbstractVerticle {
                             define();
                             start.complete();
                         } catch (Exception e) {
-                          start.fail(GET_ERROR_DEPLOYING_MODULE_CODE_EXCEPTION.apply(e));
+                            start.fail(GET_DEPLOYING_MODULE_EXCEPTION.apply(e));
                         }
                     }
                 })
                 .get();
 
         } catch (Exception e) {
-            start.fail(GET_ERROR_DEPLOYING_MODULE_CODE_EXCEPTION.apply(e));
+            start.fail(GET_DEPLOYING_MODULE_EXCEPTION.apply(e));
         }
     }
 
@@ -108,22 +108,21 @@ public abstract class VertxModule extends AbstractVerticle {
                                          .get();
     }
 
-    @SuppressWarnings("unchecked")
     public void deployTask(final Runnable runnable) {
         idExpList = idExpList.append(deployer.deployTask(requireNonNull(runnable)));
     }
 
-    @SuppressWarnings("unchecked")
-    public void deployTask(final Runnable runnable,final DeploymentOptions options) {
-        idExpList = idExpList.append(deployer.deployTask(requireNonNull(runnable),options));
+    public void deployTask(final Runnable runnable,
+                           final DeploymentOptions options) {
+        idExpList = idExpList.append(deployer.deployTask(requireNonNull(runnable),
+                                                         options));
     }
 
-    @SuppressWarnings("unchecked")
     public void deployVerticle(final AbstractVerticle verticle) {
         idExpList = idExpList.append(deployer.deployVerticle(requireNonNull(verticle)));
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected <I, O> void deployFn(final String address,
                                    final Function<I, O> fn) {
 
@@ -135,8 +134,7 @@ public abstract class VertxModule extends AbstractVerticle {
                                  );
     }
 
-    @SuppressWarnings("unchecked")
-
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected <I, O> void deployConsumer(final String address,
                                          final Consumer<Message<I>> consumer) {
 
@@ -149,8 +147,7 @@ public abstract class VertxModule extends AbstractVerticle {
                                  );
     }
 
-    @SuppressWarnings("unchecked")
-
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected <I, O> void deployConsumer(final String address,
                                          final Consumer<Message<I>> consumer,
                                          final DeploymentOptions options) {
@@ -164,8 +161,7 @@ public abstract class VertxModule extends AbstractVerticle {
                                  );
     }
 
-    @SuppressWarnings("unchecked")
-
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected <I, O> void deployFn(final String address,
                                    final Function<I, O> fn,
                                    final DeploymentOptions options) {
@@ -179,19 +175,20 @@ public abstract class VertxModule extends AbstractVerticle {
                                  );
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected <I, O> void deployλ(final String address,
                                   final λ<I, O> lambda) {
         Val<VerticleRef<I, O>> exp = deployer.deployλ(requireNonNull(address),
                                                       lambda
                                                      );
 
-                refExpMap = refExpMap.set(requireNonNull(address),
+        refExpMap = refExpMap.set(requireNonNull(address),
                                   ((Val) exp)
                                  );
 
     }
-    @SuppressWarnings("unchecked")
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected <I, O> void deployλ(final String address,
                                   final λ<I, O> lambda,
                                   final DeploymentOptions options) {

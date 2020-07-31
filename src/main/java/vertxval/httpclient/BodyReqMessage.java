@@ -5,9 +5,11 @@ import jsonvalues.JsObj;
 
 import java.util.Objects;
 
+import static java.util.Objects.requireNonNull;
+
 abstract class BodyReqMessage<T extends BodyReqMessage<T>> extends ReqMessage<T> {
     public BodyReqMessage(final byte[] body) {
-        this.body = Objects.requireNonNull(body);
+        this.body = requireNonNull(body);
     }
 
     private final byte[] body;

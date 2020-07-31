@@ -14,7 +14,7 @@ abstract class AbstractVal<O> implements Val<O> {
     public Val<O> recover(final Function<Throwable, O> fn) {
         requireNonNull(fn);
         return Cons.of(() -> get().compose(Future::succeededFuture,
-                                          e -> Future.succeededFuture(fn.apply(e))
+                                           e -> Future.succeededFuture(fn.apply(e))
                                           )
                       );
     }
@@ -23,8 +23,8 @@ abstract class AbstractVal<O> implements Val<O> {
     public Val<O> recoverWith(final Function<Throwable, Val<O>> fn) {
         requireNonNull(fn);
         return Cons.of(() -> get().compose(Future::succeededFuture,
-                                          e -> fn.apply(e)
-                                                 .get()
+                                           e -> fn.apply(e)
+                                                  .get()
                                           )
                       );
     }
@@ -33,11 +33,11 @@ abstract class AbstractVal<O> implements Val<O> {
     public Val<O> fallbackTo(final Function<Throwable, Val<O>> fn) {
         requireNonNull(fn);
         return Cons.of(() -> get().compose(Future::succeededFuture,
-                                          e -> fn.apply(e)
-                                                 .get()
-                                                 .compose(Future::succeededFuture,
-                                                          e1 -> Future.failedFuture(e)
-                                                         )
+                                           e -> fn.apply(e)
+                                                  .get()
+                                                  .compose(Future::succeededFuture,
+                                                           e1 -> Future.failedFuture(e)
+                                                          )
                                           )
                       );
 
@@ -50,7 +50,7 @@ abstract class AbstractVal<O> implements Val<O> {
                 () ->
                         get().flatMap(o ->
                                               fn.apply(o)
-                                                 .get()));
+                                                .get()));
     }
 
     @Override
@@ -65,9 +65,9 @@ abstract class AbstractVal<O> implements Val<O> {
         requireNonNull(successConsumer);
         requireNonNull(throwableConsumer);
         return Cons.of(() -> get().onComplete(event -> {
-                          if (event.succeeded()) successConsumer.accept(event.result());
-                          else throwableConsumer.accept(event.cause());
-                      })
+                           if (event.succeeded()) successConsumer.accept(event.result());
+                           else throwableConsumer.accept(event.cause());
+                       })
                       );
     }
 
@@ -78,8 +78,8 @@ abstract class AbstractVal<O> implements Val<O> {
         requireNonNull(failureMapper);
         return Cons.of(() -> get().compose(result -> successMapper.apply(result)
                                                                   .get(),
-                                          failure -> failureMapper.apply(failure)
-                                                                  .get()
+                                           failure -> failureMapper.apply(failure)
+                                                                   .get()
                                           )
                       );
 
@@ -87,7 +87,7 @@ abstract class AbstractVal<O> implements Val<O> {
 
     @Override
     public Val<O> onComplete(final Handler<AsyncResult<O>> handler) {
-
+        requireNonNull(handler);
         return Cons.of(() -> get().onComplete(handler));
 
     }

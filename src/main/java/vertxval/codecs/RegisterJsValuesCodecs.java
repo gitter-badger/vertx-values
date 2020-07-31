@@ -9,7 +9,7 @@ import vertxval.VertxValException;
 public class RegisterJsValuesCodecs extends AbstractVerticle {
 
     @Override
-    public void start(final Promise<Void> startPromise)  {
+    public void start(final Promise<Void> promise)  {
         try {
             vertx.eventBus()
                  .registerDefaultCodec(JsObj.class,
@@ -21,9 +21,9 @@ public class RegisterJsValuesCodecs extends AbstractVerticle {
                                        JsArrayMessageCodec.INSTANCE
                                       );
 
-            startPromise.complete();
+            promise.complete();
         } catch (Exception e) {
-           startPromise.fail(VertxValException.GET_ERROR_DEPLOYING_CODECS_EXCEPTION.apply(e));
+           promise.fail(VertxValException.GET_REGISTERING_CODECS_EXCEPTION.apply(e));
         }
 
 

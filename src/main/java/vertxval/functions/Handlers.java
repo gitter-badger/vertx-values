@@ -1,4 +1,4 @@
-package vertxval;
+package vertxval.functions;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -25,14 +25,14 @@ public class Handlers {
                 try {
                     message.reply(mapSuccess.apply(event.result()));
                 } catch (Throwable e) {
-                    message.reply(GET_ERROR_EXECUTING_VERTIClE_EXCEPTION.apply(e));
+                    message.reply(GET_EXECUTING_VERTIClE_EXCEPTION.apply(e));
                 }
             }
             else {
                 try {
                     message.reply(mapError.apply(event.cause()));
                 } catch (Throwable e) {
-                    message.reply(GET_ERROR_EXECUTING_VERTIClE_EXCEPTION.apply(e));
+                    message.reply(GET_EXECUTING_VERTIClE_EXCEPTION.apply(e));
                 }
             }
         };
@@ -60,7 +60,7 @@ public class Handlers {
                 try {
                     message.reply(mapSuccess.apply(event.result()));
                 } catch (Throwable e) {
-                    message.reply(GET_ERROR_EXECUTING_VERTIClE_EXCEPTION.apply(e));
+                    message.reply(GET_EXECUTING_VERTIClE_EXCEPTION.apply(e));
                 }
             }
             else {

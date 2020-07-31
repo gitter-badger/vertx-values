@@ -7,7 +7,7 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.http.*;
 import jsonvalues.JsObj;
-import vertxval.Handlers;
+import vertxval.functions.Handlers;
 import vertxval.VertxModule;
 import vertxval.exp.Val;
 import vertxval.exp.λ;
@@ -98,7 +98,7 @@ public abstract class HttpClientModule extends VertxModule {
                                );
                     break;
                 default:
-                    message.reply(HttpExceptions.HTTP_METHOD_NOT_SUPPORTED.apply(type));
+                    message.reply(HttpException.GET_HTTP_METHOD_NOT_SUPPORTED_EXCEPTION.apply(type));
             }
         };
     }
@@ -114,14 +114,14 @@ public abstract class HttpClientModule extends VertxModule {
                                             buffer -> Resp.toJsObj.apply(buffer,
                                                                          resp
                                                                         ),
-                                            cause -> HttpExceptions.EXCEPTION_RESPONSE.apply(cause)
+                                            cause -> HttpException.GET_RESPONSE_EXCEPTION.apply(cause)
                                            )
 
                                );
 
             }
             else {
-                m.reply(HttpExceptions.EXCEPTION_RESPONSE.apply(r.cause()));
+                m.reply(HttpException.GET_RESPONSE_EXCEPTION.apply(r.cause()));
             }
 
         };

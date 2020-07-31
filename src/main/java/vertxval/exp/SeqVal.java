@@ -8,6 +8,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import static java.util.Objects.requireNonNull;
+
 public class SeqVal<O> extends AbstractVal<List<O>> {
 
     @SuppressWarnings("rawtypes")
@@ -16,16 +18,17 @@ public class SeqVal<O> extends AbstractVal<List<O>> {
     List<Val<O>> seq;
 
     @SuppressWarnings("unchecked")
-    public static <O> SeqVal<O> empty(){
+    public static <O> SeqVal<O> empty() {
         return EMPTY;
     }
 
     public SeqVal(final List<Val<O>> seq) {
-        this.seq = seq;
+        this.seq = requireNonNull(seq);
     }
 
     @Override
     public <P> Val<P> map(final Function<List<O>, P> fn) {
+        requireNonNull(fn);
         return Cons.of(() -> get().map(fn));
     }
 
@@ -36,19 +39,22 @@ public class SeqVal<O> extends AbstractVal<List<O>> {
 
     @Override
     public Val<List<O>> retry(final int attempts) {
+        if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         return new SeqVal<>(seq.map(it -> it.retry(attempts)));
     }
 
     @Override
     public Val<List<O>> retryIf(final Predicate<Throwable> predicate,
                                 final int attempts) {
+        if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
+        requireNonNull(predicate);
         return new SeqVal<>(seq.map(it -> it.retryIf(predicate,
                                                      attempts
                                                     )));
     }
 
     @Override
-    @SuppressWarnings({"unchecked","rawtypes"})
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public Future<List<O>> get() {
         java.util.List futures = seq.map(Supplier::get)
                                     .toJavaList();
@@ -66,11 +72,11 @@ public class SeqVal<O> extends AbstractVal<List<O>> {
     }
 
     public SeqVal<O> append(final Val<O> exp) {
-        return new SeqVal<>(seq.append(exp));
+        return new SeqVal<>(seq.append(requireNonNull(exp)));
     }
 
     public SeqVal<O> prepend(final Val<O> exp) {
-        return new SeqVal<>(seq.prepend(exp));
+        return new SeqVal<>(seq.prepend(requireNonNull(exp)));
     }
 
     public Val<O> head() {

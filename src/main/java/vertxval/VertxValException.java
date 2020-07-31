@@ -25,32 +25,32 @@ public class VertxValException extends ReplyException {
             );
 
     public static final int ERROR_EXECUTING_VERTIClE_CODE = 1;
-    public static Function<Throwable, VertxValException> GET_ERROR_EXECUTING_VERTIClE_EXCEPTION =
+    public static Function<Throwable, VertxValException> GET_EXECUTING_VERTIClE_EXCEPTION =
             exc -> new VertxValException(ERROR_EXECUTING_VERTIClE_CODE,
                                          exc
             );
 
 
     public static final int ERROR_DEPLOYING_CODECS_CODE = 2;
-    public static Function<Throwable, VertxValException> GET_ERROR_DEPLOYING_CODECS_EXCEPTION =
+    public static Function<Throwable, VertxValException> GET_REGISTERING_CODECS_EXCEPTION =
             exc -> new VertxValException(ERROR_DEPLOYING_CODECS_CODE,
                                          exc
             );
 
     public static final int ERROR_DEPLOYING_MODULE_CODE = 3;
-    public static Function<Throwable, VertxValException> GET_ERROR_DEPLOYING_MODULE_CODE_EXCEPTION =
+    public static Function<Throwable, VertxValException> GET_DEPLOYING_MODULE_EXCEPTION =
             exc -> new VertxValException(ERROR_DEPLOYING_MODULE_CODE,
                                          exc
             );
 
     public static final int ERROR_DEPLOYING_VERTIClE_CODE = 4;
-    public static Function<Throwable, VertxValException> GET_ERROR_DEPLOYING_VERTIClE_EXCEPTION =
+    public static Function<Throwable, VertxValException> GET_DEPLOYING_VERTIClE_EXCEPTION =
             exc -> new VertxValException(ERROR_DEPLOYING_VERTIClE_CODE,
                                          exc
             );
 
     public static final int ERROR_STOPING_VERTIClE_CODE = 5;
-    public static Function<Throwable, VertxValException> GET_ERROR_STOPPING_VERTIClE_EXCEPTION =
+    public static Function<Throwable, VertxValException> GET_STOPPING_VERTIClE_EXCEPTION =
             exc -> new VertxValException(ERROR_STOPING_VERTIClE_CODE,
                                          exc
             );
@@ -73,24 +73,5 @@ public class VertxValException extends ReplyException {
     }
 
 
-    public static Consumer<Message<JsObj>> ifErrorElse(final JsObjSpec spec,
-                                                       final Function<Set<JsErrorPair>, String> errorMessage,
-                                                       final Consumer<Message<JsObj>> valid) {
-        return message -> {
-            Set<JsErrorPair> errors = spec.test(message.body());
-            if (errors.isEmpty()) message.reply(GET_BAD_MESSAGE_EXCEPTION.apply(errorMessage.apply(errors)));
-            else valid.accept(message);
-        };
 
-    }
-
-    public static <I> Consumer<Message<I>> ifErrorElse(final Predicate<I> spec,
-                                                       final String errorMessage,
-                                                       final Consumer<Message<I>> valid) {
-        return message -> {
-            if (spec.test(message.body())) valid.accept(message);
-            else message.reply(GET_BAD_MESSAGE_EXCEPTION.apply(errorMessage));
-        };
-
-    }
 }

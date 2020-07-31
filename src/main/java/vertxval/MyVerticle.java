@@ -5,9 +5,9 @@ import io.vertx.core.Promise;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.eventbus.MessageConsumer;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 
+import static java.util.Objects.requireNonNull;
 import static vertxval.VertxValException.*;
 
 /**
@@ -29,8 +29,8 @@ class MyVerticle<I> extends AbstractVerticle {
     public MyVerticle(final Consumer<Message<I>> consumer,
                       final String address
                      ) {
-        this.consumer = Objects.requireNonNull(consumer);
-        this.address = Objects.requireNonNull(address);
+        this.consumer = requireNonNull(consumer);
+        this.address = requireNonNull(address);
     }
 
     /**
@@ -52,13 +52,13 @@ class MyVerticle<I> extends AbstractVerticle {
                                                  try {
                                                      this.consumer.accept((Message<I>) m);
                                                  } catch (Throwable e) {
-                                                     m.reply(GET_ERROR_EXECUTING_VERTIClE_EXCEPTION.apply(e));
+                                                     m.reply(GET_EXECUTING_VERTIClE_EXCEPTION.apply(e));
                                                  }
                                              }
                                             );
             messageConsumer.completionHandler(promise);
         } catch (Exception e) {
-            promise.fail(GET_ERROR_DEPLOYING_VERTIClE_EXCEPTION.apply(e));
+            promise.fail(GET_DEPLOYING_VERTIClE_EXCEPTION.apply(e));
         }
     }
 
@@ -71,11 +71,11 @@ class MyVerticle<I> extends AbstractVerticle {
     @Override
     public void stop(final Promise<Void> promise) {
         try {
-            if (messageConsumer != null && messageConsumer.isRegistered())
+            if (messageConsumer.isRegistered())
                 messageConsumer.unregister(promise);
             else promise.complete();
         } catch (Exception e) {
-            promise.fail(GET_ERROR_STOPPING_VERTIClE_EXCEPTION.apply(e));
+            promise.fail(GET_STOPPING_VERTIClE_EXCEPTION.apply(e));
 
         }
     }

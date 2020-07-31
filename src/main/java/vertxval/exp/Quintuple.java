@@ -4,8 +4,11 @@ import io.vavr.Tuple5;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
+
+import static java.util.Objects.requireNonNull;
 
 
 public final class Quintuple<A, B, C, D, E> extends AbstractVal<Tuple5<A, B, C,D,E>> {
@@ -34,16 +37,17 @@ public final class Quintuple<A, B, C, D, E> extends AbstractVal<Tuple5<A, B, C,D
                                                               Val<C> _3,
                                                               Val<D> _4,
                                                               Val<E> _5) {
-        return new Quintuple<>(_1,
-                               _2,
-                               _3,
-                               _4,
-                               _5
+        return new Quintuple<>(requireNonNull(_1),
+                               requireNonNull(_2),
+                               requireNonNull(_3),
+                               requireNonNull(_4),
+                               requireNonNull(_5)
         );
     }
 
     @Override
     public <P> Val<P> map(final Function<Tuple5<A, B, C, D, E>, P> fn) {
+        requireNonNull(fn);
         return Cons.of(() -> get().map(fn));
     }
 
@@ -66,6 +70,7 @@ public final class Quintuple<A, B, C, D, E> extends AbstractVal<Tuple5<A, B, C,D
 
     @Override
     public Val<Tuple5<A, B, C, D, E>> retry(final int attempts) {
+        if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         return new Quintuple<>(_1.retry(attempts),
                                _2.retry(attempts),
                                _3.retry(attempts),
@@ -77,6 +82,8 @@ public final class Quintuple<A, B, C, D, E> extends AbstractVal<Tuple5<A, B, C,D
     @Override
     public Val<Tuple5<A, B, C, D, E>> retryIf(final Predicate<Throwable> predicate,
                                               final int attempts) {
+        if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
+        requireNonNull(predicate);
         return new Quintuple<>(_1.retryIf(predicate,
                                           attempts
                                          ),

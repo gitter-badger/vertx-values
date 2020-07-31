@@ -47,7 +47,6 @@ abstract class ReqMessage<T extends ReqMessage<T>> {
     }
 
     @SuppressWarnings("unchecked")
-
     public T timeout(final int timeout,
                      final TimeUnit unit) {
         if (timeout < 0) throw new IllegalArgumentException("timeout < 0");
@@ -56,21 +55,18 @@ abstract class ReqMessage<T extends ReqMessage<T>> {
     }
 
     @SuppressWarnings("unchecked")
-
     public T ssl(final boolean ssl) {
         this.ssl = ssl;
         return (T) this;
     }
 
     @SuppressWarnings("unchecked")
-
     public T followRedirects(final boolean followRedirects) {
         this.followRedirects = followRedirects;
         return (T) this;
     }
 
     @SuppressWarnings("unchecked")
-
     public T port(final int port) {
         if (port < 0) throw new IllegalArgumentException("port < 0");
         this.port = port;
@@ -78,7 +74,6 @@ abstract class ReqMessage<T extends ReqMessage<T>> {
     }
 
     @SuppressWarnings("unchecked")
-
     public T host(final String host) {
         if (requireNonNull(host).isEmpty()) throw new IllegalArgumentException("host is empty");
         this.host = host;
@@ -86,7 +81,6 @@ abstract class ReqMessage<T extends ReqMessage<T>> {
     }
 
     @SuppressWarnings("unchecked")
-
     public T uri(final String uri) {
         if (requireNonNull(uri).isEmpty()) throw new IllegalArgumentException("uri is empty");
         this.uri = uri;

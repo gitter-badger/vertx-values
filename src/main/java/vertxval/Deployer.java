@@ -5,18 +5,16 @@ import io.vertx.core.eventbus.Message;
 import vertxval.exp.Cons;
 import vertxval.exp.Val;
 import vertxval.exp.λ;
+import vertxval.functions.Handlers;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
-import static vertxval.VertxValException.GET_ERROR_EXECUTING_VERTIClE_EXCEPTION;
+import static vertxval.VertxValException.GET_EXECUTING_VERTIClE_EXCEPTION;
 
 /**
  Wrapper around the vertx instance. It registers and spawns verticles. If an address is not provided, one is generated. You only
@@ -38,7 +36,7 @@ public class Deployer {
      */
     public Deployer(final Vertx vertx) {
 
-        this(vertx,
+        this(requireNonNull(vertx),
              DEFAULT_OPTIONS
             );
 
@@ -65,7 +63,7 @@ public class Deployer {
      @return an ActorRef wrapped in a future
      */
     public <I, O> Val<VerticleRef<I, O>> deployConsumer(final Consumer<Message<I>> consumer) {
-
+        requireNonNull(consumer);
         return deployConsumer(generateVerticleAddress(),
                               consumer,
                               DEFAULT_OPTIONS
@@ -81,6 +79,8 @@ public class Deployer {
      */
     public <I, O> Val<VerticleRef<I, O>> deployConsumer(final Consumer<Message<I>> consumer,
                                                         final DeploymentOptions options) {
+        requireNonNull(consumer);
+        requireNonNull(options);
 
         return deployConsumer(generateVerticleAddress(),
                               consumer,
@@ -98,7 +98,8 @@ public class Deployer {
     public <I, O> Val<VerticleRef<I, O>> deployConsumer(final String address,
                                                         final Consumer<Message<I>> consumer
                                                        ) {
-
+        requireNonNull(address);
+        requireNonNull(consumer);
         return deployConsumer(address,
                               consumer,
                               DEFAULT_OPTIONS
@@ -117,6 +118,9 @@ public class Deployer {
                                                         final Consumer<Message<I>> consumer,
                                                         final DeploymentOptions options
                                                        ) {
+        requireNonNull(address);
+        requireNonNull(consumer);
+        requireNonNull(options);
         final int         instances = options.getInstances();
         final Set<String> ids       = new HashSet<>();
         @SuppressWarnings("rawtypes") final List<Future> futures = new ArrayList<>();
@@ -148,6 +152,8 @@ public class Deployer {
      */
     public <I, O> Val<VerticleRef<I, O>> deployFn(final Function<I, O> fn,
                                                   final DeploymentOptions options) {
+        requireNonNull(options);
+        requireNonNull(fn);
         return deployFn(generateVerticleAddress(),
                         fn,
                         options
@@ -161,6 +167,7 @@ public class Deployer {
      @return an ActorRef wrapped in a future
      */
     public <I, O> Val<VerticleRef<I, O>> deployFn(final Function<I, O> fn) {
+        requireNonNull(fn);
         return deployFn(generateVerticleAddress(),
                         fn,
                         deploymentOptions
@@ -177,6 +184,8 @@ public class Deployer {
     public <I, O> Val<VerticleRef<I, O>> deployFn(final String address,
                                                   final Function<I, O> fn
                                                  ) {
+        requireNonNull(address);
+        requireNonNull(fn);
         return deployFn(address,
                         fn,
                         deploymentOptions
@@ -195,6 +204,9 @@ public class Deployer {
                                                   final Function<I, O> fn,
                                                   final DeploymentOptions options
                                                  ) {
+        requireNonNull(address);
+        requireNonNull(fn);
+        requireNonNull(options);
         final int         instances = options.getInstances();
         final Set<String> ids       = new HashSet<>();
         @SuppressWarnings("rawtypes") final List<Future> futures = new ArrayList<>();
@@ -228,6 +240,8 @@ public class Deployer {
     public <I, O> Val<VerticleRef<I, O>> deployλ(final String address,
                                                  final λ<I, O> fn
                                                 ) {
+        requireNonNull(address);
+        requireNonNull(fn);
         return deployλ(address,
                        fn,
                        DEFAULT_OPTIONS
@@ -242,6 +256,8 @@ public class Deployer {
      */
     public <I, O> Val<VerticleRef<I, O>> deployλ(final λ<I, O> fn
                                                 ) {
+
+        requireNonNull(fn);
         return deployλ(generateVerticleAddress(),
                        fn,
                        DEFAULT_OPTIONS
@@ -251,12 +267,15 @@ public class Deployer {
     /**
      @param fn  the function that takes a message of type I and produces an output of type O
      @param <I> the type of the message sent to the verticle
+     @param options options for configuring the verticle deployment
      @param <O> the type of the reply
      @return an ActorRef wrapped in a future
      */
     public <I, O> Val<VerticleRef<I, O>> deployλ(final λ<I, O> fn,
                                                  final DeploymentOptions options
                                                 ) {
+        requireNonNull(options);
+        requireNonNull(fn);
         return deployλ(generateVerticleAddress(),
                        fn,
                        options
@@ -275,6 +294,9 @@ public class Deployer {
                                                  final λ<I, O> fn,
                                                  final DeploymentOptions options
                                                 ) {
+        requireNonNull(address);
+        requireNonNull(options);
+        requireNonNull(fn);
         final int         instances = options.getInstances();
         final Set<String> ids       = new HashSet<>();
         @SuppressWarnings("rawtypes") final List<Future> futures = new ArrayList<>();
@@ -307,6 +329,7 @@ public class Deployer {
      @return an ActorRef wrapped in a future
      */
     public <I, O> λ<I, O> spawnλ(final λ<I, O> λ) {
+        requireNonNull(λ);
         return spawnλ(generateProcessAddress(),
                       λ,
                       DEFAULT_OPTIONS
@@ -322,6 +345,8 @@ public class Deployer {
      */
     public <I, O> λ<I, O> spawnλ(final λ<I, O> λ,
                                  final DeploymentOptions options) {
+        requireNonNull(options);
+        requireNonNull(λ);
         return spawnλ(generateProcessAddress(),
                       λ,
                       options
@@ -338,6 +363,9 @@ public class Deployer {
                                   final λ<I, O> λ,
                                   final DeploymentOptions options) {
 
+        requireNonNull(address);
+        requireNonNull(options);
+        requireNonNull(λ);
 
         return n ->
         {
@@ -364,6 +392,7 @@ public class Deployer {
      @return an ActorRef wrapped in a future
      */
     public <I, O> λ<I, O> spawnFn(final Function<I, O> fn) {
+        requireNonNull(fn);
         return spawnFn(fn,
                        deploymentOptions
                       );
@@ -379,6 +408,8 @@ public class Deployer {
     public <I, O> λ<I, O> spawnFn(final Function<I, O> fn,
                                   final DeploymentOptions options
                                  ) {
+        requireNonNull(fn);
+        requireNonNull(options);
         return n ->
         {
             Consumer<Message<I>> consumer = m -> m.reply(fn.apply(m.body()));
@@ -394,11 +425,14 @@ public class Deployer {
     }
 
     public Supplier<Val<String>> spawnTask(final Runnable task) {
+        requireNonNull(task);
         return () -> deployTask(task);
     }
 
     public Supplier<Val<String>> spawnTask(final Runnable task,
                                            final DeploymentOptions options) {
+        requireNonNull(task);
+        requireNonNull(options);
         return () -> deployTask(task,
                                 options);
     }
@@ -412,6 +446,7 @@ public class Deployer {
     public Supplier<Val<String>> spawnVerticle(final AbstractVerticle verticle,
                                                final DeploymentOptions options) {
         requireNonNull(verticle);
+        requireNonNull(options);
         return () -> deployVerticle(verticle,
                                     options);
     }
@@ -419,17 +454,21 @@ public class Deployer {
     public Val<String> deployVerticle(final AbstractVerticle verticle,
                                       final DeploymentOptions options) {
         requireNonNull(verticle);
+        requireNonNull(options);
         return Cons.of(() -> vertx.deployVerticle(verticle,
                                                   options));
     }
 
     public Val<String> deployVerticle(final AbstractVerticle verticle) {
+        requireNonNull(verticle);
         return deployVerticle(verticle,
                               DEFAULT_OPTIONS);
     }
 
     public Val<String> deployTask(final Runnable task,
                                   final DeploymentOptions options) {
+        requireNonNull(options);
+        requireNonNull(task);
         return Cons.of(() -> vertx.deployVerticle(new AbstractVerticle() {
                                                       @Override
                                                       public void start(final Promise<Void> promise) {
@@ -446,7 +485,7 @@ public class Deployer {
 
 
     public Val<String> deployTask(final Runnable task) {
-        return deployTask(task,
+        return deployTask(requireNonNull(task),
                           DEFAULT_OPTIONS);
     }
 
@@ -468,7 +507,7 @@ public class Deployer {
                                              O body = message.body();
                                              consumer.accept(body);
                                          } catch (Throwable e) {
-                                             message.reply(GET_ERROR_EXECUTING_VERTIClE_EXCEPTION.apply(e));
+                                             message.reply(GET_EXECUTING_VERTIClE_EXCEPTION.apply(e));
                                          }
                                      }
                                     );

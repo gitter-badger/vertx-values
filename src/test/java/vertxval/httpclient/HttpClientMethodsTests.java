@@ -37,7 +37,7 @@ public class HttpClientMethodsTests {
                                  .listen(PORT),
                             vertx.deployVerticle(httpClient)
                            )
-                       .onComplete( TestFns.pipeTo(testContext));
+                       .onComplete(TestFns.pipeTo(testContext));
 
 
     }

@@ -1,12 +1,12 @@
 package vertxval;
 
-import vertxval.exp.Cons;
-import vertxval.exp.λ;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.Message;
+import vertxval.exp.Cons;
+import vertxval.exp.λ;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +44,10 @@ public class VerticleRef<I, O> {
                 final Set<String> ids,
                 final String address
                ) {
-        this.vertx = vertx;
-        this.ids = ids;
-        this.address = address;
+        this.vertx = requireNonNull(vertx);
+        this.ids = requireNonNull(ids);
+        this.address = requireNonNull(address);
+        if (ids.isEmpty()) throw new IllegalArgumentException("ids is empty");
     }
 
     /**
@@ -113,7 +114,6 @@ public class VerticleRef<I, O> {
         for (final String id : ids) {
             final Future<Void> future = vertx.undeploy(id);
             futures.add(future);
-
         }
         return CompositeFuture.all(futures)
                               .flatMap(it ->

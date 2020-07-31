@@ -7,6 +7,7 @@ import io.vavr.collection.Map;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -35,7 +36,7 @@ public final class MapVal<O> extends AbstractVal<Map<String, O>> {
     }
 
     private MapVal(final Map<String, Val<O>> bindings) {
-        this.bindings = bindings;
+        this.bindings = requireNonNull(bindings);
     }
 
 
@@ -51,8 +52,8 @@ public final class MapVal<O> extends AbstractVal<Map<String, O>> {
                                    final Val<O> exp
                                   ) {
         MapVal<O> obj = new MapVal<>();
-        obj.bindings = obj.bindings.put(key,
-                                        exp
+        obj.bindings = obj.bindings.put(requireNonNull(key),
+                                        requireNonNull(exp)
                                        );
         return obj;
     }
@@ -65,7 +66,7 @@ public final class MapVal<O> extends AbstractVal<Map<String, O>> {
      @param exp1 the mapping associated to the first key
      @param key2 the second key
      @param exp2 the mapping associated to the second key
-     @param <O> the type of the map values
+     @param <O>  the type of the map values
      @return a JsObjFuture
      */
     public static <O> MapVal<O> of(final String key1,
@@ -91,7 +92,7 @@ public final class MapVal<O> extends AbstractVal<Map<String, O>> {
      @param exp2 the mapping associated to the second key
      @param key3 the third key
      @param exp3 the mapping associated to the third key
-     @param <O> the type of the map values
+     @param <O>  the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
@@ -125,7 +126,7 @@ public final class MapVal<O> extends AbstractVal<Map<String, O>> {
      @param exp3 the mapping associated to the third key
      @param key4 the fourth key
      @param exp4 the mapping associated to the fourth key
-     @param <O> the type of the map values
+     @param <O>  the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
@@ -165,7 +166,7 @@ public final class MapVal<O> extends AbstractVal<Map<String, O>> {
      @param exp4 the mapping associated to the fourth key
      @param key5 the fifth key
      @param exp5 the mapping associated to the fifth key
-     @param <O> the type of the map values
+     @param <O>  the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
@@ -211,7 +212,7 @@ public final class MapVal<O> extends AbstractVal<Map<String, O>> {
      @param exp5 the mapping associated to the fifth key
      @param key6 the sixth key
      @param exp6 the mapping associated to the sixth key
-     @param <O> the type of the map values
+     @param <O>  the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
@@ -263,7 +264,7 @@ public final class MapVal<O> extends AbstractVal<Map<String, O>> {
      @param exp6 the mapping associated to the sixth key
      @param key7 the seventh key
      @param exp7 the mapping associated to the seventh key
-     @param <O> the type of the map values
+     @param <O>  the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
@@ -321,7 +322,7 @@ public final class MapVal<O> extends AbstractVal<Map<String, O>> {
      @param exp7 the mapping associated to the seventh key
      @param key8 the eighth key
      @param exp8 the mapping associated to the eighth key
-     @param <O> the type of the map values
+     @param <O>  the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
@@ -386,7 +387,7 @@ public final class MapVal<O> extends AbstractVal<Map<String, O>> {
      @param exp8 the mapping associated to the eighth key
      @param key9 the ninth key
      @param exp9 the mapping associated to the ninth key
-     @param <O> the type of the map values
+     @param <O>  the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
@@ -458,7 +459,7 @@ public final class MapVal<O> extends AbstractVal<Map<String, O>> {
      @param exp9  the mapping associated to the ninth key
      @param key10 the tenth key
      @param exp10 the mapping associated to the tenth key
-     @param <O> the type of the map values
+     @param <O>   the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
@@ -535,7 +536,7 @@ public final class MapVal<O> extends AbstractVal<Map<String, O>> {
      @param exp10 the mapping associated to the eleventh key
      @param key11 the tenth key
      @param exp11 the mapping associated to the eleventh key
-     @param <O> the type of the map values
+     @param <O>   the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
@@ -618,7 +619,7 @@ public final class MapVal<O> extends AbstractVal<Map<String, O>> {
      @param exp11 the mapping associated to the eleventh key
      @param key12 the twelfth key
      @param exp12 the mapping associated to the twelfth key
-     @param <O> the type of the map values
+     @param <O>   the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
@@ -706,7 +707,7 @@ public final class MapVal<O> extends AbstractVal<Map<String, O>> {
      @param exp12 the mapping associated to the twelfth key,
      @param key13 the thirteenth key
      @param exp13 the mapping associated to the thirteenth key
-     @param <O> the type of the map values
+     @param <O>   the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
@@ -800,7 +801,7 @@ public final class MapVal<O> extends AbstractVal<Map<String, O>> {
      @param exp13 the mapping associated to the thirteenth key
      @param key14 the fourteenth key
      @param exp14 the mapping associated to the fourteenth key
-     @param <O> the type of the map values
+     @param <O>   the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
@@ -901,7 +902,7 @@ public final class MapVal<O> extends AbstractVal<Map<String, O>> {
      @param exp14 the mapping associated to the fourteenth key
      @param key15 the fifteenth key
      @param exp15 the mapping associated to the fifteenth key
-     @param <O> the type of the map values
+     @param <O>   the type of the map values
      @return a JsObjFuture
      */
     @SuppressWarnings("squid:S00107")
@@ -995,6 +996,7 @@ public final class MapVal<O> extends AbstractVal<Map<String, O>> {
 
     @Override
     public <P> Val<P> map(final Function<Map<String, O>, P> fn) {
+        requireNonNull(fn);
         return Cons.of(() -> get().map(fn));
     }
 
@@ -1009,12 +1011,15 @@ public final class MapVal<O> extends AbstractVal<Map<String, O>> {
 
     @Override
     public Val<Map<String, O>> retry(final int attempts) {
+        if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         return new MapVal<>(bindings.mapValues(it -> it.retry(attempts)));
     }
 
     @Override
     public Val<Map<String, O>> retryIf(final Predicate<Throwable> predicate,
                                        final int attempts) {
+        if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
+        requireNonNull(predicate);
         return new MapVal<>(bindings.mapValues(it -> it.retryIf(predicate,
                                                                 attempts
                                                                )));
