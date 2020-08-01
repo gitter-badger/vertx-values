@@ -49,8 +49,7 @@ final public class Resp {
 
 
 
-    public static final Function<JsObj, JsObj> mapBody2Json =
-            mapBody.apply(bytes -> JsObj.parse(new String(bytes)));
+    public static final Function<JsObj, JsObj> mapBody2Json = mapBody.apply(JsObj::parse);
 
     static BiFunction<Buffer, HttpClientResponse, JsObj> toJsObj =
             (buffer, httpResp) ->

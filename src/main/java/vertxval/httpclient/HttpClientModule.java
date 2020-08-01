@@ -7,41 +7,45 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.http.*;
 import jsonvalues.JsObj;
+import vertxval.VerticleRef;
 import vertxval.functions.Handlers;
 import vertxval.VertxModule;
-import vertxval.exp.Val;
 import vertxval.exp.λ;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
+import static io.vertx.core.http.HttpMethod.*;
+import static java.util.Objects.requireNonNull;
+import static vertxval.VertxValException.*;
+import static vertxval.httpclient.HttpException.GET_HTTP_METHOD_NOT_SUPPORTED_EXCEPTION;
+import static vertxval.httpclient.HttpException.GET_RESPONSE_EXCEPTION;
 import static vertxval.httpclient.Req.BODY_LENS;
 
 
 public abstract class HttpClientModule extends VertxModule {
 
     private final HttpClientOptions httpOptions;
-    private final static String HTTPCLIENT_ADDRESS = "httpclient";
+    private final static String HTTPCLIENT_ADDRESS = "vertxval.httpclient";
 
     private λ<JsObj, JsObj> httpClient;
 
-    public Function<GetMessage, Val<JsObj>> get = builder -> httpClient.apply(builder.createHttpReq());
+    public λ<GetMessage, JsObj> get = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<PostMessage, Val<JsObj>> post = builder -> httpClient.apply(builder.createHttpReq());
+    public λ<PostMessage, JsObj> post = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<PutMessage, Val<JsObj>> put = builder -> httpClient.apply(builder.createHttpReq());
+    public λ<PutMessage, JsObj> put = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<DeleteMessage, Val<JsObj>> delete = builder -> httpClient.apply(builder.createHttpReq());
+    public λ<DeleteMessage, JsObj> delete = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<HeadMessage, Val<JsObj>> head = builder -> httpClient.apply(builder.createHttpReq());
+    public λ<HeadMessage,JsObj> head = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<OptionsMessage, Val<JsObj>> options = builder -> httpClient.apply(builder.createHttpReq());
+    public λ<OptionsMessage, JsObj> options = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<PatchMessage, Val<JsObj>> patch = builder -> httpClient.apply(builder.createHttpReq());
+    public λ<PatchMessage, JsObj> patch = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<TraceMessage, Val<JsObj>> trace = builder -> httpClient.apply(builder.createHttpReq());
+    public λ<TraceMessage, JsObj> trace = builder -> httpClient.apply(builder.createHttpReq());
 
-    public Function<ConnectMessage, Val<JsObj>> connect = builder -> httpClient.apply(builder.createHttpReq());
+    public λ<ConnectMessage, JsObj> connect = builder -> httpClient.apply(builder.createHttpReq());
 
     private static Consumer<Message<JsObj>> consumer(final HttpClient client) {
         return message -> {
@@ -82,23 +86,23 @@ public abstract class HttpClientModule extends VertxModule {
                                );
                     break;
                 case 6:
-                    client.send(options.setMethod(HttpMethod.TRACE),
+                    client.send(options.setMethod(TRACE),
                                 getHandler(message)
                                );
                     break;
                 case 7:
-                    client.send(options.setMethod(HttpMethod.PATCH),
+                    client.send(options.setMethod(PATCH),
                                 Buffer.buffer(BODY_LENS.get.apply(body)),
                                 getHandler(message)
                                );
                     break;
                 case 8:
-                    client.send(options.setMethod(HttpMethod.CONNECT),
+                    client.send(options.setMethod(CONNECT),
                                 getHandler(message)
                                );
                     break;
                 default:
-                    message.reply(HttpException.GET_HTTP_METHOD_NOT_SUPPORTED_EXCEPTION.apply(type));
+                    message.reply(GET_HTTP_METHOD_NOT_SUPPORTED_EXCEPTION.apply(type));
             }
         };
     }
@@ -114,26 +118,28 @@ public abstract class HttpClientModule extends VertxModule {
                                             buffer -> Resp.toJsObj.apply(buffer,
                                                                          resp
                                                                         ),
-                                            cause -> HttpException.GET_RESPONSE_EXCEPTION.apply(cause)
+                                            cause -> GET_RESPONSE_EXCEPTION.apply(cause)
                                            )
 
                                );
 
             }
             else {
-                m.reply(HttpException.GET_RESPONSE_EXCEPTION.apply(r.cause()));
+                m.reply(GET_RESPONSE_EXCEPTION.apply(r.cause()));
             }
 
         };
     }
 
     public HttpClientModule(final HttpClientOptions options) {
-        this.httpOptions = options;
+        this.httpOptions = requireNonNull(options);
     }
 
     @Override
     protected void define() {
-        this.httpClient = this.<JsObj, JsObj>getDeployedVerticle(HTTPCLIENT_ADDRESS).ask();
+        VerticleRef<JsObj, JsObj> verticleRef = this.getDeployedVerticle(HTTPCLIENT_ADDRESS);
+        if(verticleRef==null)throw GET_DEPLOYING_MODULE_EXCEPTION.apply(new NullPointerException("httpclient is null"));
+        this.httpClient = verticleRef.ask();
         defineOperations();
     }
 

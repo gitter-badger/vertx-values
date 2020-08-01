@@ -7,7 +7,10 @@ import vertxval.exp.Val;
 import vertxval.exp.λ;
 import vertxval.functions.Handlers;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -121,9 +124,9 @@ public class Deployer {
         requireNonNull(address);
         requireNonNull(consumer);
         requireNonNull(options);
-        final int         instances = options.getInstances();
-        final Set<String> ids       = new HashSet<>();
-        @SuppressWarnings("rawtypes") final List<Future> futures = new ArrayList<>();
+        final int                                        instances = options.getInstances();
+        final Set<String>                                ids       = new HashSet<>();
+        @SuppressWarnings("rawtypes") final List<Future> futures   = new ArrayList<>();
         final MyVerticle<I> verticle = new MyVerticle<>(consumer,
                                                         address
         );
@@ -207,9 +210,9 @@ public class Deployer {
         requireNonNull(address);
         requireNonNull(fn);
         requireNonNull(options);
-        final int         instances = options.getInstances();
-        final Set<String> ids       = new HashSet<>();
-        @SuppressWarnings("rawtypes") final List<Future> futures = new ArrayList<>();
+        final int                                        instances = options.getInstances();
+        final Set<String>                                ids       = new HashSet<>();
+        @SuppressWarnings("rawtypes") final List<Future> futures   = new ArrayList<>();
         final MyVerticle<I> verticle = new MyVerticle<>(m -> m.reply(fn.apply(m.body())),
                                                         address
         );
@@ -265,10 +268,10 @@ public class Deployer {
     }
 
     /**
-     @param fn  the function that takes a message of type I and produces an output of type O
-     @param <I> the type of the message sent to the verticle
+     @param fn      the function that takes a message of type I and produces an output of type O
+     @param <I>     the type of the message sent to the verticle
      @param options options for configuring the verticle deployment
-     @param <O> the type of the reply
+     @param <O>     the type of the reply
      @return an ActorRef wrapped in a future
      */
     public <I, O> Val<VerticleRef<I, O>> deployλ(final λ<I, O> fn,
@@ -297,9 +300,9 @@ public class Deployer {
         requireNonNull(address);
         requireNonNull(options);
         requireNonNull(fn);
-        final int         instances = options.getInstances();
-        final Set<String> ids       = new HashSet<>();
-        @SuppressWarnings("rawtypes") final List<Future> futures = new ArrayList<>();
+        final int                                        instances = options.getInstances();
+        final Set<String>                                ids       = new HashSet<>();
+        @SuppressWarnings("rawtypes") final List<Future> futures   = new ArrayList<>();
         final MyVerticle<I> verticle = new MyVerticle<>(message -> fn.apply(message.body())
                                                                      .onComplete(Handlers.pipeTo(message))
                                                                      .get(),
@@ -434,13 +437,15 @@ public class Deployer {
         requireNonNull(task);
         requireNonNull(options);
         return () -> deployTask(task,
-                                options);
+                                options
+                               );
     }
 
     public Supplier<Val<String>> spawnVerticle(final AbstractVerticle verticle) {
         requireNonNull(verticle);
         return () -> deployVerticle(verticle,
-                                    DEFAULT_OPTIONS);
+                                    DEFAULT_OPTIONS
+                                   );
     }
 
     public Supplier<Val<String>> spawnVerticle(final AbstractVerticle verticle,
@@ -448,7 +453,8 @@ public class Deployer {
         requireNonNull(verticle);
         requireNonNull(options);
         return () -> deployVerticle(verticle,
-                                    options);
+                                    options
+                                   );
     }
 
     public Val<String> deployVerticle(final AbstractVerticle verticle,
@@ -456,13 +462,15 @@ public class Deployer {
         requireNonNull(verticle);
         requireNonNull(options);
         return Cons.of(() -> vertx.deployVerticle(verticle,
-                                                  options));
+                                                  options
+                                                 ));
     }
 
     public Val<String> deployVerticle(final AbstractVerticle verticle) {
         requireNonNull(verticle);
         return deployVerticle(verticle,
-                              DEFAULT_OPTIONS);
+                              DEFAULT_OPTIONS
+                             );
     }
 
     public Val<String> deployTask(final Runnable task,
@@ -480,13 +488,15 @@ public class Deployer {
                                                           }
                                                       }
                                                   },
-                                                  options));
+                                                  options
+                                                 ));
     }
 
 
     public Val<String> deployTask(final Runnable task) {
         return deployTask(requireNonNull(task),
-                          DEFAULT_OPTIONS);
+                          DEFAULT_OPTIONS
+                         );
     }
 
     protected <O> Consumer<O> registerPublisher(final String address) {

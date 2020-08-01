@@ -1,16 +1,9 @@
 package vertxval;
 
-import io.vertx.core.eventbus.Message;
 import io.vertx.core.eventbus.ReplyException;
-import jsonvalues.JsObj;
-import jsonvalues.spec.JsErrorPair;
-import jsonvalues.spec.JsObjSpec;
-
 import java.util.Arrays;
-import java.util.Set;
-import java.util.function.Consumer;
+
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 import static io.vertx.core.eventbus.ReplyFailure.RECIPIENT_FAILURE;
 
