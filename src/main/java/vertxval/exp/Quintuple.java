@@ -54,21 +54,6 @@ public final class Quintuple<A, B, C, D, E> extends AbstractVal<Tuple5<A, B, C,D
 
 
     @Override
-    public Tuple5<A, B, C, D, E> result() {
-        return new Tuple5<>(_1.get()
-                              .result(),
-                            _2.get()
-                              .result(),
-                            _3.get()
-                              .result(),
-                            _4.get()
-                              .result(),
-                            _5.get()
-                              .result()
-        );
-    }
-
-    @Override
     public Val<Tuple5<A, B, C, D, E>> retry(final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         return new Quintuple<>(_1.retry(attempts),

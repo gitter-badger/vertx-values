@@ -37,7 +37,7 @@ public abstract class VertxModule extends AbstractVerticle {
 
     public VertxModule(final DeploymentOptions options) {
         this(MapVal.EMPTY,
-             options
+             requireNonNull(options)
             );
         idExpList = SeqVal.empty();
     }
@@ -115,7 +115,8 @@ public abstract class VertxModule extends AbstractVerticle {
     public void deployTask(final Runnable runnable,
                            final DeploymentOptions options) {
         idExpList = idExpList.append(deployer.deployTask(requireNonNull(runnable),
-                                                         options));
+                                                         requireNonNull(options)
+                                                        ));
     }
 
     public void deployVerticle(final AbstractVerticle verticle) {

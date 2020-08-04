@@ -35,17 +35,6 @@ public final class Pair<A, B> extends AbstractVal<Tuple2<A, B>> {
         return Cons.of(() -> get().map(fn));
     }
 
-
-
-    @Override
-    public Tuple2<A, B> result() {
-        return new Tuple2<>(_1.get()
-                              .result(),
-                            _2.get()
-                              .result()
-        );
-    }
-
     @Override
     public Val<Tuple2<A, B>> retry(final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");

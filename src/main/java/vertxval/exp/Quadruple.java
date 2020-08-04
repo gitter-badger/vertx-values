@@ -48,18 +48,6 @@ public class Quadruple<A, B, C, D> extends AbstractVal<Tuple4<A, B,C,D>> {
     }
 
 
-    @Override
-    public Tuple4<A, B, C, D> result() {
-        return new Tuple4<>(_1.get()
-                              .result(),
-                            _2.get()
-                              .result(),
-                            _3.get()
-                              .result(),
-                            _4.get()
-                              .result()
-        );
-    }
 
     @Override
     public Val<Tuple4<A, B, C, D>> retry(final int attempts) {

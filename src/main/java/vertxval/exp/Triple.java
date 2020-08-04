@@ -41,18 +41,6 @@ public final class Triple<A, B, C> extends AbstractVal<Tuple3<A, B, C>> {
     }
 
 
-    @Override
-    public Tuple3<A, B, C> result() {
-        return new Tuple3<>(_1.get()
-                              .result(),
-                            _2.get()
-                              .result(),
-                            _3.get()
-                              .result()
-        );
-
-    }
-
 
     @Override
     public Val<Tuple3<A, B, C>> retry(final int attempts) {

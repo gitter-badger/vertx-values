@@ -11,8 +11,8 @@ import vertxval.Deployer;
 import vertxval.TestFns;
 import vertxval.VerticleRef;
 import vertxval.codecs.RegisterJsValuesCodecs;
-import vertxval.exp.Val;
 import vertxval.exp.Pair;
+import vertxval.exp.Val;
 
 import static vertxval.TestFns.pipeTo;
 import static vertxval.bankaccount.Account.creditLens;
@@ -33,7 +33,7 @@ public class TestBankAccount {
 
         module = new BankAccountModule();
 
-        Pair.of(deployer.deployTask(RegisterJsValuesCodecs::new),
+        Pair.of(deployer.deployVerticle(new RegisterJsValuesCodecs()),
                 deployer.deployVerticle(module)
                )
             .onComplete(pipeTo(testContext))
@@ -49,12 +49,14 @@ public class TestBankAccount {
         Val<VerticleRef<JsObj, Integer>> futRafaRef =
                 module.registerAccount.apply(nameLens.set.apply("Rafa")
                                                          .andThen(creditLens.set.apply(10000))
-                                                         .apply(JsObj.empty()));
+                                                         .apply(JsObj.empty())
+                                            );
 
         Val<VerticleRef<JsObj, Integer>> futPhilipRef =
                 module.registerAccount.apply(nameLens.set.apply("Philip")
                                                          .andThen(creditLens.set.apply(1000))
-                                                         .apply(JsObj.empty()));
+                                                         .apply(JsObj.empty())
+                                            );
 
 
         Pair.of(futRafaRef,
@@ -82,12 +84,14 @@ public class TestBankAccount {
         Val<VerticleRef<JsObj, Integer>> futRafaRef =
                 module.registerAccount.apply(nameLens.set.apply("Rafa")
                                                          .andThen(creditLens.set.apply(10000))
-                                                         .apply(JsObj.empty()));
+                                                         .apply(JsObj.empty())
+                                            );
 
         Val<VerticleRef<JsObj, Integer>> futPhilipRef =
                 module.registerAccount.apply(nameLens.set.apply("Philip")
                                                          .andThen(creditLens.set.apply(1000))
-                                                         .apply(JsObj.empty()));
+                                                         .apply(JsObj.empty())
+                                            );
 
         Pair.of(futRafaRef,
                 futPhilipRef

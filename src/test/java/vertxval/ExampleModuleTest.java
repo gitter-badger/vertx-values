@@ -86,7 +86,7 @@ public class ExampleModuleTest {
                 .onComplete(r -> r.result()
                                   .ask()
                                   .apply(JsObj.empty())
-                                  .onComplete(h -> context.verify(() ->
+                                  .onComplete(h ->  context.verify(() ->
                                                                   {
                                                                       assertEquals(h.result(),
                                                                                    JsObj.empty()

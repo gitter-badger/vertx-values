@@ -11,32 +11,30 @@ import java.util.function.Supplier;
 
 public interface Val<O> extends Supplier<Future<O>> {
 
-    <P> Val<P> map(Function<O, P> fn);
+    <P> Val<P> map(final Function<O, P> fn);
 
-    <Q> Val<Q> flatMap(Function<O, Val<Q>> fn);
+    <Q> Val<Q> flatMap(final Function<O, Val<Q>> fn);
 
-    O result();
+    Val<O> retry(final int attempts);
 
-    Val<O> retry(int attempts);
+    Val<O> retryIf(final Predicate<Throwable> predicate,
+                   final int attempts);
 
-    Val<O> retryIf(Predicate<Throwable> predicate,
-                   int attempts);
+    Val<O> recover(final Function<Throwable, O> fn);
 
-    Val<O> recover(Function<Throwable, O> fn);
+    Val<O> recoverWith(final Function<Throwable, Val<O>> fn);
 
-    Val<O> recoverWith(Function<Throwable, Val<O>> fn);
+    Val<O> fallbackTo(final Function<Throwable, Val<O>> fn);
 
-    Val<O> fallbackTo(Function<Throwable, Val<O>> fn);
+    Val<O> onSuccess(final Consumer<O> success);
 
-    Val<O> onSuccess(Consumer<O> success);
+    Val<O> onComplete(final Consumer<O> success,
+                      final Consumer<Throwable> thowable);
 
-    Val<O> onComplete(Consumer<O> success,
-                      Consumer<Throwable> thowable);
+    <U> Val<U> flatMap(final Function<O, Val<U>> successMapper,
+                       final Function<Throwable, Val<U>> failureMapper);
 
-    <U> Val<U> flatMap(Function<O, Val<U>> successMapper,
-                       Function<Throwable, Val<U>> failureMapper);
-
-    Val<O> onComplete(Handler<AsyncResult<O>> handler);
+    Val<O> onComplete(final Handler<AsyncResult<O>> handler);
 
 
 }

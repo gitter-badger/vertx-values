@@ -10,21 +10,25 @@ public class ExampleModule extends VertxModule {
 
 
     public static Function<Integer, Val<Integer>> triple;
-    public static  Function<Integer, Val<Integer>> quadruple;
+    public static Function<Integer, Val<Integer>> quadruple;
     public static Function<Integer, Val<Integer>> addOne;
     public static Consumer<Integer> printNumber;
+
+    private final String TRIPLE_ADDRESS = "triple";
+    private final String ADDONE_ADDRESS = "addOne";
+    private final String PRINT_ADDRESS = "print";
+
     {
         Function<Integer, Integer> integerIntegerFn = i -> i * 4;
         quadruple = deployer.spawnFn(integerIntegerFn);
     }
 
 
-
     @Override
     protected void define() {
-        triple = this.<Integer, Integer>getDeployedVerticle("triple").ask();
-        addOne = this.<Integer, Integer>getDeployedVerticle("addOne").ask();
-        printNumber = this.<Integer, Void>getDeployedVerticle("print").tell();
+        triple = this.<Integer, Integer>getDeployedVerticle(TRIPLE_ADDRESS).ask();
+        addOne = this.<Integer, Integer>getDeployedVerticle(ADDONE_ADDRESS).ask();
+        printNumber = this.<Integer, Void>getDeployedVerticle(PRINT_ADDRESS).tell();
     }
 
     @Override
@@ -33,17 +37,16 @@ public class ExampleModule extends VertxModule {
         final Function<Integer, Integer> addOne      = i -> i + 1;
         final Consumer<Message<Integer>> printNumber = m -> System.out.println(m.body());
 
-        this.deployFn("triple",
+        this.deployFn(TRIPLE_ADDRESS,
                       triple
                      );
-        this.deployFn("addOne",
+        this.deployFn(ADDONE_ADDRESS,
                       addOne
                      );
 
-        this.deployConsumer("printNumber",
+        this.deployConsumer(PRINT_ADDRESS,
                             printNumber
                            );
-
 
 
     }

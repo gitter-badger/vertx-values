@@ -168,20 +168,6 @@ public final class Switch<O> extends AbstractVal<O> {
         return Cons.of(()->get().map(fn));
     }
 
-    @Override
-    public O result() {
-        OptionalInt first = IntStream.range(0,
-                                            predicates.size())
-                                     .filter(n -> predicates.get(n)
-                                                            .get()
-                                                            .result())
-                                     .findFirst();
-
-        if(first.isPresent())return branches.get(first.getAsInt()).get().result();
-        else return null;
-
-
-    }
 
     @Override
     public Val<O> retry(final int attempts) {

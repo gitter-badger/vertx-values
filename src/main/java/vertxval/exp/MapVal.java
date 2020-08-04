@@ -1000,14 +1000,6 @@ public final class MapVal<O> extends AbstractVal<Map<String, O>> {
         return Cons.of(() -> get().map(fn));
     }
 
-    @Override
-    public Map<String, O> result() {
-        return bindings.map((k, v) -> new Tuple2<>(k,
-                                                   v.get()
-                                                    .result()
-                            )
-                           );
-    }
 
     @Override
     public Val<Map<String, O>> retry(final int attempts) {

@@ -130,19 +130,24 @@ public class Deployer {
         final MyVerticle<I> verticle = new MyVerticle<>(consumer,
                                                         address
         );
-        for (int i = 0; i < instances; i++) {
-            final Future<String> future = vertx.deployVerticle(verticle,
-                                                               options.setInstances(1)
-                                                              );
-            futures.add(future.onSuccess(ids::add));
-        }
 
-        return Cons.of(() -> CompositeFuture.all(futures)
-                                            .flatMap(cf -> getVerticleRefFuture(address,
-                                                                                ids,
-                                                                                cf
-                                                                               )
-                                                    )
+        return Cons.of(() -> {
+                           for (int i = 0; i < instances; i++) {
+                               final Future<String> future = vertx.deployVerticle(verticle,
+                                                                                  options.setInstances(1)
+                                                                                 );
+                               futures.add(future.onSuccess(ids::add));
+                           }
+
+
+                           return CompositeFuture.all(futures)
+                                                 .flatMap(cf -> Future.succeededFuture(new VerticleRef<>(vertx,
+                                                                                                         ids,
+                                                                                                         address
+                                                                                       )
+                                                                                      )
+                                                         );
+                       }
                       );
     }
 
@@ -210,26 +215,30 @@ public class Deployer {
         requireNonNull(address);
         requireNonNull(fn);
         requireNonNull(options);
-        final int                                        instances = options.getInstances();
-        final Set<String>                                ids       = new HashSet<>();
-        @SuppressWarnings("rawtypes") final List<Future> futures   = new ArrayList<>();
-        final MyVerticle<I> verticle = new MyVerticle<>(m -> m.reply(fn.apply(m.body())),
-                                                        address
-        );
-        for (int i = 0; i < instances; i++) {
-            final Future<String> future = vertx.deployVerticle(verticle,
-                                                               options.setInstances(1)
-                                                              );
-            futures.add(future.onSuccess(ids::add));
-        }
 
-        return Cons.of(() -> CompositeFuture.all(futures)
-                                            .flatMap(cf -> getVerticleRefFuture(
-                                                    address,
-                                                    ids,
-                                                    cf
-                                                                               )
-                                                    )
+
+        return Cons.of(() -> {
+                           final int                                        instances = options.getInstances();
+                           final Set<String>                                ids       = new HashSet<>();
+                           @SuppressWarnings("rawtypes") final List<Future> futures   = new ArrayList<>();
+                           final MyVerticle<I> verticle = new MyVerticle<>(m -> m.reply(fn.apply(m.body())),
+                                                                           address
+                           );
+
+                           for (int i = 0; i < instances; i++) {
+                               final Future<String> future = vertx.deployVerticle(verticle,
+                                                                                  options.setInstances(1)
+                                                                                 );
+                               futures.add(future.onSuccess(ids::add));
+                           }
+                           return CompositeFuture.all(futures)
+                                                 .flatMap(cf -> Future.succeededFuture(new VerticleRef<>(vertx,
+                                                                                                         ids,
+                                                                                                         address
+                                                                                       )
+                                                                                      )
+                                                         );
+                       }
                       );
     }
 
@@ -300,27 +309,32 @@ public class Deployer {
         requireNonNull(address);
         requireNonNull(options);
         requireNonNull(fn);
-        final int                                        instances = options.getInstances();
-        final Set<String>                                ids       = new HashSet<>();
-        @SuppressWarnings("rawtypes") final List<Future> futures   = new ArrayList<>();
-        final MyVerticle<I> verticle = new MyVerticle<>(message -> fn.apply(message.body())
-                                                                     .onComplete(Handlers.pipeTo(message))
-                                                                     .get(),
-                                                        address
-        );
-        for (int i = 0; i < instances; i++) {
-            final Future<String> future = vertx.deployVerticle(verticle,
-                                                               options.setInstances(1)
-                                                              );
-            futures.add(future.onSuccess(ids::add));
-        }
 
-        return Cons.of(() -> CompositeFuture.all(futures)
-                                            .flatMap(cf -> getVerticleRefFuture(address,
-                                                                                ids,
-                                                                                cf
-                                                                               )
-                                                    )
+
+        return Cons.of(() -> {
+                           final int                                        instances = options.getInstances();
+                           final Set<String>                                ids       = new HashSet<>();
+                           @SuppressWarnings("rawtypes") final List<Future> futures   = new ArrayList<>();
+                           final MyVerticle<I> verticle = new MyVerticle<>(message -> fn.apply(message.body())
+                                                                                        .onComplete(Handlers.pipeTo(message))
+                                                                                        .get(),
+                                                                           address
+                           );
+
+                           for (int i = 0; i < instances; i++) {
+                               final Future<String> future = vertx.deployVerticle(verticle,
+                                                                                  options.setInstances(1)
+                                                                                 );
+                               futures.add(future.onSuccess(ids::add));
+                           }
+                           return CompositeFuture.all(futures)
+                                                 .flatMap(cf -> Future.succeededFuture(new VerticleRef<>(vertx,
+                                                                                                         ids,
+                                                                                                         address
+                                                                                       )
+                                                                                      )
+                                                         );
+                       }
                       );
     }
 
@@ -381,7 +395,8 @@ public class Deployer {
 
             return future.flatMap(r -> r.ask()
                                         .apply(n)
-                                        .onComplete(a -> r.undeploy()));
+                                        .onComplete(a -> r.undeploy())
+                                 );
         };
 
 
@@ -521,18 +536,6 @@ public class Deployer {
                                          }
                                      }
                                     );
-    }
-
-    private <I, O> Future<VerticleRef<I, O>> getVerticleRefFuture(final String address,
-                                                                  final Set<String> ids,
-                                                                  final CompositeFuture cf
-                                                                 ) {
-        if (cf.isComplete()) return Future.succeededFuture(new VerticleRef<>(vertx,
-                                                                             ids,
-                                                                             address
-                                                           )
-                                                          );
-        else return Future.failedFuture(cf.cause());
     }
 
 

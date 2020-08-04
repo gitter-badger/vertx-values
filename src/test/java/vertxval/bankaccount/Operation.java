@@ -21,7 +21,7 @@ public class Operation {
     public static final String WITHDRAW_OP = "WITHDRAW";
 
     public static final Lens<JsObj, String> opLens = JsObj.lens.str(OP_FIELD);
-    public static final Lens<JsObj, Integer> amountLens = JsObj.lens.intNum(OP_FIELD);
+    public static final Lens<JsObj, Integer> amountLens = JsObj.lens.intNum(AMOUNT_FIELD);
 
     public static final JsObjSpec spec = JsObjSpec.strict(OP_FIELD,
                                                           oneOf(Arrays.asList(JsStr.of(DEPOSIT_OP),
@@ -35,12 +35,14 @@ public class Operation {
     public static final Predicate<JsObj> IS_DEPOSIT = opLens.exists.apply(DEPOSIT_OP::equals);
     public static final Predicate<JsObj> IS_WITHDRAW = opLens.exists.apply(WITHDRAW_OP::equals);
 
-    public static final Function<Integer,JsObj> makeDeposit = amount -> opLens.set.apply(DEPOSIT_OP)
-                                                                                  .andThen(amountLens.set.apply(amount))
-                                                                                  .apply(JsObj.empty());
+    public static final Function<Integer, JsObj> makeDeposit =
+            amount -> opLens.set.apply(DEPOSIT_OP)
+                                .andThen(amountLens.set.apply(amount))
+                                .apply(JsObj.empty());
 
 
-    public static final Function<Integer,JsObj> makeWithdraw = amount -> opLens.set.apply(WITHDRAW_OP)
-                                                                                  .andThen(amountLens.set.apply(amount))
-                                                                                  .apply(JsObj.empty());
+    public static final Function<Integer, JsObj> makeWithdraw =
+            amount -> opLens.set.apply(WITHDRAW_OP)
+                                .andThen(amountLens.set.apply(amount))
+                                .apply(JsObj.empty());
 }

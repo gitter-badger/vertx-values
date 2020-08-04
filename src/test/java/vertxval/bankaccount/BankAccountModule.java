@@ -1,10 +1,11 @@
 package vertxval.bankaccount;
 
 import jsonvalues.JsObj;
-import vertxval.VertxModule;
 import vertxval.VerticleRef;
+import vertxval.VertxModule;
 import vertxval.exp.Val;
 import vertxval.exp.λ;
+import vertxval.functions.Validators;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -27,31 +28,32 @@ public class BankAccountModule extends VertxModule {
      it returns the credit of the account after the operation or -1 if
      Spawns a person account to send operations like deposits and withdraws
      */
-    public Function<JsObj, Val<VerticleRef<JsObj, Integer>>> registerAccount;
+    public Function<JsObj, Val<VerticleRef<JsObj, Integer>>> registerAccount =
+            account -> deployer.deployλ(nameLens.get.apply(account),
+                                        new AccountActor(creditLens.get.apply(account),
+                                                         deployer.spawnλ(Validators.validateJsObj(Operation.spec))
+                                        )
+                                       );
+
 
     /**
      Transaction -> Code
      Performs a transaction between two accounts. The transaction contains the accounts and the amount of money
      to move
      */
-    public BiFunction<λ<JsObj, Integer>, λ<JsObj, Integer>, λ<Integer, Integer>> makeTx;
+    public BiFunction<λ<JsObj, Integer>, λ<JsObj, Integer>, λ<Integer, Integer>> makeTx =
+            (from, to) -> deployer.spawnλ(new TxActor(from,
+                                                      to
+                                          )
+                                         );
 
 
     @Override
     protected void define() {
-        registerAccount = account -> deployer.deployλ(nameLens.get.apply(account),
-                                                      new AccountActor(creditLens.get.apply(account))
-                                                     );
-
-        makeTx = (from, to) -> deployer.spawnλ(new TxActor(from,
-                                                           to
-                                               )
-                                              );
     }
 
     @Override
     protected void deploy() {
-
     }
 
 }

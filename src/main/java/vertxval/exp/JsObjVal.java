@@ -1027,17 +1027,6 @@ public final class JsObjVal extends AbstractVal<JsObj> {
         return Cons.of(() -> get().map(fn));
     }
 
-    @Override
-    public jsonvalues.JsObj result() {
-        jsonvalues.JsObj result = jsonvalues.JsObj.empty();
-        for (final Tuple2<String, Val<? extends JsValue>> tuple : bindings.iterator()) {
-            result = result.set(tuple._1,
-                                tuple._2.get()
-                                        .result()
-                               );
-        }
-        return result;
-    }
 
     @Override
     public Val<JsObj> retry(final int attempts) {

@@ -3,9 +3,8 @@ package vertxval.httpclient;
 
 import jsonvalues.JsObj;
 
-import java.util.Objects;
-
 import static java.util.Objects.requireNonNull;
+import static vertxval.httpclient.Req.BODY_LENS;
 
 abstract class BodyReqMessage<T extends BodyReqMessage<T>> extends ReqMessage<T> {
     public BodyReqMessage(final byte[] body) {
@@ -17,6 +16,7 @@ abstract class BodyReqMessage<T extends BodyReqMessage<T>> extends ReqMessage<T>
 
     @Override
     public JsObj createHttpReq() {
-        return Req.BODY_LENS.set.apply(body).apply(super.createHttpReq());
+        return BODY_LENS.set.apply(body)
+                            .apply(super.createHttpReq());
     }
 }

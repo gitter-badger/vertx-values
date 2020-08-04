@@ -39,17 +39,6 @@ public final class And extends AbstractVal<Boolean> {
     }
 
     @Override
-    public Boolean result() {
-        return exps.stream()
-                   .map(s -> s.get()
-                              .result()
-                       )
-                   .reduce(true,
-                           (a, b) -> a && b
-                          );
-    }
-
-    @Override
     public Val<Boolean> retry(final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
 

@@ -46,11 +46,9 @@ abstract class AbstractVal<O> implements Val<O> {
     @Override
     public <Q> Val<Q> flatMap(final Function<O, Val<Q>> fn) {
         requireNonNull(fn);
-        return Cons.of(
-                () ->
-                        get().flatMap(o ->
-                                              fn.apply(o)
-                                                .get()));
+        return Cons.of(() -> get().flatMap(o -> fn.apply(o)
+                                                  .get())
+                      );
     }
 
     @Override

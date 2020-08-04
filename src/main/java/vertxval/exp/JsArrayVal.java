@@ -92,17 +92,6 @@ public final class JsArrayVal extends AbstractVal<JsArray> {
         return Cons.of(() -> get().map(fn));
     }
 
-    @Override
-    public jsonvalues.JsArray result() {
-        jsonvalues.JsArray result = jsonvalues.JsArray.empty();
-
-        for (final Val<? extends JsValue> future : seq) {
-            result = result.append(future.get()
-                                         .result());
-        }
-
-        return result;
-    }
 
     @Override
     public Val<JsArray> retry(final int attempts) {

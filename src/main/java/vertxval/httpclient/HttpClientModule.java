@@ -11,7 +11,6 @@ import vertxval.VerticleRef;
 import vertxval.functions.Handlers;
 import vertxval.VertxModule;
 import vertxval.exp.λ;
-
 import java.util.function.Consumer;
 
 import static io.vertx.core.http.HttpMethod.*;

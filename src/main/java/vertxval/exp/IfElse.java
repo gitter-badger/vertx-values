@@ -2,7 +2,6 @@ package vertxval.exp;
 
 import io.vertx.core.Future;
 
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -55,11 +54,6 @@ public final class IfElse<O> extends AbstractVal<O> {
     }
 
     @Override
-    public O result() {
-        return get().result();
-    }
-
-    @Override
     public Val<O> retry(final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         return new IfElse<O>(predicate.retry(attempts))
@@ -72,9 +66,12 @@ public final class IfElse<O> extends AbstractVal<O> {
                           final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         requireNonNull(predicate);
-        return new IfElse<O>(this.predicate.retryIf(predicate,attempts))
-                .consequence(consequence.retryIf(predicate,attempts))
-                .alternative(alternative.retryIf(predicate,attempts));
+        return new IfElse<O>(this.predicate.retryIf(predicate,
+                                                    attempts))
+                .consequence(consequence.retryIf(predicate,
+                                                 attempts))
+                .alternative(alternative.retryIf(predicate,
+                                                 attempts));
     }
 
 

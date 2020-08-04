@@ -37,14 +37,6 @@ public final class Or extends AbstractVal<Boolean> {
         return Cons.of(() -> get().map(fn));
     }
 
-    @Override
-    public Boolean result() {
-        return exps.stream()
-                        .map(s -> s.get()
-                                   .result())
-                        .reduce(false,
-                                (a, b) -> a || b);
-    }
 
     @Override
     public Val<Boolean> retry(final int attempts) {

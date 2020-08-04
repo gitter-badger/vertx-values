@@ -75,7 +75,7 @@ class MyVerticle<I> extends AbstractVerticle {
                 messageConsumer.unregister(promise);
             else promise.complete();
         } catch (Exception e) {
-            promise.fail(GET_STOPPING_VERTIClE_EXCEPTION.apply(e));
+            promise.fail(GET_STOPPING_VERTICLE_EXCEPTION.apply(e));
 
         }
     }

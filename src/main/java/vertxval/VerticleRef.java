@@ -60,10 +60,12 @@ public class VerticleRef<I, O> {
      */
     public λ<I, O> ask(final DeliveryOptions options) {
         requireNonNull(options);
-        return body -> Cons.of(() -> vertx.eventBus().<O>request(address,
-                                                                 body,
-                                                                 options
-                                                                ).map(Message::body));
+        return body -> Cons.of(() -> {
+            return vertx.eventBus().<O>request(address,
+                                               body,
+                                               options
+                                              ).map(Message::body);
+        });
     }
 
     /**

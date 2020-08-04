@@ -32,10 +32,6 @@ public class SeqVal<O> extends AbstractVal<List<O>> {
         return Cons.of(() -> get().map(fn));
     }
 
-    @Override
-    public List<O> result() {
-        return seq.map(Val::result);
-    }
 
     @Override
     public Val<List<O>> retry(final int attempts) {

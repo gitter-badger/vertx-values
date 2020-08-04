@@ -43,12 +43,6 @@ public final class Cons<O> extends AbstractVal<O> {
                       );
     }
 
-
-    @Override
-    public O result() {
-        return get().result();
-    }
-
     @Override
     public Val<O> retry(final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
