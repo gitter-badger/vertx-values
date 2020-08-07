@@ -1,6 +1,6 @@
-package actors.performance;
+package vertxval.performance;
 
-import actors.performance.Module;
+import vertxval.performance.Module;
 import io.vertx.core.Vertx;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
@@ -12,8 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import static actors.performance.Functions.await20segForEnding;
-import static actors.performance.Module.*;
+import static vertxval.performance.Functions.await20segForEnding;
+import static vertxval.performance.Module.*;
 
 @ExtendWith(VertxExtension.class)
 public class TestPerformance

@@ -1,6 +1,6 @@
-package actors.performance;
+package vertxval.performance;
 
-import actors.ActorsModule;
+import vertxval.ActorsModule;
 import io.vertx.core.*;
 import io.vertx.core.json.JsonObject;
 import jsonvalues.JsObj;
@@ -57,13 +57,13 @@ public class Module extends ActorsModule
 
     jacksonParser = this.<String,JsonObject>toActorRef(list.get(10)).ask();
 
-    filterProcess = actors.spawn(Functions.filter);
+    filterProcess = vertxval.spawn(Functions.filter);
 
-    mapProcess = actors.spawn(Functions.map);
+    mapProcess = vertxval.spawn(Functions.map);
 
-    reduceProcess = actors.spawn(Functions.reduce);
+    reduceProcess = vertxval.spawn(Functions.reduce);
 
-    generatorProcess = actors.spawn(new JsGenVerticle());
+    generatorProcess = vertxval.spawn(new JsGenVerticle());
 
   }
 
@@ -72,28 +72,28 @@ public class Module extends ActorsModule
   {
     final DeploymentOptions WORKER = new DeploymentOptions().setWorker(true);
 
-    return Arrays.asList(actors.deploy(Functions.filter),
-                         actors.deploy(Functions.map),
-                         actors.deploy(Functions.reduce),
-                         actors.deploy(new JsGenVerticle(),
-                                       WORKER.setInstances(8)
-                                      ),
-                         actors.deploy(new CountStringOneVerticle(),
-                                       WORKER
-                                      ),
-                         actors.deploy(new CountStringMultiVerticle(),
-                                       WORKER
-                                      ),
-                         actors.deploy(new CountStringProcesses(),
-                                       WORKER
-                                       ),
-                         actors.deploy(Functions.id),
+    return Arrays.asList(vertxval.deploy(Functions.filter),
+                         vertxval.deploy(Functions.map),
+                         vertxval.deploy(Functions.reduce),
+                         vertxval.deploy(new JsGenVerticle(),
+                                         WORKER.setInstances(8)
+                                        ),
+                         vertxval.deploy(new CountStringOneVerticle(),
+                                         WORKER
+                                        ),
+                         vertxval.deploy(new CountStringMultiVerticle(),
+                                         WORKER
+                                        ),
+                         vertxval.deploy(new CountStringProcesses(),
+                                         WORKER
+                                        ),
+                         vertxval.deploy(Functions.id),
 
-                         actors.deploy(Functions.jacksonId),
+                         vertxval.deploy(Functions.jacksonId),
 
-                         actors.deploy(Functions.parser),
+                         vertxval.deploy(Functions.parser),
 
-                         actors.deploy(Functions.jacksonParser)
+                         vertxval.deploy(Functions.jacksonParser)
                         );
   }
 

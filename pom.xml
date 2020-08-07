@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.imrafaelmerino</groupId>
-  <artifactId>vertx-actors</artifactId>
+  <artifactId>vertx-values</artifactId>
   <packaging>jar</packaging>
-  <version>0.1</version>
-  <name>vertx-actors</name>
-  <description>vertx-actors is a lightweight library to work with Vertx following a functional style and the Earlang philosophy based on actors. </description>
-  <url>https://github.com/imrafaelmerino/vertx-actors</url>
+  <version>0.4</version>
+  <name>vertx-values</name>
+  <description>vertx-values is a lightweight library to work with Vertx following a functional style and the Earlang philosophy based on deployer. </description>
+  <url>https://github.com/imrafaelmerino/vertx-values</url>
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
@@ -25,7 +25,7 @@
     </developer>
   </developers>
   <scm>
-    <url>https://github.com/imrafaelmerino/vertx-actors.git</url>
+    <url>https://github.com/imrafaelmerino/vertx-deployer.git</url>
   </scm>
 
   <properties>
@@ -37,10 +37,12 @@
     <MAVEN-SUREFIRE-PLUGIN.VERSION>2.22.1</MAVEN-SUREFIRE-PLUGIN.VERSION>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <MAVEN-COMPILER-PLUGIN.VERSION>3.1</MAVEN-COMPILER-PLUGIN.VERSION>
-    <MAVEN-COMPILER-PLUGIN.SOURCE>8</MAVEN-COMPILER-PLUGIN.SOURCE>
-    <MAVEN-COMPILER-PLUGIN.TARGET>8</MAVEN-COMPILER-PLUGIN.TARGET>
-    <VERTX-VERSION>4.0.0-milestone4</VERTX-VERSION>
+    <MAVEN-COMPILER-PLUGIN.SOURCE>11</MAVEN-COMPILER-PLUGIN.SOURCE>
+    <MAVEN-COMPILER-PLUGIN.TARGET>11</MAVEN-COMPILER-PLUGIN.TARGET>
+    <VERTX-VERSION>4.0.0-milestone5</VERTX-VERSION>
+    <JSON-VALUES.VERSION>8.2.2</JSON-VALUES.VERSION>
   </properties>
+
 
   <build>
     <plugins>
@@ -51,7 +53,12 @@
         <configuration>
           <source>${MAVEN-COMPILER-PLUGIN.SOURCE}</source>
           <target>${MAVEN-COMPILER-PLUGIN.TARGET}</target>
+          <showWarnings>true</showWarnings>
+          <compilerArgs>
+            <arg>-Xlint:all</arg>
+          </compilerArgs>
         </configuration>
+
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -63,7 +70,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${MAVEN-JAVADOC-PLUGIN.VERSION}</version>
         <configuration>
-          <source>8</source>
+          <source>11</source>
         </configuration>
         <executions>
           <execution>
@@ -79,15 +86,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-unit</artifactId>
-      <version>${VERTX-VERSION}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>com.github.imrafaelmerino</groupId>
       <artifactId>json-values</artifactId>
-      <version>7.0.0</version>
+      <version>${JSON-VALUES.VERSION}</version>
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
@@ -102,6 +103,14 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.6.2</version>
+      <scope>test</scope>
+    </dependency>
+
+
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>1.7.29</version>
@@ -113,6 +122,10 @@
       <version>1.7.29</version>
       <scope>test</scope>
     </dependency>
+
+
+
+
   </dependencies>
   <profiles>
     <profile>

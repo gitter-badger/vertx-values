@@ -1,4 +1,4 @@
-package actors.performance;
+package vertxval.performance;
 
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static actors.performance.Functions.TIME_WAITING_MS;
-import static actors.performance.Module.*;
+import static vertxval.performance.Functions.TIME_WAITING_MS;
+import static vertxval.performance.Module.*;
 
 public class CountStringMultiVerticle implements Consumer<Message<Integer>>
 {

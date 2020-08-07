@@ -1,18 +1,18 @@
-package actors.performance.benchmarks;
+package vertxval.performance.benchmarks;
 
-import actors.performance.Functions;
-import actors.performance.Module;
+import vertxval.performance.Functions;
+import vertxval.performance.Module;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import jsonvalues.JsObj;
 import jsonvalues.MalformedJson;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
-import static actors.performance.Module.*;
+import static vertxval.performance.Module.*;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import static actors.performance.Functions.await20segForEnding;
+import static vertxval.performance.Functions.await20segForEnding;
 
 public class JacksonVsJsValuesBenchmark
 {
