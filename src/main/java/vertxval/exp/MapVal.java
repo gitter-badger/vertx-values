@@ -7,7 +7,6 @@ import io.vavr.collection.Map;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -1002,14 +1001,14 @@ public final class MapVal<O> extends AbstractVal<Map<String, O>> {
 
 
     @Override
-    public Val<Map<String, O>> retry(final int attempts) {
+    public MapVal<O> retry(final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         return new MapVal<>(bindings.mapValues(it -> it.retry(attempts)));
     }
 
     @Override
-    public Val<Map<String, O>> retryIf(final Predicate<Throwable> predicate,
-                                       final int attempts) {
+    public MapVal<O> retryIf(final Predicate<Throwable> predicate,
+                             final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         requireNonNull(predicate);
         return new MapVal<>(bindings.mapValues(it -> it.retryIf(predicate,

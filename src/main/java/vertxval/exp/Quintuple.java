@@ -3,8 +3,6 @@ package vertxval.exp;
 import io.vavr.Tuple5;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
-
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -54,7 +52,7 @@ public final class Quintuple<A, B, C, D, E> extends AbstractVal<Tuple5<A, B, C,D
 
 
     @Override
-    public Val<Tuple5<A, B, C, D, E>> retry(final int attempts) {
+    public Quintuple<A, B, C, D, E> retry(final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         return new Quintuple<>(_1.retry(attempts),
                                _2.retry(attempts),
@@ -65,7 +63,7 @@ public final class Quintuple<A, B, C, D, E> extends AbstractVal<Tuple5<A, B, C,D
     }
 
     @Override
-    public Val<Tuple5<A, B, C, D, E>> retryIf(final Predicate<Throwable> predicate,
+    public Quintuple<A, B, C, D, E> retryIf(final Predicate<Throwable> predicate,
                                               final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         requireNonNull(predicate);

@@ -1,12 +1,12 @@
 package vertxval.codecs;
 
-import vertxval.TestProperty;
 import io.vertx.core.buffer.Buffer;
 import jsonvalues.JsArray;
 import jsonvalues.JsObj;
 import jsonvalues.JsValue;
 import jsonvalues.gen.JsGens;
 import jsonvalues.gen.JsObjGen;
+import jsonvalues.gen.TestProperty;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.Predicate;
@@ -34,16 +34,18 @@ public class TestCodecs {
                                          .optional(),
                                    "f",
                                    JsGens.array(JsGens.integer,
-                                                10)
+                                                10
+                                               )
                                          .nullable(),
                                    "g",
                                    JsObjGen.of("a",
-                                               JsGens.oneOf(JsObj.empty()))
+                                               JsGens.oneOf(JsObj.empty())
+                                              )
                                            .nullable()
                                   );
 
 
-        Predicate<JsValue> objEncondingProperty = o -> {
+        Predicate<JsObj> objEncondingProperty = o -> {
             Buffer buffer = Buffer.buffer();
 
             JsObjMessageCodec.INSTANCE.encodeToWire(buffer,
@@ -58,7 +60,7 @@ public class TestCodecs {
             return o.equals(obj);
         };
 
-        Predicate<JsValue> arrEncondingProperty = o -> {
+        Predicate<JsArray> arrEncondingProperty = o -> {
             Buffer buffer = Buffer.buffer();
 
             JsArrayMessageCodec.INSTANCE.encodeToWire(buffer,
@@ -75,11 +77,15 @@ public class TestCodecs {
 
         TestProperty.test(gen,
                           objEncondingProperty,
-                          100);
+                          System.out::println
+                         );
+
         TestProperty.test(JsGens.array(gen,
-                                       10),
+                                       10
+                                      ),
                           arrEncondingProperty,
-                          100);
+                          System.out::println
+                         );
     }
 }
 

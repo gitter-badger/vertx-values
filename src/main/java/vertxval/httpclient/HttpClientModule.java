@@ -16,8 +16,6 @@ import java.util.function.Consumer;
 import static io.vertx.core.http.HttpMethod.*;
 import static java.util.Objects.requireNonNull;
 import static vertxval.VertxValException.*;
-import static vertxval.httpclient.HttpException.GET_HTTP_METHOD_NOT_SUPPORTED_EXCEPTION;
-import static vertxval.httpclient.HttpException.GET_RESPONSE_EXCEPTION;
 import static vertxval.httpclient.Req.BODY_LENS;
 
 
@@ -101,7 +99,7 @@ public abstract class HttpClientModule extends VertxModule {
                                );
                     break;
                 default:
-                    message.reply(GET_HTTP_METHOD_NOT_SUPPORTED_EXCEPTION.apply(type));
+                    message.reply(GET_HTTP_METHOD_NOT_IMPLEMENTED_EXCEPTION.apply(type));
             }
         };
     }

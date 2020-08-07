@@ -1,15 +1,17 @@
-package vertxval;
+package vertxval.exp;
 
-import vertxval.exp.Val;
-import vertxval.exp.IfElse;
-import vertxval.exp.JsObjVal;
-import vertxval.exp.Cons;
 import io.vertx.core.Future;
+import io.vertx.junit5.VertxExtension;
+import io.vertx.junit5.VertxTestContext;
 import jsonvalues.JsBool;
 import jsonvalues.JsInt;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.util.function.Supplier;
+
+@ExtendWith(VertxExtension.class)
 public class TestVal {
     @Test
     public void test() {
@@ -57,5 +59,6 @@ public class TestVal {
                                 result
                                );
     }
+
 
 }

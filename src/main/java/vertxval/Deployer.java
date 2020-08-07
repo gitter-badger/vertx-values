@@ -17,7 +17,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
-import static vertxval.VertxValException.GET_EXECUTING_VERTIClE_EXCEPTION;
+import static vertxval.VertxValException.GET_EXECUTING_VERTICLE_EXCEPTION;
 
 /**
  Wrapper around the vertx instance. It registers and spawns verticles. If an address is not provided, one is generated. You only
@@ -532,7 +532,7 @@ public class Deployer {
                                              O body = message.body();
                                              consumer.accept(body);
                                          } catch (Throwable e) {
-                                             message.reply(GET_EXECUTING_VERTIClE_EXCEPTION.apply(e));
+                                             message.reply(GET_EXECUTING_VERTICLE_EXCEPTION.apply(e));
                                          }
                                      }
                                     );

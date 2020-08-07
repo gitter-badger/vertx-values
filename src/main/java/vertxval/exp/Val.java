@@ -29,7 +29,7 @@ public interface Val<O> extends Supplier<Future<O>> {
     Val<O> onSuccess(final Consumer<O> success);
 
     Val<O> onComplete(final Consumer<O> success,
-                      final Consumer<Throwable> thowable);
+                      final Consumer<Throwable> failure);
 
     <U> Val<U> flatMap(final Function<O, Val<U>> successMapper,
                        final Function<Throwable, Val<U>> failureMapper);

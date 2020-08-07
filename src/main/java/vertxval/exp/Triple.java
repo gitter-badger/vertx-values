@@ -3,8 +3,6 @@ package vertxval.exp;
 import io.vavr.Tuple3;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
-
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -43,7 +41,7 @@ public final class Triple<A, B, C> extends AbstractVal<Tuple3<A, B, C>> {
 
 
     @Override
-    public Val<Tuple3<A, B, C>> retry(final int attempts) {
+    public Triple<A,B,C> retry(final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         return new Triple<>(_1.retry(attempts),
                             _2.retry(attempts),
@@ -52,7 +50,7 @@ public final class Triple<A, B, C> extends AbstractVal<Tuple3<A, B, C>> {
     }
 
     @Override
-    public Val<Tuple3<A, B, C>> retryIf(final Predicate<Throwable> predicate,
+    public Triple<A,B,C> retryIf(final Predicate<Throwable> predicate,
                                         final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         requireNonNull(predicate);

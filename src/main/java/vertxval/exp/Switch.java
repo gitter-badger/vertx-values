@@ -6,7 +6,6 @@ import io.vertx.core.Future;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -90,16 +89,16 @@ public final class Switch<O> extends AbstractVal<O> {
     }
 
 
-    public static <I, O> Switch<O> of(final Val<Boolean> predicate1,
-                                      final Val<O> branch1,
-                                      final Val<Boolean> predicate2,
-                                      final Val<O> branch2,
-                                      final Val<Boolean> predicate3,
-                                      final Val<O> branch3,
-                                      final Val<Boolean> predicate4,
-                                      final Val<O> branch4,
-                                      final Val<Boolean> predicate5,
-                                      final Val<O> branch5) {
+    public static <O> Switch<O> of(final Val<Boolean> predicate1,
+                                   final Val<O> branch1,
+                                   final Val<Boolean> predicate2,
+                                   final Val<O> branch2,
+                                   final Val<Boolean> predicate3,
+                                   final Val<O> branch3,
+                                   final Val<Boolean> predicate4,
+                                   final Val<O> branch4,
+                                   final Val<Boolean> predicate5,
+                                   final Val<O> branch5) {
 
 
         List<Val<Boolean>> predicates = new ArrayList<>();
@@ -129,18 +128,18 @@ public final class Switch<O> extends AbstractVal<O> {
         this.branches = requireNonNull(branches);
     }
 
-    public static <I, O> Switch<O> of(final Val<Boolean> predicate1,
-                                      final Val<O> branch1,
-                                      final Val<Boolean> predicate2,
-                                      final Val<O> branch2,
-                                      final Val<Boolean> predicate3,
-                                      final Val<O> branch3,
-                                      final Val<Boolean> predicate4,
-                                      final Val<O> branch4,
-                                      final Val<Boolean> predicate5,
-                                      final Val<O> branch5,
-                                      final Val<Boolean> predicate6,
-                                      final Val<O> branch6) {
+    public static <O> Switch<O> of(final Val<Boolean> predicate1,
+                                   final Val<O> branch1,
+                                   final Val<Boolean> predicate2,
+                                   final Val<O> branch2,
+                                   final Val<Boolean> predicate3,
+                                   final Val<O> branch3,
+                                   final Val<Boolean> predicate4,
+                                   final Val<O> branch4,
+                                   final Val<Boolean> predicate5,
+                                   final Val<O> branch5,
+                                   final Val<Boolean> predicate6,
+                                   final Val<O> branch6) {
 
         List<Val<Boolean>> predicates = new ArrayList<>();
         List<Val<O>>       branches   = new ArrayList<>();
@@ -165,25 +164,39 @@ public final class Switch<O> extends AbstractVal<O> {
     @Override
     public <P> Val<P> map(final Function<O, P> fn) {
         requireNonNull(fn);
-        return Cons.of(()->get().map(fn));
+        return Cons.of(() -> get().map(fn));
     }
 
 
     @Override
-    public Val<O> retry(final int attempts) {
-        if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
-        return new Switch<>(predicates.stream().map(it->it.retry(attempts)).collect(Collectors.toList()),
-                            branches.stream().map(it->it.retry(attempts)).collect(Collectors.toList())
+    public Switch<O> retry(final int attempts) {
+        if (attempts < 1)
+            throw new IllegalArgumentException("attempts < 1");
+        return new Switch<>(predicates.stream()
+                                      .map(it -> it.retry(attempts))
+                                      .collect(Collectors.toList()),
+                            branches.stream()
+                                    .map(it -> it.retry(attempts))
+                                    .collect(Collectors.toList())
         );
     }
 
     @Override
-    public Val<O> retryIf(final Predicate<Throwable> predicate,
-                          final int attempts) {
-        if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
+    public Switch<O> retryIf(final Predicate<Throwable> predicate,
+                             final int attempts) {
+        if (attempts < 1)
+            throw new IllegalArgumentException("attempts < 1");
         requireNonNull(predicate);
-        return new Switch<>(predicates.stream().map(it->it.retryIf(predicate,attempts)).collect(Collectors.toList()),
-                            branches.stream().map(it->it.retryIf(predicate,attempts)).collect(Collectors.toList())
+        return new Switch<>(predicates.stream()
+                                      .map(it -> it.retryIf(predicate,
+                                                            attempts
+                                                           ))
+                                      .collect(Collectors.toList()),
+                            branches.stream()
+                                    .map(it -> it.retryIf(predicate,
+                                                          attempts
+                                                         ))
+                                    .collect(Collectors.toList())
         );
     }
 

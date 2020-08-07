@@ -34,14 +34,14 @@ public class SeqVal<O> extends AbstractVal<List<O>> {
 
 
     @Override
-    public Val<List<O>> retry(final int attempts) {
+    public SeqVal<O> retry(final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         return new SeqVal<>(seq.map(it -> it.retry(attempts)));
     }
 
     @Override
-    public Val<List<O>> retryIf(final Predicate<Throwable> predicate,
-                                final int attempts) {
+    public SeqVal<O> retryIf(final Predicate<Throwable> predicate,
+                             final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         requireNonNull(predicate);
         return new SeqVal<>(seq.map(it -> it.retryIf(predicate,
@@ -58,8 +58,8 @@ public class SeqVal<O> extends AbstractVal<List<O>> {
                               .map(c -> {
                                   List<O>                result    = List.empty();
                                   java.util.List<Object> completed = c.list();
-                                  for (int i = 0; i < completed.size(); i++) {
-                                      O element = (O) completed.get(i);
+                                  for (Object o : completed) {
+                                      O element = (O) o;
                                       result = result.append(element);
                                   }
                                   return result;

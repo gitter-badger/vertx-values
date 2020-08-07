@@ -36,7 +36,7 @@ public final class Pair<A, B> extends AbstractVal<Tuple2<A, B>> {
     }
 
     @Override
-    public Val<Tuple2<A, B>> retry(final int attempts) {
+    public Pair<A,B> retry(final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         return new Pair<>(_1.retry(attempts),
                           _2.retry(attempts)
@@ -44,7 +44,7 @@ public final class Pair<A, B> extends AbstractVal<Tuple2<A, B>> {
     }
 
     @Override
-    public Val<Tuple2<A, B>> retryIf(final Predicate<Throwable> predicate,
+    public Pair<A,B> retryIf(final Predicate<Throwable> predicate,
                                      final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         Objects.requireNonNull(predicate);

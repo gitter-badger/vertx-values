@@ -5,7 +5,6 @@ import io.vertx.core.Future;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -39,7 +38,7 @@ public final class And extends AbstractVal<Boolean> {
     }
 
     @Override
-    public Val<Boolean> retry(final int attempts) {
+    public And retry(final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
 
         return new And(exps.stream()
@@ -48,7 +47,7 @@ public final class And extends AbstractVal<Boolean> {
     }
 
     @Override
-    public Val<Boolean> retryIf(final Predicate<Throwable> predicate,
+    public And retryIf(final Predicate<Throwable> predicate,
                                 final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         requireNonNull(predicate);

@@ -4,8 +4,6 @@ import io.vavr.collection.List;
 import io.vertx.core.Future;
 import jsonvalues.JsArray;
 import jsonvalues.JsValue;
-
-import java.util.Arrays;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -94,12 +92,12 @@ public final class JsArrayVal extends AbstractVal<JsArray> {
 
 
     @Override
-    public Val<JsArray> retry(final int attempts) {
+    public JsArrayVal retry(final int attempts) {
         return new JsArrayVal(seq.map(it->it.retry(attempts)));
     }
 
     @Override
-    public Val<JsArray> retryIf(final Predicate<Throwable> predicate,
+    public JsArrayVal retryIf(final Predicate<Throwable> predicate,
                                 final int attempts) {
         return new JsArrayVal(seq.map(it->it.retryIf(predicate, attempts)));
 

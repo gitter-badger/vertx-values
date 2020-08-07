@@ -4,14 +4,13 @@ import io.vavr.Tuple4;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static java.util.Objects.requireNonNull;
 
 
-public class Quadruple<A, B, C, D> extends AbstractVal<Tuple4<A, B,C,D>> {
+public class Quadruple<A, B, C, D> extends AbstractVal<Tuple4<A, B, C, D>> {
 
     private final Val<A> _1;
     private final Val<B> _2;
@@ -40,7 +39,6 @@ public class Quadruple<A, B, C, D> extends AbstractVal<Tuple4<A, B,C,D>> {
     }
 
 
-
     @Override
     public <P> Val<P> map(final Function<Tuple4<A, B, C, D>, P> fn) {
         requireNonNull(fn);
@@ -48,9 +46,8 @@ public class Quadruple<A, B, C, D> extends AbstractVal<Tuple4<A, B,C,D>> {
     }
 
 
-
     @Override
-    public Val<Tuple4<A, B, C, D>> retry(final int attempts) {
+    public Quadruple<A, B, C, D> retry(final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         return new Quadruple<>(_1.retry(attempts),
                                _2.retry(attempts),
@@ -60,8 +57,8 @@ public class Quadruple<A, B, C, D> extends AbstractVal<Tuple4<A, B,C,D>> {
     }
 
     @Override
-    public Val<Tuple4<A, B, C, D>> retryIf(final Predicate<Throwable> predicate,
-                                           final int attempts) {
+    public Quadruple<A, B, C, D> retryIf(final Predicate<Throwable> predicate,
+                                         final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         requireNonNull(predicate);
         return new Quadruple<>(_1.retryIf(predicate,

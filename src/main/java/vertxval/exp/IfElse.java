@@ -10,9 +10,9 @@ import static java.util.Objects.requireNonNull;
 
 public final class IfElse<O> extends AbstractVal<O> {
 
-    final Val<Boolean> predicate;
-    Val<O> consequence;
-    Val<O> alternative;
+    private final Val<Boolean> predicate;
+    private Val<O> consequence;
+    private Val<O> alternative;
 
     public static <O> IfElse<O> predicate(Val<Boolean> predicate) {
         return new IfElse<>(requireNonNull(predicate));
@@ -54,7 +54,7 @@ public final class IfElse<O> extends AbstractVal<O> {
     }
 
     @Override
-    public Val<O> retry(final int attempts) {
+    public IfElse<O> retry(final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         return new IfElse<O>(predicate.retry(attempts))
                 .consequence(consequence.retry(attempts))
@@ -62,7 +62,7 @@ public final class IfElse<O> extends AbstractVal<O> {
     }
 
     @Override
-    public Val<O> retryIf(final Predicate<Throwable> predicate,
+    public IfElse<O> retryIf(final Predicate<Throwable> predicate,
                           final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         requireNonNull(predicate);

@@ -53,8 +53,8 @@ public abstract class Req {
                              str.optional()
                             );
 
-    public static final JsObjSpec reqBodySpec = reqSpec.set(BODY_FIELD,
-                                                            binary);
+    public static final JsObjSpec reqWithBodySpec = reqSpec.set(BODY_FIELD,
+                                                                binary);
 
 
      static Function<JsObj, RequestOptions> toReqOptions =

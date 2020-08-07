@@ -52,13 +52,13 @@ class MyVerticle<I> extends AbstractVerticle {
                                                  try {
                                                      this.consumer.accept((Message<I>) m);
                                                  } catch (Throwable e) {
-                                                     m.reply(GET_EXECUTING_VERTIClE_EXCEPTION.apply(e));
+                                                     m.reply(GET_EXECUTING_VERTICLE_EXCEPTION.apply(e));
                                                  }
                                              }
                                             );
             messageConsumer.completionHandler(promise);
         } catch (Exception e) {
-            promise.fail(GET_DEPLOYING_VERTIClE_EXCEPTION.apply(e));
+            promise.fail(GET_DEPLOYING_VERTICLE_EXCEPTION.apply(e));
         }
     }
 

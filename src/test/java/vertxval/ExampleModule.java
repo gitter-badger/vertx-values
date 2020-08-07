@@ -15,7 +15,7 @@ public class ExampleModule extends VertxModule {
     public static Consumer<Integer> printNumber;
 
     private final String TRIPLE_ADDRESS = "triple";
-    private final String ADDONE_ADDRESS = "addOne";
+    private final String ADD_ONE_ADDRESS = "addOne";
     private final String PRINT_ADDRESS = "print";
 
     {
@@ -27,7 +27,7 @@ public class ExampleModule extends VertxModule {
     @Override
     protected void define() {
         triple = this.<Integer, Integer>getDeployedVerticle(TRIPLE_ADDRESS).ask();
-        addOne = this.<Integer, Integer>getDeployedVerticle(ADDONE_ADDRESS).ask();
+        addOne = this.<Integer, Integer>getDeployedVerticle(ADD_ONE_ADDRESS).ask();
         printNumber = this.<Integer, Void>getDeployedVerticle(PRINT_ADDRESS).tell();
     }
 
@@ -40,7 +40,7 @@ public class ExampleModule extends VertxModule {
         this.deployFn(TRIPLE_ADDRESS,
                       triple
                      );
-        this.deployFn(ADDONE_ADDRESS,
+        this.deployFn(ADD_ONE_ADDRESS,
                       addOne
                      );
 

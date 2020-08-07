@@ -59,12 +59,12 @@ abstract class AbstractVal<O> implements Val<O> {
 
     @Override
     public Val<O> onComplete(final Consumer<O> successConsumer,
-                             final Consumer<Throwable> throwableConsumer) {
+                             final Consumer<Throwable> failure) {
         requireNonNull(successConsumer);
-        requireNonNull(throwableConsumer);
+        requireNonNull(failure);
         return Cons.of(() -> get().onComplete(event -> {
                            if (event.succeeded()) successConsumer.accept(event.result());
-                           else throwableConsumer.accept(event.cause());
+                           else failure.accept(event.cause());
                        })
                       );
     }

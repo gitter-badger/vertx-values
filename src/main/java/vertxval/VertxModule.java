@@ -116,7 +116,8 @@ public abstract class VertxModule extends AbstractVerticle {
                            final DeploymentOptions options) {
         idExpList = idExpList.append(deployer.deployTask(requireNonNull(runnable),
                                                          requireNonNull(options)
-                                                        ));
+                                                        )
+                                    );
     }
 
     public void deployVerticle(final AbstractVerticle verticle) {

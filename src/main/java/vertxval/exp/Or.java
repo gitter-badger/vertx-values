@@ -39,14 +39,14 @@ public final class Or extends AbstractVal<Boolean> {
 
 
     @Override
-    public Val<Boolean> retry(final int attempts) {
+    public Or retry(final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         return new Or(exps.stream().map(it->it.retry(attempts))
                            .collect(Collectors.toList()));
     }
 
     @Override
-    public Val<Boolean> retryIf(final Predicate<Throwable> predicate,
+    public Or retryIf(final Predicate<Throwable> predicate,
                                 final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         requireNonNull(predicate);

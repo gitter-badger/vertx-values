@@ -7,12 +7,10 @@ import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.Message;
 import vertxval.exp.Cons;
 import vertxval.exp.λ;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
-
 import static java.util.Objects.requireNonNull;
 
 /**
