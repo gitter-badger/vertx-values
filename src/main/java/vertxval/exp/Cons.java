@@ -12,6 +12,9 @@ public final class Cons<O> extends AbstractVal<O> {
 
     Supplier<Future<O>> fut;
 
+    public static final Val<Boolean> TRUE = Cons.success(true);
+    public static final Val<Boolean> FALSE = Cons.success(false);
+
     Cons(final Supplier<Future<O>> fut) {
         this.fut = requireNonNull(fut);
     }
@@ -20,6 +23,8 @@ public final class Cons<O> extends AbstractVal<O> {
         requireNonNull(failure);
         return Cons.of(() -> Future.failedFuture(failure));
     }
+
+
 
     public static <O> Val<O> of(Supplier<Future<O>> supplier) {
 

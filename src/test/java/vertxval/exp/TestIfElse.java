@@ -78,7 +78,7 @@ public class TestIfElse {
                 );
 
 
-        IfElse.<String>predicate(Cons.success(true))
+        IfElse.<String>predicate(Cons.TRUE)
                 .consequence(consequence.get())
                 .alternative(Cons.success("alternative"))
                 .retryIf(VertxValException.prism.exists.apply(v -> v.failureCode() == BAD_MESSAGE_CODE),

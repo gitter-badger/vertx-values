@@ -1,13 +1,9 @@
 package vertxval.functions;
-
-
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.eventbus.ReplyException;
-
 import java.util.function.Function;
-
 import static java.util.Objects.requireNonNull;
 import static vertxval.VertxValException.GET_EXECUTING_VERTICLE_EXCEPTION;
 
@@ -19,6 +15,7 @@ public class Handlers {
         requireNonNull(message);
         requireNonNull(mapSuccess);
         requireNonNull(mapError);
+
         return event -> {
             if (event.succeeded()) {
                 try {
