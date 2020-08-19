@@ -11,6 +11,8 @@ import vertxval.VerticleRef;
 import vertxval.functions.Handlers;
 import vertxval.VertxModule;
 import vertxval.exp.λ;
+
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import static io.vertx.core.http.HttpMethod.*;
@@ -21,8 +23,17 @@ import static vertxval.httpclient.Req.BODY_LENS;
 
 public abstract class HttpClientModule extends VertxModule {
 
+    private static AtomicInteger modulesCounter = new AtomicInteger(1);
+    public HttpClientModule(final HttpClientOptions options) {
+        this.httpClientAddress = HTTPCLIENT_ADDRESS+ modulesCounter.getAndIncrement();
+        this.httpOptions = requireNonNull(options);
+    }
+
     private final HttpClientOptions httpOptions;
-    private final static String HTTPCLIENT_ADDRESS = "vertxval.httpclient";
+
+    private final String httpClientAddress;
+
+    private final static String HTTPCLIENT_ADDRESS = "vertxval.httpclient.";
 
     private λ<JsObj, JsObj> httpClient;
 
@@ -128,13 +139,9 @@ public abstract class HttpClientModule extends VertxModule {
         };
     }
 
-    public HttpClientModule(final HttpClientOptions options) {
-        this.httpOptions = requireNonNull(options);
-    }
-
     @Override
     protected void define() {
-        VerticleRef<JsObj, JsObj> verticleRef = this.getDeployedVerticle(HTTPCLIENT_ADDRESS);
+        VerticleRef<JsObj, JsObj> verticleRef = this.getDeployedVerticle(httpClientAddress);
         if(verticleRef==null)throw GET_DEPLOYING_MODULE_EXCEPTION.apply(new NullPointerException("httpclient is null"));
         this.httpClient = verticleRef.ask();
         defineOperations();
@@ -145,7 +152,7 @@ public abstract class HttpClientModule extends VertxModule {
 
     @Override
     protected void deploy() {
-        this.deployConsumer(HTTPCLIENT_ADDRESS,
+        this.deployConsumer(httpClientAddress,
                             consumer(vertx.createHttpClient(httpOptions))
                            );
         deployOperations();
