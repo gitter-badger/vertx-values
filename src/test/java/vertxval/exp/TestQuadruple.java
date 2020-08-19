@@ -1,7 +1,6 @@
 package vertxval.exp;
 
 import io.vavr.Tuple4;
-import io.vertx.core.Future;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 import org.junit.jupiter.api.Test;
@@ -16,25 +15,16 @@ public class TestQuadruple {
     @Test
     public void testRetries(VertxTestContext context) {
 
-        Val<String> val = Cons.of(new Supplier<>() {
-            int i = 0;
+        final Supplier<Val<String>> val =
+                new ReturnsConsOrFailure<>(counter -> new RuntimeException("counter: " + counter),
+                                           counter -> counter == 1 || counter == 2,
+                                           "a"
+                );
 
-            @Override
-            public Future<String> get() {
-                if (i == 0 || i == 1) {
-                    i += 1;
-                    System.out.println("throw an exception");
-                    return Future.failedFuture("i=" + i);
-                }
-                System.out.println("returns true");
-                i = 0;
-                return Future.succeededFuture("a");
-            }
-        });
-        Quadruple.of(val,
-                     val,
-                     val,
-                     val
+        Quadruple.of(val.get(),
+                     val.get(),
+                     val.get(),
+                     val.get()
                     )
                  .retry(2)
                  .get()

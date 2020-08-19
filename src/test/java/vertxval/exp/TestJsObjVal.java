@@ -20,33 +20,25 @@ public class TestJsObjVal {
     public void testRetries(VertxTestContext context) {
 
         JsStr a = JsStr.of("a");
-        Val<JsStr> val = Cons.of(new Supplier<>() {
-            int i = 0;
 
-            @Override
-            public Future<JsStr> get() {
-                if (i == 0 || i == 1) {
-                    i += 1;
-                    System.out.println("throw an exception");
-                    return Future.failedFuture("i=" + i);
-                }
-                System.out.println("returns true");
-                i = 0;
-                return Future.succeededFuture(a);
-            }
-        });
+        final Supplier<Val<JsStr>> val =
+                new ReturnsConsOrFailure<>(counter -> new RuntimeException("counter: " + counter),
+                                           counter -> counter == 1 || counter == 2,
+                                           a
+                );
+
 
         JsObjVal.of("a",
-                    val,
+                    val.get(),
                     "b",
-                    val,
+                    val.get(),
                     "c",
-                    val,
+                    val.get(),
                     "d",
-                    JsArrayVal.tuple(val,
-                                     val,
+                    JsArrayVal.tuple(val.get(),
+                                     val.get(),
                                      JsObjVal.of("a",
-                                                 val
+                                                 val.get()
                                                 )
                                     )
                    )
