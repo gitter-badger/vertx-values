@@ -9,14 +9,14 @@ import static vertxval.bankaccount.BankAccountModule.BROKE_RESP;
 import static vertxval.bankaccount.Operation.IS_DEPOSIT;
 import static vertxval.bankaccount.Operation.amountLens;
 
-public class AccountActor implements λ<JsObj, Integer> {
+public class AccountVerticle implements λ<JsObj, Integer> {
 
     private int credit;
 
     private λ<JsObj, JsObj> validateOp;
 
-    public AccountActor(final int credit,
-                        final λ<JsObj, JsObj> validateOp) {
+    public AccountVerticle(final int credit,
+                           final λ<JsObj, JsObj> validateOp) {
         this.credit = credit;
         this.validateOp = validateOp;
     }

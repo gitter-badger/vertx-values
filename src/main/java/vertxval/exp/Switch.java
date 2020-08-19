@@ -169,7 +169,7 @@ public final class Switch<O> extends AbstractVal<O> {
 
 
     @Override
-    public Switch<O> retry(final int attempts) {
+    public Val<O> retry(final int attempts) {
         if (attempts < 1)
             throw new IllegalArgumentException("attempts < 1");
         return new Switch<>(predicates.stream()
@@ -182,7 +182,7 @@ public final class Switch<O> extends AbstractVal<O> {
     }
 
     @Override
-    public Switch<O> retryIf(final Predicate<Throwable> predicate,
+    public Val<O> retryIf(final Predicate<Throwable> predicate,
                              final int attempts) {
         if (attempts < 1)
             throw new IllegalArgumentException("attempts < 1");

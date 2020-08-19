@@ -4,6 +4,7 @@ import io.vavr.collection.List;
 import io.vertx.core.Future;
 import jsonvalues.JsArray;
 import jsonvalues.JsValue;
+
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -28,11 +29,19 @@ import static java.util.Objects.requireNonNull;
 public final class JsArrayVal extends AbstractVal<JsArray> {
     private List<Val<? extends JsValue>> seq = List.empty();
 
+    private static final JsArrayVal EMPTY = new JsArrayVal();
+
     private JsArrayVal(List<Val<? extends JsValue>> seq) {
         this.seq = seq;
     }
 
-    private JsArrayVal(){}
+    private JsArrayVal() {
+    }
+
+
+    public static JsArrayVal empty() {
+        return EMPTY;
+    }
 
     @SafeVarargs
     private JsArrayVal(final Val<? extends JsValue> fut,
@@ -68,12 +77,12 @@ public final class JsArrayVal extends AbstractVal<JsArray> {
      @return a CompletableFuture of a json array
      */
     @Override
-    public Future<jsonvalues.JsArray> get() {
-        Future<jsonvalues.JsArray> result = Future.succeededFuture(jsonvalues.JsArray.empty());
+    public Future<JsArray> get() {
+        Future<jsonvalues.JsArray> result = Future.succeededFuture(JsArray.empty());
 
         for (final Val<? extends JsValue> future : seq) {
             result = result.flatMap(arr -> future.get()
-                                                 .map(v -> arr.append(v)));
+                                                 .map(arr::append));
         }
         return result;
     }
@@ -81,7 +90,7 @@ public final class JsArrayVal extends AbstractVal<JsArray> {
     public JsArrayVal append(final Val<? extends JsValue> future) {
 
         final JsArrayVal arrayFuture = new JsArrayVal();
-        arrayFuture.seq = arrayFuture.seq.append(future);
+        arrayFuture.seq = this.seq.append(future);
         return arrayFuture;
     }
 
@@ -92,16 +101,21 @@ public final class JsArrayVal extends AbstractVal<JsArray> {
 
 
     @Override
-    public JsArrayVal retry(final int attempts) {
-        return new JsArrayVal(seq.map(it->it.retry(attempts)));
+    public Val<JsArray> retry(final int attempts) {
+        return new JsArrayVal(seq.map(it -> it.retry(attempts)));
     }
 
     @Override
-    public JsArrayVal retryIf(final Predicate<Throwable> predicate,
+    public Val<JsArray> retryIf(final Predicate<Throwable> predicate,
                                 final int attempts) {
-        return new JsArrayVal(seq.map(it->it.retryIf(predicate, attempts)));
+        return new JsArrayVal(seq.map(it -> it.retryIf(predicate,
+                                                       attempts
+                                                      )));
 
     }
 
+    public JsArrayVal appendAll(final JsArrayVal others) {
+        return new JsArrayVal(seq.appendAll(others.seq));
+    }
 
 }

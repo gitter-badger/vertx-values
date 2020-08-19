@@ -15,7 +15,7 @@ public class SeqVal<O> extends AbstractVal<List<O>> {
     @SuppressWarnings("rawtypes")
     public final static SeqVal EMPTY = new SeqVal<>(List.empty());
 
-    List<Val<O>> seq;
+    private final List<Val<O>> seq;
 
     @SuppressWarnings("unchecked")
     public static <O> SeqVal<O> empty() {
@@ -32,17 +32,18 @@ public class SeqVal<O> extends AbstractVal<List<O>> {
         return Cons.of(() -> get().map(fn));
     }
 
-
     @Override
     public SeqVal<O> retry(final int attempts) {
-        if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
+        if (attempts < 1)
+            throw new IllegalArgumentException("attempts < 1");
         return new SeqVal<>(seq.map(it -> it.retry(attempts)));
     }
 
     @Override
     public SeqVal<O> retryIf(final Predicate<Throwable> predicate,
                              final int attempts) {
-        if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
+        if (attempts < 1)
+            throw new IllegalArgumentException("attempts < 1");
         requireNonNull(predicate);
         return new SeqVal<>(seq.map(it -> it.retryIf(predicate,
                                                      attempts

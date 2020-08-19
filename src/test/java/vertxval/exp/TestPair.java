@@ -4,6 +4,7 @@ import io.vavr.Tuple2;
 import io.vertx.core.Future;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -37,10 +38,11 @@ public class TestPair {
             .retry(2)
             .get()
             .onComplete(it -> {
-                context.verify(() -> it.result()
-                                       .equals(new Tuple2<>("a",
-                                                            "a")
-                                              )
+                context.verify(() -> Assertions.assertEquals(new Tuple2<>("a",
+                                                                          "a"
+                                                             ),
+                                                             it.result()
+                                                            )
                               );
                 context.completeNow();
             });

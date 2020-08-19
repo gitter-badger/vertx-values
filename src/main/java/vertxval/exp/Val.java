@@ -36,5 +36,8 @@ public interface Val<O> extends Supplier<Future<O>> {
 
     Val<O> onComplete(final Handler<AsyncResult<O>> handler);
 
+    //<P> Pair<O,P> zip(Val<P> val);
+
+
 
 }
