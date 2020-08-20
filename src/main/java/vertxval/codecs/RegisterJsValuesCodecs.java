@@ -6,6 +6,11 @@ import jsonvalues.JsArray;
 import jsonvalues.JsObj;
 import vertxval.VertxValException;
 
+/**
+ Verticle to register the codecs to be able to send json values ({@link JsObj} and {@link JsArray}) to the even bus.
+ If this verticle is deployed more than once, it returns a promise that is completed with a failure saying that
+ the codecs has already been registered
+ */
 public class RegisterJsValuesCodecs extends AbstractVerticle {
 
     @Override
