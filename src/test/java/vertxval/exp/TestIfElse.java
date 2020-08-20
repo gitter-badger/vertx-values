@@ -1,10 +1,7 @@
 package vertxval.exp;
 
-import io.vertx.core.Future;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
-import jsonvalues.JsBool;
-import jsonvalues.JsInt;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,28 +14,15 @@ import static vertxval.VertxValException.GET_BAD_MESSAGE_EXCEPTION;
 
 @ExtendWith(VertxExtension.class)
 public class TestIfElse {
-
+    final Supplier<Val<Boolean>> trueVal =
+            new ReturnsConsOrFailure<>(counter -> new RuntimeException("counter:+" + counter),
+                                       counter -> counter == 1 || counter == 2,
+                                       true
+            );
 
     @Test
     public void testRetryIfElsePredicate(final VertxTestContext context) {
-
-        Val<Boolean> predicate = Cons.of(new Supplier<>() {
-            int i = 0;
-
-            @Override
-            public Future<Boolean> get() {
-                if (i == 0 || i == 1) {
-                    i += 1;
-                    System.out.println("throw an exception");
-                    return Future.failedFuture("i=" + i);
-                }
-                System.out.println("returns true");
-                return Future.succeededFuture(true);
-            }
-        });
-
-
-        IfElse.predicate(predicate)
+        IfElse.predicate(trueVal.get())
               .consequence(Cons.success("consequence"))
               .alternative(Cons.success("alternative"))
               .retry(2)
@@ -59,28 +43,17 @@ public class TestIfElse {
 
     @Test
     public void testRetryPredicateWhenBadMessage(final VertxTestContext context) {
-
-        Val<Boolean> predicate = Cons.of(new Supplier<>() {
-            int i = 0;
-
-            @Override
-            public Future<Boolean> get() {
-                if (i == 0 || i == 1) {
-                    i += 1;
-                    System.out.println("throw an exception");
-                    return Future.failedFuture(GET_BAD_MESSAGE_EXCEPTION.apply("bad message"));
-                }
-                System.out.println("returns true");
-                return Future.succeededFuture(true);
-            }
-        });
-
-
-        IfElse.predicate(predicate)
+        final Supplier<Val<Boolean>> trueVal =
+                new ReturnsConsOrFailure<>(counter -> GET_BAD_MESSAGE_EXCEPTION.apply("bad message"),
+                                           counter -> counter == 1 || counter == 2,
+                                           true
+                );
+        IfElse.predicate(trueVal.get())
               .consequence(Cons.success("consequence"))
               .alternative(Cons.success("alternative"))
-              .retryIf(VertxValException.prism.exists.apply(v->v.failureCode()==BAD_MESSAGE_CODE),
-                       2)
+              .retryIf(VertxValException.prism.exists.apply(v -> v.failureCode() == BAD_MESSAGE_CODE),
+                       2
+                      )
               .onComplete(r -> {
                   if (r.succeeded()) {
                       System.out.println(r.result());
@@ -98,28 +71,19 @@ public class TestIfElse {
 
     @Test
     public void testRetryIfIfElseConsequence(final VertxTestContext context) {
-
-        Val<String> consequence = Cons.of(new Supplier<>() {
-            int i = 0;
-
-            @Override
-            public Future<String> get() {
-                if (i == 0 || i == 1) {
-                    i += 1;
-                    System.out.println("throw an exception");
-                    return Future.failedFuture(GET_BAD_MESSAGE_EXCEPTION.apply("bad message"));
-                }
-                System.out.println("returns consequence");
-                return Future.succeededFuture("consequence");
-            }
-        });
+        final Supplier<Val<String>> consequence =
+                new ReturnsConsOrFailure<>(counter -> GET_BAD_MESSAGE_EXCEPTION.apply("bad message"),
+                                           counter -> counter == 1 || counter == 2,
+                                           "consequence"
+                );
 
 
-        IfElse.<String>predicate(Cons.success(true))
-                .consequence(consequence)
+        IfElse.<String>predicate(Cons.TRUE)
+                .consequence(consequence.get())
                 .alternative(Cons.success("alternative"))
-                .retryIf(VertxValException.prism.exists.apply(v->v.failureCode()==BAD_MESSAGE_CODE),
-                         2)
+                .retryIf(VertxValException.prism.exists.apply(v -> v.failureCode() == BAD_MESSAGE_CODE),
+                         2
+                        )
                 .onComplete(r -> {
                     if (r.succeeded()) {
                         System.out.println(r.result());
@@ -138,27 +102,19 @@ public class TestIfElse {
     @Test
     public void testRetryIfIfElseAlternative(final VertxTestContext context) {
 
-        Val<String> alterantive = Cons.of(new Supplier<>() {
-            int i = 0;
-
-            @Override
-            public Future<String> get() {
-                if (i == 0 || i == 1) {
-                    i += 1;
-                    System.out.println("throw an exception");
-                    return Future.failedFuture(GET_BAD_MESSAGE_EXCEPTION.apply("bad message"));
-                }
-                System.out.println("returns alternative");
-                return Future.succeededFuture("alternative");
-            }
-        });
+        final Supplier<Val<String>> alternative =
+                new ReturnsConsOrFailure<>(counter -> GET_BAD_MESSAGE_EXCEPTION.apply("bad message"),
+                                           counter -> counter == 1 || counter == 2,
+                                           "alternative"
+                );
 
 
         IfElse.<String>predicate(Cons.success(false))
                 .consequence(Cons.success("consequence"))
-                .alternative(alterantive)
-                .retryIf(VertxValException.prism.exists.apply(v->v.failureCode()==BAD_MESSAGE_CODE),
-                         2)
+                .alternative(alternative.get())
+                .retryIf(VertxValException.prism.exists.apply(v -> v.failureCode() == BAD_MESSAGE_CODE),
+                         2
+                        )
                 .onComplete(r -> {
                     if (r.succeeded()) {
                         System.out.println(r.result());
@@ -177,25 +133,15 @@ public class TestIfElse {
 
     @Test
     public void testRetryIfElseConsequence(final VertxTestContext context) {
-
-        Val<String> consequence = Cons.of(new Supplier<>() {
-            int i = 0;
-
-            @Override
-            public Future<String> get() {
-                if (i == 0 || i == 1) {
-                    i += 1;
-                    System.out.println("throw an exception");
-                    return Future.failedFuture("i=" + i);
-                }
-                System.out.println("returns true");
-                return Future.succeededFuture("consequence");
-            }
-        });
+        final Supplier<Val<String>> consequence =
+                new ReturnsConsOrFailure<>(counter -> new RuntimeException("counter: " + counter),
+                                           counter -> counter == 1 || counter == 2,
+                                           "consequence"
+                );
 
 
         IfElse.<String>predicate(Cons.success(true))
-                .consequence(consequence)
+                .consequence(consequence.get())
                 .alternative(Cons.success("alternative"))
                 .retry(2)
                 .onComplete(r -> {
@@ -216,25 +162,16 @@ public class TestIfElse {
     @Test
     public void testRetryIfElseAlternative(final VertxTestContext context) {
 
-        Val<String> alternative = Cons.of(new Supplier<>() {
-            int i = 0;
-
-            @Override
-            public Future<String> get() {
-                if (i == 0 || i == 1) {
-                    i += 1;
-                    System.out.println("throw an exception");
-                    return Future.failedFuture("i=" + i);
-                }
-                System.out.println("returns true");
-                return Future.succeededFuture("alternative");
-            }
-        });
+        final Supplier<Val<String>> alternative =
+                new ReturnsConsOrFailure<>(counter -> new RuntimeException("counter: " + counter),
+                                           counter -> counter == 1 || counter == 2,
+                                           "alternative"
+                );
 
 
         IfElse.<String>predicate(Cons.success(false))
                 .consequence(Cons.success("consequence"))
-                .alternative(alternative)
+                .alternative(alternative.get())
                 .retry(2)
                 .onComplete(r -> {
                     if (r.succeeded()) {

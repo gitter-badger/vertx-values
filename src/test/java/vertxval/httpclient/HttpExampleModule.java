@@ -15,7 +15,7 @@ public class HttpExampleModule extends HttpClientModule {
     }
 
     @Override
-    protected void defineOperations() {
+    protected void defineRequests() {
         λ<String, JsObj> search =
                 term -> get.apply(new GetMessage().host("www.google.com")
                                                   .uri("/search?q=" + term)
@@ -28,9 +28,7 @@ public class HttpExampleModule extends HttpClientModule {
     }
 
     @Override
-    protected void deployOperations() {
-
-
+    protected void deployRequests() {
         λ<JsObj, JsObj> post_customer = body -> post.apply(new PostMessage(body.serialize()));
         this.deployFn("create_client",
                       post_customer,

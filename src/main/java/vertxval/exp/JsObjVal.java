@@ -1028,12 +1028,12 @@ public final class JsObjVal extends AbstractVal<JsObj> {
 
 
     @Override
-    public JsObjVal retry(final int attempts) {
+    public Val<JsObj> retry(final int attempts) {
         return new JsObjVal(bindings.mapValues(it -> it.retry(attempts)));
     }
 
     @Override
-    public JsObjVal retryIf(final Predicate<Throwable> predicate,
+    public Val<JsObj> retryIf(final Predicate<Throwable> predicate,
                               final int attempts) {
         return new JsObjVal(bindings.mapValues(it -> it.retryIf(predicate,
                                                                 attempts

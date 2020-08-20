@@ -38,7 +38,7 @@ public final class And extends AbstractVal<Boolean> {
     }
 
     @Override
-    public And retry(final int attempts) {
+    public Val<Boolean> retry(final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
 
         return new And(exps.stream()
@@ -47,7 +47,7 @@ public final class And extends AbstractVal<Boolean> {
     }
 
     @Override
-    public And retryIf(final Predicate<Throwable> predicate,
+    public Val<Boolean> retryIf(final Predicate<Throwable> predicate,
                                 final int attempts) {
         if (attempts < 1) throw new IllegalArgumentException("attempts < 1");
         requireNonNull(predicate);

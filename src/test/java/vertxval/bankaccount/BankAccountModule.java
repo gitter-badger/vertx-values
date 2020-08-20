@@ -30,8 +30,8 @@ public class BankAccountModule extends VertxModule {
      */
     public Function<JsObj, Val<VerticleRef<JsObj, Integer>>> registerAccount =
             account -> deployer.deployλ(nameLens.get.apply(account),
-                                        new AccountActor(creditLens.get.apply(account),
-                                                         deployer.spawnλ(Validators.validateJsObj(Operation.spec))
+                                        new AccountVerticle(creditLens.get.apply(account),
+                                                            deployer.spawnλ(Validators.validateJsObj(Operation.spec))
                                         )
                                        );
 
@@ -42,8 +42,8 @@ public class BankAccountModule extends VertxModule {
      to move
      */
     public BiFunction<λ<JsObj, Integer>, λ<JsObj, Integer>, λ<Integer, Integer>> makeTx =
-            (from, to) -> deployer.spawnλ(new TxActor(from,
-                                                      to
+            (from, to) -> deployer.spawnλ(new TxVerticle(from,
+                                                         to
                                           )
                                          );
 
